@@ -11,6 +11,7 @@
 # Generated files
 bin/
 gen/
+generated/
 
 # Gradle files
 .gradle/
@@ -24,3 +25,5 @@ proguard/
 
 #Log Files
 *.log
+
+app
