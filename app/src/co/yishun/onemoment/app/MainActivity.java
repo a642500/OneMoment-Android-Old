@@ -1,15 +1,22 @@
 package co.yishun.onemoment.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import co.yishun.library.fragmentwrapactivity.FragmentWrapActivity;
+import co.yishun.onemoment.app.ui.RecordFragment;
+import org.androidannotations.annotations.EActivity;
 
 /**
+ * MainActivity.
+ * <p/>
  * Created by Carlos on 2/2/15.
  */
-public class MainActivity extends Activity {
+@EActivity
+public class MainActivity extends FragmentWrapActivity {
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public Fragment getWrappedFragment() {
+        return new RecordFragment();
     }
 }
