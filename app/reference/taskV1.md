@@ -30,3 +30,8 @@ Video Coding Method
 - 480*480
 - 480p
 - H.264
+
+Audio Coding Method
+---
+
+- AAC
