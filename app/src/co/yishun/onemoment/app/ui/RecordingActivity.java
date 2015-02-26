@@ -5,11 +5,8 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -37,8 +34,6 @@ public class RecordingActivity extends Activity {
     private static final String TAG = "Recorder";
     @ViewById(R.id.recordVideoBtn)
     ImageButton captureButton;
-
-    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,73 +90,6 @@ public class RecordingActivity extends Activity {
         }
     }
 
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Deprecated
-    private boolean prepareVideoRecorder() {
-
-        // BEGIN_INCLUDE (configure_preview)
-        mCamera = CameraHelper.getDefaultCameraInstance();
-        Camera.Parameters parameters = mCamera.getParameters();
-
-
-        Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), mPreview.getWidth(), mPreview.getHeight());
-        parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
-        mCamera.setParameters(parameters);
-
-        Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
-        CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
-        profile.videoFrameWidth = optimalVideoSize.width;
-        profile.videoFrameHeight = optimalVideoSize.height;
-        profile.videoFrameRate = 30;
-        profile.audioCodec = MediaRecorder.AudioEncoder.AAC;
-        profile.videoCodec = MediaRecorder.VideoEncoder.H264;
-        profile.fileFormat = MediaRecorder.OutputFormat.MPEG_4;
-
-        try {
-            // Requires API level 11+, For backward compatibility use {@link setPreviewDisplay}
-            // with {@link SurfaceView}
-            mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
-        } catch (IOException e) {
-            Log.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
-            return false;
-        }
-        // END_INCLUDE (configure_preview)
-
-
-        // BEGIN_INCLUDE (configure_media_recorder)
-        mMediaRecorder = new MediaRecorder();
-
-        // Step 1: Unlock and set camera to MediaRecorder
-        mCamera.unlock();
-        mMediaRecorder.setCamera(mCamera);
-
-        // Step 2: Set sources
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-
-        // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        mMediaRecorder.setProfile(profile);
-
-        // Step 4: Set output file
-        mMediaRecorder.setOutputFile(CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO).toString());
-        // END_INCLUDE (configure_media_recorder)
-
-        // Step 5: Prepare configured MediaRecorder
-        try {
-            mMediaRecorder.prepare();
-        } catch (IllegalStateException e) {
-            Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
-            releaseMediaRecorder();
-            return false;
-        } catch (IOException e) {
-            Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
-            releaseMediaRecorder();
-            return false;
-        }
-        return true;
-    }
-
     private int prepareStatus = NOT_PREPARED;
     public static final int NOT_PREPARED = 0;
     public static final int PREPARED = 1;
@@ -191,6 +119,10 @@ public class RecordingActivity extends Activity {
         mCamera.startPreview();
     }
 
+    /**
+     * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
+     * operation.
+     */
     @SupposeBackground void prepare() {
         Camera.Parameters parameters = mCamera.getParameters();
         Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
@@ -263,63 +195,6 @@ public class RecordingActivity extends Activity {
             isRecording = false;
             releaseCamera();
             Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
-     * operation.
-     */
-    @Deprecated
-    class MediaPrepareTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            // initialize video camera
-            if (prepareVideoRecorder()) {
-                // Camera is available and unlocked, MediaRecorder is prepared,
-                // now you can start recording
-                mMediaRecorder.start();
-
-                isRecording = true;
-
-                mHandler.postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.i(TAG, "time run out, isRecording: " + isRecording);
-                                if (isRecording) {
-                                    // stop recording and release camera
-                                    mMediaRecorder.stop();  // stop the recording
-                                    releaseMediaRecorder(); // release the MediaRecorder object
-                                    mCamera.lock();         // take camera access back from MediaRecorder
-
-                                    // inform the user that recording has stopped
-                                    setCaptureButtonText("Capture");
-                                    isRecording = false;
-                                    releaseCamera();
-                                    Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }, 1200L
-                        //TODO move to constant
-                );
-            } else {
-                // prepare didn't work, release the camera
-                releaseMediaRecorder();
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull Boolean result) {
-            if (!result) {
-                RecordingActivity.this.finish();
-            }
-            // inform the user that recording has started
-            setCaptureButtonText("Stop");
-
         }
     }
 
