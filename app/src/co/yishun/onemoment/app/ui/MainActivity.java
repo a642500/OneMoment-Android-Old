@@ -1,4 +1,4 @@
-package co.yishun.onemoment.app;
+package co.yishun.onemoment.app.ui;
 
 import android.app.Fragment;
 import co.yishun.library.fragmentwrapactivity.FragmentWrapActivity;
