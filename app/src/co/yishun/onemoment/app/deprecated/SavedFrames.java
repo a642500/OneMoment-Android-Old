@@ -6,6 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by Carlos on 2/3/15.
  */
+@Deprecated
 public class SavedFrames implements Parcelable {
 
     byte[] frameBytesData = null;

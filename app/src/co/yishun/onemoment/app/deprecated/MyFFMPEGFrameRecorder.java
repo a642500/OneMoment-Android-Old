@@ -26,6 +26,7 @@ import static com.googlecode.javacv.cpp.swscale.*;
 /**
  * Created by Carlos on 2/3/15.
  */
+@Deprecated
 public class MyFFMPEGFrameRecorder extends FrameRecorder {
 
     private static Exception loadingException = null;
