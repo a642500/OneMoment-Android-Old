@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="ion-2.0.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/AndroidAsync/androidasync-2.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/libs/ion/ion-2.0.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/app/libs/AndroidAsync/source/src" />
+      <root url="file://$PROJECT_DIR$/app/libs/AndroidAsync/source/test/src" />
+      <root url="file://$PROJECT_DIR$/app/libs/ion/source/src" />
+      <root url="file://$PROJECT_DIR$/app/libs/ion/source/test/src" />
+    </SOURCES>
+  </library>
+</component>

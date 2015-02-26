@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">One Moment</string>
+
+    <string name="fragmentRecordShootBtnString">Shoot</string>
+
+    <string name="loginTitle">Register</string>
+    <string name="loginPhoneHint">Phone number</string>
+    <string name="loginVerificationHint">Verification code</string>
+    <string name="loginVerificationBtnString">get verification code</string>
+    <string name="loginNextBtnString">Next</string>
+    <string name="loginLoginBtnString">Already has an Account? Login</string>
 </resources>
