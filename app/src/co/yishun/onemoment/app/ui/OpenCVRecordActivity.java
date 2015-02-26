@@ -18,12 +18,12 @@ import org.androidannotations.annotations.*;
 import java.io.IOException;
 
 /**
- * This activity uses the camera/camcorder as the A/V source for the {@link android.media.MediaRecorder} API.
- * A {@link android.view.TextureView} is used as the camera preview which limits the code to API 14+.
- * Created by Carlos on 2/14/15.
+ * This is an version of {@link RecordingActivity} implement by OpenCV.
+ * <p/>
+ * Created by Carlos on 2/26/15.
  */
 @EActivity(R.layout.recording_layout)
-public class RecordingActivity extends Activity {
+public class OpenCVRecordActivity extends Activity {
     private Camera mCamera;
     @ViewById(R.id.surfaceView)
     TextureView mPreview;
@@ -33,7 +33,7 @@ public class RecordingActivity extends Activity {
     private static final String TAG = "Recorder";
 //    @ViewById(R.id.recordVideoBtn)
 //    ImageButton captureButton;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,7 +193,7 @@ public class RecordingActivity extends Activity {
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
-            Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "ok!!", Toast.LENGTH_LONG).show();
         }
     }
 
