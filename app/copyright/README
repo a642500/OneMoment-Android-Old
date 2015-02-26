@@ -1,0 +1,35 @@
+#Some Open Source Recourse Used by One Moment 
+
+##FragmentWrapActivity
+
+This will be open source under [Apache 2.0](Apache2)
+
+
+Author:[toxz](https://github.com/a642500)
+
+##VideoRecorder(will be removed)
+
+We use some icon from this project but No code used. The icon hasn't been revised, anybody can get it from (https://github.com/qdrzwd/VideoRecorder)
+
+License:[GPL v3.0]()
+Author:[qdrzwd](https://github.com/qdrzwd)
+
+##OpenCV
+
+License:[3-clause BSD License](http://opensource.org/licenses/BSD-3-Clause)
+
+##AndroidAnnotations
+
+License:[Apache 2.0](./AndroidAnnotations)
+
+##ORMLite
+
+License:See [here](./ormlite)
+
+
+---
+
+#License Copy
+
+- Apache 2.0(http://www.apache.org/licenses/LICENSE-2.0)
+- GPL 3.0(http://www.gnu.org/licenses/gpl-3.0)
