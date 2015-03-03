@@ -2,17 +2,24 @@ package co.yishun.onemoment.app.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
+import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.util.CameraHelper;
+import co.yishun.onemoment.app.util.LogUtil;
 import org.androidannotations.annotations.*;
 
 import java.io.IOException;
@@ -25,8 +32,7 @@ import java.io.IOException;
 @EActivity(R.layout.recording_layout)
 public class RecordingActivity extends Activity {
     private Camera mCamera;
-    @ViewById(R.id.surfaceView)
-    TextureView mPreview;
+    @ViewById(R.id.surfaceView) TextureView mPreview;
     private MediaRecorder mMediaRecorder;
 
     private boolean isRecording = false;
@@ -37,6 +43,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     /**
@@ -46,8 +53,7 @@ public class RecordingActivity extends Activity {
      *
      * @param view the view generating the event.
      */
-    @Click(R.id.recordVideoBtn)
-    public void onCaptureClick(View view) {
+    @Fun @Click(R.id.recordVideoBtn) void onCaptureClick(View view) {
         if (!isRecording) {
 //            new MediaPrepareTask().execute(null, null, null);
             record();
@@ -55,6 +61,7 @@ public class RecordingActivity extends Activity {
     }
 
 
+    @Fun
     private void setCaptureButtonText(String title) {
 //        captureButton.setText(title);
     }
@@ -94,7 +101,16 @@ public class RecordingActivity extends Activity {
     public static final int PREPARED = 1;
     public static final int PREPARED_FAILED = -1;
 
-    @AfterViews
+    @Fun @AfterViews void initView() {
+        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mPreview.setOpaque(false);
+                mPreview.setTransform(calculateScaleSize(mPreview, Config.getDefaultCameraSize()));
+            }
+        });
+        preview();
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background void preview() {
         // BEGIN_INCLUDE (configure_preview)
@@ -102,7 +118,7 @@ public class RecordingActivity extends Activity {
         Camera.Parameters parameters = mCamera.getParameters();
 
 
-        Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), mPreview.getWidth(), mPreview.getHeight());
+        Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
         mCamera.setParameters(parameters);
         mCamera.setDisplayOrientation(90);
@@ -114,7 +130,6 @@ public class RecordingActivity extends Activity {
             Log.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
             prepareStatus = PREPARED_FAILED;
         }
-
         mCamera.startPreview();
     }
 
@@ -195,6 +210,30 @@ public class RecordingActivity extends Activity {
             releaseCamera();
             Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * @param previewView view to display preview
+     * @param cropSize    targeted preview size. Null to use default size {@link co.yishun.onemoment.app.config.Config#}
+     * @return matrix to apply {@link TextureView#setTransform(Matrix)}
+     */
+    @Fun
+    private Matrix calculateScaleSize(@NonNull final TextureView previewView, @NonNull final Pair<Integer, Integer> cropSize) {
+        int viewWidth = previewView.getWidth();
+        int viewHeight = previewView.getHeight();
+        LogUtil.v(TAG, "view width: " + viewWidth);
+        if (viewHeight != viewWidth)
+            LogUtil.w(TAG, "preview view width not equals height, width is " + viewWidth + ", height is" + viewHeight);
+        LogUtil.v(TAG, "crop width: " + cropSize.first);
+        if (!cropSize.first.equals(cropSize.second)) {
+            LogUtil.w(TAG, "target size first not equals second, first is " + cropSize.first + ", second is" + cropSize.second);
+        }
+        float scaleX = viewWidth / cropSize.first;
+        float scaleY = viewHeight / cropSize.second;
+        Matrix mat = new Matrix();
+        LogUtil.i(TAG, "scaleX " + scaleX + "; scaleY " + scaleY);
+        mat.setScale(scaleX, scaleY);
+        return mat;
     }
 
 }

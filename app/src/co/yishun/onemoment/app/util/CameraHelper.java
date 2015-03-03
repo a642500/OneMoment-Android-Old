@@ -54,7 +54,7 @@ public class CameraHelper {
         double minWidthDiff = Double.MAX_VALUE;
 
         for (Camera.Size size : sizes) {
-            Log.i("iter height", "width: " + size.width + ", height: " + size.height);
+            LogUtil.v("iter height", "width: " + size.width + ", height: " + size.height);
             if (size.height >= targetHeight && Math.abs(size.height - targetHeight) <= minHeightDiff
                     && size.width >= targetWidth && Math.abs(size.width - targetWidth) <= minWidthDiff) {
                 optimalSize = size;
@@ -62,7 +62,7 @@ public class CameraHelper {
                 minWidthDiff = Math.abs(size.width - targetWidth);
             }
         }
-        Log.i("selected size", "width: " + optimalSize.width + ", height: " + optimalSize.height);
+        LogUtil.i("selected size", "width: " + optimalSize.width + ", height: " + optimalSize.height);
         return optimalSize;
     }
 
