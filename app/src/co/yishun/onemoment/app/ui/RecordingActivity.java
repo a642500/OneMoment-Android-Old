@@ -55,7 +55,6 @@ public class RecordingActivity extends Activity {
      */
     @Fun @Click(R.id.recordVideoBtn) void onCaptureClick(View view) {
         if (!isRecording) {
-//            new MediaPrepareTask().execute(null, null, null);
             record();
         }
     }
@@ -101,25 +100,25 @@ public class RecordingActivity extends Activity {
     public static final int PREPARED = 1;
     public static final int PREPARED_FAILED = -1;
 
-    @Fun @AfterViews void initView() {
-        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-                mPreview.setOpaque(false);
-                mPreview.setTransform(calculateScaleSize(mPreview, Config.getDefaultCameraSize()));
-            }
-        });
-        preview();
-    }
 
+    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background void preview() {
         // BEGIN_INCLUDE (configure_preview)
         mCamera = CameraHelper.getDefaultCameraInstance();
-        Camera.Parameters parameters = mCamera.getParameters();
 
-
-        Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
+        final Camera.Parameters parameters = mCamera.getParameters();
+        final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
+
+        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mPreview.setOpaque(false);
+                Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
+                mPreview.setTransform(mat);
+            }
+        });
+
         mCamera.setParameters(parameters);
         mCamera.setDisplayOrientation(90);
         try {
@@ -218,7 +217,9 @@ public class RecordingActivity extends Activity {
      * @return matrix to apply {@link TextureView#setTransform(Matrix)}
      */
     @Fun
-    private Matrix calculateScaleSize(@NonNull final TextureView previewView, @NonNull final Pair<Integer, Integer> cropSize) {
+    private Matrix calculatePreviewMatrix(@NonNull final TextureView previewView, @NonNull final Pair<Integer, Integer> cropSize, @NonNull final Camera.Size size) {
+        Matrix mat = new Matrix();
+
         int viewWidth = previewView.getWidth();
         int viewHeight = previewView.getHeight();
         LogUtil.v(TAG, "view width: " + viewWidth);
@@ -228,11 +229,15 @@ public class RecordingActivity extends Activity {
         if (!cropSize.first.equals(cropSize.second)) {
             LogUtil.w(TAG, "target size first not equals second, first is " + cropSize.first + ", second is" + cropSize.second);
         }
+
+        //set scale
         float scaleX = viewWidth / cropSize.first;
         float scaleY = viewHeight / cropSize.second;
-        Matrix mat = new Matrix();
         LogUtil.i(TAG, "scaleX " + scaleX + "; scaleY " + scaleY);
         mat.setScale(scaleX, scaleY);
+
+        //move to center
+        mat.postTranslate(size.width / 2 - viewWidth / 2, size.height / 2 - viewHeight / 2);
         return mat;
     }
 
