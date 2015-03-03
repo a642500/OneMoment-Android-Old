@@ -39,6 +39,7 @@
 
         <activity
                 android:name=".ui.RecordingActivity_"
+                android:theme="@style/Theme.AppCompat.Light.App.NoActionBar"
                 android:enabled="false"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden">

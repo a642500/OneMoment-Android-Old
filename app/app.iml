@@ -35,5 +35,6 @@
     <orderEntry type="library" name="ormlite-core-4.48" level="project" />
     <orderEntry type="library" name="ion-2.0.5" level="project" />
     <orderEntry type="library" name="gson-2.3.1" level="project" />
+    <orderEntry type="module" module-name="android-support-v7-appcompat" />
   </component>
 </module>
