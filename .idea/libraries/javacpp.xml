@@ -1,9 +1,13 @@
 <component name="libraryTable">
   <library name="javacpp">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/javacpp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/libs/javacpp/javacpp.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/app/libs/javacpp/javacpp-0.10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/app/libs/javacpp/javacpp-0.10-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

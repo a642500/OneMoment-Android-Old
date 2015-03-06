@@ -15,11 +15,11 @@
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/generated" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/testSrc" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/armeabi" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javacpp" level="project" />
-    <orderEntry type="library" name="javacv" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="androidannotations-api-3.1" level="project" />
     <orderEntry type="module" module-name="FragmentWrapActivity" />
@@ -36,5 +36,6 @@
     <orderEntry type="library" name="ion-2.0.5" level="project" />
     <orderEntry type="library" name="gson-2.3.1" level="project" />
     <orderEntry type="module" module-name="android-support-v7-appcompat" />
+    <orderEntry type="library" exported="" name="ffmpeg" level="project" />
   </component>
 </module>
