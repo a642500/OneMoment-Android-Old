@@ -24,6 +24,8 @@ import org.androidannotations.annotations.*;
 
 import java.io.IOException;
 
+//TODO stop record by MediaRecorder.setMaxDuration()
+
 /**
  * This activity uses the camera/camcorder as the A/V source for the {@link android.media.MediaRecorder} API.
  * A {@link android.view.TextureView} is used as the camera preview which limits the code to API 14+.

@@ -1,6 +1,6 @@
 package co.yishun.onemoment.app.recorder;
 
-import com.googlecode.javacv.cpp.avcodec;
+//import com.googlecode.javacv.cpp.avcodec;
 
 /**
  * provide parameters for {@link Recorder}
@@ -9,13 +9,13 @@ import com.googlecode.javacv.cpp.avcodec;
  */
 public class RecorderParameters {
 
-    public int videoCodec = avcodec.AV_CODEC_ID_H264;
+//    public int videoCodec = avcodec.AV_CODEC_ID_H264;
 
     public int videoFrameRate = 30;
 
     public int videoQuality = 12;
 
-    public int audioCodec = avcodec.AV_CODEC_ID_AAC;
+//    public int audioCodec = avcodec.AV_CODEC_ID_AAC;
 
     public int audioChannel = 1;
 

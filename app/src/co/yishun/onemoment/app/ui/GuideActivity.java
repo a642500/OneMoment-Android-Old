@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import co.yishun.onemoment.app.MainActivity_;
 import co.yishun.onemoment.app.R;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -40,7 +39,7 @@ public class GuideActivity extends Activity {
     }
 
     /**
-     * After user finished this guide, disable this activity, and enable {@link co.yishun.onemoment.app.ui.RecordActivity_} as default activity.
+     * After user finished this guide, disable this activity, and enable {@link co.yishun.onemoment.app.ui.RecordingActivity_} as default activity.
      */
     private void changeEnableStatus() {
         PackageManager packageManager = getPackageManager();
