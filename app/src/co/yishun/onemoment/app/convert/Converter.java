@@ -6,6 +6,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.util.LogUtil;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class Converter {
         if (mOutput != null) {
             mCommand.add(mOutput);
         }
+        LogUtil.i(TAG, Arrays.toString(mCommand.toArray()));
         return new ProcessBuilder(mCommand);
     }
 
@@ -100,7 +102,10 @@ public class Converter {
      * @return Converter to call in chain.
      */
     public Converter cropToStandard() {
+        mCommand.add("-vf");
         mCommand.add("crop=480,480");
+        mCommand.add("-strict");
+        mCommand.add("-2");
         return this;
     }
 

@@ -34,6 +34,7 @@ public class CameraHelper {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private static final String TAG = LogUtil.makeTag(CameraHelper.class);
 
     /**
      * Iterate over supported camera preview sizes to see which one best fits the
@@ -155,6 +156,19 @@ public class CameraHelper {
         }
 
         return mediaFile;
+    }
+
+    /**
+     * Get Converted path from origin media file path.
+     *
+     * @param path to the media file
+     * @return path to the converted file.
+     */
+    public static String getConvertedMediaFile(String path) {
+        File file = new File(path);
+        String s = file.getParentFile().toString() + "/Converted_" + file.getName();
+        LogUtil.i(TAG, s);
+        return s;
     }
 
 }
