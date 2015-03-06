@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.config;
 
 import android.util.Pair;
+import co.yishun.onemoment.app.R;
 
 /**
  * Created by Carlos on 2/15/15.
@@ -21,6 +22,8 @@ public class Config {
     public static final String URL_VERIFICATION_SEND_SMS = "/api/v2/send_verify_sms";
     public static final String URL_VERIFICATION_VERIFY = "/api/v2/verify_phone";
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
+
+    private static final int FFMPEG_RAW_ID = R.raw.ffmpeg;
 
 
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
@@ -74,5 +77,7 @@ public class Config {
         return mCameraSize;
     }
 
-
+    public static int getFfmpegRawId() {
+        return FFMPEG_RAW_ID;
+    }
 }
