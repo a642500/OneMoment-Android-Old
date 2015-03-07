@@ -23,10 +23,10 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import org.androidannotations.annotations.*;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 //TODO stop record by MediaRecorder.setMaxDuration()
 
@@ -227,30 +227,59 @@ public class RecordingActivity extends Activity {
     }
 
     @Background void convert(String from, String to) {
-        try {
-            Process process = Converter.with(this).from(from).cropToStandard().to(to).get().start();
-            InputStream in = process.getInputStream();
-            InputStream er = process.getErrorStream();
-
-            int exitCode = 1;
-            while (exitCode == 1) {
-                if (in.available() > 0) LogUtil.d(TAG, "output: " + String.valueOf(in.read()));
-                if (er.available() > 0) LogUtil.e(TAG, "err: " + String.valueOf(er.read()));
-                exitCode = process.exitValue();
+        Converter.with(this).from(from).cropToStandard().to(to).setHandler(new FFmpegExecuteResponseHandler() {
+            @Override public void onSuccess(String message) {
+                Log.i(TAG, "success: " + message);
             }
 
+            @Override public void onProgress(String message) {
+                Log.i(TAG, "progress: " + message);
 
+            }
+
+            @Override public void onFailure(String message) {
+                Log.e (TAG, "fail: " + message);
+
+            }
+
+            @Override public void onStart() {
+                Log.i(TAG, "start");
+
+            }
+
+            @Override public void onFinish() {
+                Log.i(TAG, "finish");
+
+            }
+        }).start();
+    }
+
+    private String convertInputStreamToString(InputStream is) throws IOException {
+
+     /*
+         * To convert the InputStream to String we use the
+         * Reader.read(char[] buffer) method. We iterate until the
+         * Reader return -1 which means there's no more data to
+         * read. We use the StringWriter class to produce the string.
+         */
+        if (is != null) {
+            Writer writer = new StringWriter();
+
+            char[] buffer = new char[1024];
             try {
-                exitCode = process.waitFor();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Reader reader = new BufferedReader(
+                        new InputStreamReader(is, "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                is.close();
             }
-            onConvert(exitCode);
-
-        } catch (IOException e) {
-            LogUtil.e(TAG, "converter process throw IOException", e);
+            return writer.toString();
+        } else {
+            return "";
         }
-
     }
 
 
