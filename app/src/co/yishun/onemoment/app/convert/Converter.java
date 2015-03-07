@@ -2,51 +2,24 @@ package co.yishun.onemoment.app.convert;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import co.yishun.onemoment.app.config.Config;
+import android.util.Log;
 import co.yishun.onemoment.app.util.LogUtil;
-
-import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 
 /**
- * Video Converter tool implemented by Ffmpeg.
- * <p/>
- * You can {@link Converter#with(Context)} to get instance.
- * <p/>
- * {@code Converter.with(Context).from(Input).cropToStandard().to(Output).get()}
- * <p/>
- * Created by Carlos on 3/6/15.
+ * Created by Carlos on 3/7/15.
  */
-public class Converter {
-
+public abstract class Converter {
     private static final String TAG = LogUtil.makeTag(Converter.class);
-    private static final int IO_BUFFER_SIZE = 32256;
-    private static final String CACHE_NAME = "ffmpeg";
-    private final String EXE_PTAH;
-    private final List<String> mCommand;
+    final StringBuilder mCommand = new StringBuilder();
     private String mOutput;
 
 
     /**
-     * @param context
-     * @hide use {@link #Converter(Context)#with(Context)} to get instance
-     */
-    private Converter(@NonNull Context context) {
-        EXE_PTAH = install(context);
-        mCommand = new LinkedList<>();
-        mCommand.add(EXE_PTAH);
-    }
-
-    /**
      * Get Converter instance.
-     *
-     * @param context
-     * @return
      */
-    public static Converter with(@NonNull Context context) {
-        return new Converter(context);
+    public static Converter with(Context context) {
+        return new Converter2(context);
     }
 
     /**
@@ -55,22 +28,10 @@ public class Converter {
      * @param arg to be added.
      * @return Converter to call in chain.
      */
-    public Converter arg(final String arg) {
-        mCommand.add(arg);
+    public Converter arg(@NonNull final String arg) {
+        mCommand.append(' ');
+        mCommand.append(arg);
         return this;
-    }
-
-    /**
-     * Get process with set command.
-     *
-     * @return the process
-     */
-    public ProcessBuilder get() {
-        if (mOutput != null) {
-            mCommand.add(mOutput);
-        }
-        LogUtil.i(TAG, Arrays.toString(mCommand.toArray()));
-        return new ProcessBuilder(mCommand);
     }
 
     /**
@@ -79,20 +40,20 @@ public class Converter {
      * @param inputFile path to input file
      * @return Converter to call in chain.
      */
-    public Converter from(String inputFile) {
-        mCommand.add("-i");
-        mCommand.add(inputFile);
+    public Converter from(@NonNull final String inputFile) {
+        mCommand.append(" -i ");
+        mCommand.append(inputFile);
         return this;
     }
 
     /**
      * set output file arg, you can only set one output file arg.
      *
-     * @param outputFile path to output file
+     * @param outFile path to output file
      * @return Converter to call in chain.
      */
-    public Converter to(String outputFile) {
-        mOutput = outputFile;
+    public Converter to(@NonNull final String outFile) {
+        mOutput = outFile;
         return this;
     }
 
@@ -102,57 +63,45 @@ public class Converter {
      * @return Converter to call in chain.
      */
     public Converter cropToStandard() {
-        mCommand.add("-vf");
-        mCommand.add("crop=480,480");
-        mCommand.add("-strict");
-        mCommand.add("-2");
+        mCommand.append(" -vf");
+        mCommand.append(" crop=480,480");
+        mCommand.append(" -strict");
+        mCommand.append(" -2");
         return this;
     }
 
-
     /**
-     * to install executable ffmpeg.
+     * Get the command.
      *
-     * @param context
-     * @return path to executable ffmpeg, null when error occurred when installing.
+     * @return the command.
      */
-    private String install(@NonNull Context context) {
-        //TODO avoid to install every time instantiate.
-        String path = null;
-        final InputStream rawSteam = context.getResources().openRawResource(Config.getFfmpegRawId());
-        try {
-            File ffmpegFile = checkFile(context);
-            final OutputStream binStream = new FileOutputStream(ffmpegFile);
-            byte[] buffer = new byte[IO_BUFFER_SIZE];
-            int count;
-            while ((count = rawSteam.read(buffer)) > 0) {
-                binStream.write(buffer, 0, count);
-            }
-            ffmpegFile.setExecutable(true);
-            path = ffmpegFile.toString();
-
-            try {
-                rawSteam.close();
-                binStream.close();
-            } catch (IOException e) {
-                LogUtil.e(TAG, "Failed to close stream", e);
-            }
-        } catch (FileNotFoundException e) {
-            LogUtil.e(TAG, "Cache file not found.", e);
-        } catch (IOException e) {
-            LogUtil.e(TAG, "Write error", e);
-        }
-
-        return path;
+    public String getCommand() {
+        return mCommand.toString();
     }
 
-    private File checkFile(Context context) throws IOException {
-        File ffmpegFile = new File(context.getCacheDir(), CACHE_NAME);
-        LogUtil.i(TAG, "ffmpeg install path: " + ffmpegFile.toString());
 
-        if (!ffmpegFile.exists()) {
-            ffmpegFile.createNewFile();
-        }
-        return ffmpegFile;
+    public abstract Converter setHandler(FFmpegExecuteResponseHandler handler);
+
+    /**
+     * to get command ready and let it run.
+     */
+    final public void start() {
+        mCommand.append(' ');
+        mCommand.append(mOutput);
+        Log.i(TAG, this.toString());
+        run();
+    }
+
+    @Override public String toString() {
+        return getCommand();
+    }
+
+    /**
+     * exec command.
+     */
+    abstract void run();
+
+    public static class NotSupportMethod extends Throwable {
+
     }
 }
