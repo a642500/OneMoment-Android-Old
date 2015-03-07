@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="FFmpegAndroid-0.2.5-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/ffmpeg-android/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/app/libs/ffmpeg-android/FFmpegAndroid-0.2.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/app/libs/ffmpeg-android/FFmpegAndroid-0.2.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
