@@ -17,6 +17,7 @@ import java.io.*;
  * <p/>
  * Created by Carlos on 3/6/15.
  */
+@Deprecated
 class ConverterA extends Converter {
 
     private static final String TAG = LogUtil.makeTag(ConverterA.class);
