@@ -38,5 +38,6 @@
     <orderEntry type="module" module-name="android-support-v7-appcompat" />
     <orderEntry type="library" exported="" name="ffmpeg" level="project" />
     <orderEntry type="library" exported="" name="FFmpegAndroid-0.2.5-sources" level="project" />
+    <orderEntry type="module" module-name="ormlite-content-provider-library" />
   </component>
 </module>

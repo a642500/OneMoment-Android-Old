@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/FragmentWrapActivity/FragmentWrapActivity.iml" filepath="$PROJECT_DIR$/FragmentWrapActivity/FragmentWrapActivity.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/libs/v7/appcompat/android-support-v7-appcompat.iml" filepath="$PROJECT_DIR$/app/libs/v7/appcompat/android-support-v7-appcompat.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/libs/ormlite-content-provider-library/ormlite-content-provider-library.iml" filepath="$PROJECT_DIR$/app/libs/ormlite-content-provider-library/ormlite-content-provider-library.iml" />
     </modules>
   </component>
 </project>
