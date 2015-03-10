@@ -27,8 +27,9 @@ public class Contract {
         public static final String MIMETYPE_NAME = AUTHORITY + "provider";
 
         public static final String PATH = "path";
-        //        public static final int CONTENT_URI_PATTERN_MANY = 1;
-//        public static final int CONTENT_URI_PATTERN_ONE = 2;
+        //TODO ??
+        public static final int CONTENT_URI_PATTERN_MANY = 1;
+        public static final int CONTENT_URI_PATTERN_ONE = 2;
 
         public static final Uri CONTENT_URI = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)

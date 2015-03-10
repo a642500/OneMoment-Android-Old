@@ -64,5 +64,11 @@
         <activity android:name=".ui.LoginActivity_"/>
 
         <service android:name=".sync.SyncService"/>
+
+
+        <provider
+                android:authorities="co.yishun.onemoment.app.data.moment"
+                android:name=".data.MomentProvider"
+                android:exported="false"/>
     </application>
 </manifest>
