@@ -38,17 +38,13 @@
       <property name="caretWidth" class="java.lang.Integer" />
     </properties>
   </component>
-  <component name="CppTools.Loader" reportImplicitCastToBool="false" reportNameReferencedOnce="false" version="3" compilerSelect="AUTO" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="org.androidannotations.annotations.AfterInject" />
-      <item index="1" class="java.lang.String" itemvalue="org.androidannotations.annotations.AfterTextChange" />
-      <item index="2" class="java.lang.String" itemvalue="org.androidannotations.annotations.AfterViews" />
-      <item index="3" class="java.lang.String" itemvalue="org.androidannotations.annotations.Click" />
-    </list>
   </component>
-  <component name="IdProvider" IDEtalkID="49990ABF0E014FEDF83C3E840132E9FE" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="IdProvider" IDEtalkID="A12A6617E6062C20884C41D2C5D74C46" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
@@ -59,10 +55,26 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="Android API 21 Platform" project-jdk-type="Android SDK">
-    <output url="file://$PROJECT_DIR$/out" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
