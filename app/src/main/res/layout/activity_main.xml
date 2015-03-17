@@ -17,5 +17,5 @@
             android:layout_height="match_parent"
             android:text="@string/app_name"
             android:gravity="center"
-            android:background="@color/fragmentRecordBottomBackgroundColor"/>
+            android:background="@color/bgColorRecordBottom"/>
 </FrameLayout>

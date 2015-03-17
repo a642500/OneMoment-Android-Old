@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <color name="fragmentRecordHeaderBackgroundColor">#222222</color>
-    <color name="fragmentRecordBottomBackgroundColor">#222222</color>
+
+    <color name="bgColorRecordHeader">#242424</color>
+    <color name="bgColorRecordBottom">#242424</color>
 </resources>

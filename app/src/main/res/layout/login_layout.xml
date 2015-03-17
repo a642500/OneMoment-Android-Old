@@ -62,6 +62,6 @@
             android:minHeight="56dp"
             android:layout_alignParentBottom="true"
             android:text="@string/loginLoginBtnString"
-            android:background="@color/fragmentRecordBottomBackgroundColor"
+            android:background="@color/bgColorRecordBottom"
             />
 </RelativeLayout>
