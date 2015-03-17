@@ -5,9 +5,11 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.1.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
@@ -15,8 +17,14 @@ repositories {
 }
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion 22
     buildToolsVersion "22.0.0"
+
 
     defaultConfig {
         applicationId "co.yishun.onemoment.app"
@@ -61,6 +69,8 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.1.1'
     compile 'org.androidannotations:androidannotations-api:3.2'
     compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
+
+    compile 'net.orfjackal.retrolambda:retrolambda:1.8.1'
 
     //if test code need
     androidTestApt 'org.androidannotations:androidannotations:3.2'

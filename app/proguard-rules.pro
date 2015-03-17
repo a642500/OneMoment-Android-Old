@@ -17,3 +17,4 @@
 #}
 -dontwarn org.androidannotations.api.rest.*
 -dontwarn com.squareup.picasso.*
+-dontwarn java.lang.invoke.*
