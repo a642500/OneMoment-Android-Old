@@ -34,6 +34,7 @@ public class CameraHelper {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private static boolean isFrontCamera = false;
     private static final String TAG = LogUtil.makeTag(CameraHelper.class);
 
     /**
@@ -70,8 +71,16 @@ public class CameraHelper {
     /**
      * @return the default camera on the device. Return null if there is no camera on the device.
      */
-    public static Camera getDefaultCameraInstance() {
-        return Camera.open();
+    public static Camera getCameraInstance() {
+        return isFrontCamera ? getDefaultFrontFacingCameraInstance() : getDefaultBackFacingCameraInstance();
+    }
+
+    public static void setFrontCamera(boolean isFront) {
+        isFrontCamera = isFront;
+    }
+
+    public static boolean isFrontCamera() {
+        return isFrontCamera;
     }
 
 

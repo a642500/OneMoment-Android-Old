@@ -35,8 +35,39 @@
             android:id="@+id/recordHeader"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fragmentRecordHeaderHeight"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
             android:background="@color/bgColorRecordHeader"
+            android:layout_gravity="center_horizontal"
             >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            <Switch
+                    android:id="@+id/recordFlashSwitch"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="left"
+                    android:background="@color/bgColorRecordHeader"
+                    />
+
+            <Switch
+                    android:id="@+id/cameraSwitch"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="right"
+                    android:background="@color/bgColorRecordHeader"
+                    />
+        </LinearLayout>
 
     </android.widget.Toolbar>
 
@@ -62,19 +93,19 @@
     </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
 
     <!--<ImageView-->
-            <!--android:visibility="invisible"-->
-            <!--android:id="@+id/recordSurfaceImage"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_below="@id/recordHeader"-->
-            <!--android:layout_above="@id/recordBottom"-->
-            <!--android:background="#7f000000"-->
-            <!--android:clickable="false"-->
-            <!--android:focusable="false"-->
-            <!--android:scaleType="center"/>-->
+    <!--android:visibility="invisible"-->
+    <!--android:id="@+id/recordSurfaceImage"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@id/recordHeader"-->
+    <!--android:layout_above="@id/recordBottom"-->
+    <!--android:background="#7f000000"-->
+    <!--android:clickable="false"-->
+    <!--android:focusable="false"-->
+    <!--android:scaleType="center"/>-->
 
     <RelativeLayout
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:id="@+id/recordBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -16,6 +17,7 @@ import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Switch;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
@@ -35,6 +37,7 @@ import java.io.*;
  * A {@link TextureView} is used as the camera preview which limits the code to API 14+.
  * Created by Carlos on 2/14/15.
  */
+@Fullscreen
 @EActivity(R.layout.recording_layout)
 public class RecordingActivity extends Activity {
     public static final int NOT_PREPARED = 0;
@@ -71,6 +74,42 @@ public class RecordingActivity extends Activity {
         if (!isRecording) {
             record();
         }
+    }
+
+    @ViewById Switch recordFlashSwitch;
+    @ViewById Switch cameraSwitch;
+
+    @AfterViews void initViews() {
+        //TODO can switch when recording?
+        //TODO flashlight  http://stackoverflow.com/questions/6068803/how-to-turn-on-camera-flash-light-programmatically-in-android
+        PackageManager packageManager = getPackageManager();
+
+        boolean hasFlash = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        recordFlashSwitch.setEnabled(hasFlash);
+        recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
+        recordFlashSwitch.setOnCheckedChangeListener(
+                hasFlash ?
+                        (buttonView, isChecked) -> {
+                            Camera.Parameters p = mCamera.getParameters();
+                            p.setFlashMode(isChecked ? Camera.Parameters.FLASH_MODE_TORCH : Camera.Parameters.FLASH_MODE_OFF);
+                            mCamera.setParameters(p);
+                        }
+                        : null);
+
+        boolean hasFront = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+        cameraSwitch.setEnabled(hasFront);
+        cameraSwitch.setVisibility(!hasFront ? View.VISIBLE : View.INVISIBLE);
+        cameraSwitch.setOnCheckedChangeListener(
+                hasFront ?
+                        (v, isChecked) -> {
+                            CameraHelper.setFrontCamera(isChecked);
+                            releaseCamera();
+                            preview();
+                        }
+                        : null
+        );
+
+
     }
 
     @Fun
@@ -112,8 +151,7 @@ public class RecordingActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background void preview() {
         // BEGIN_INCLUDE (configure_preview)
-        mCamera = CameraHelper.getDefaultCameraInstance();
-
+        mCamera = CameraHelper.getCameraInstance();
         final Camera.Parameters parameters = mCamera.getParameters();
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
@@ -238,7 +276,7 @@ public class RecordingActivity extends Activity {
             }
 
             @Override public void onFailure(String message) {
-                Log.e (TAG, "fail: " + message);
+                Log.e(TAG, "fail: " + message);
 
             }
 
@@ -249,7 +287,7 @@ public class RecordingActivity extends Activity {
 
             @Override public void onFinish() {
                 Log.i(TAG, "finish");
-
+                onConvert(0);
             }
         }).start();
     }
