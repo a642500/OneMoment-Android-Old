@@ -25,27 +25,61 @@
 <!--</FrameLayout>-->
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <RelativeLayout
+    <android.widget.Toolbar
+            android:layout_weight="2"
             android:id="@+id/recordHeader"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fragmentRecordHeaderHeight"
-            android:background="@color/fragmentRecordHeaderBackgroundColor"
-            android:layout_alignParentTop="true"
+            android:background="@color/bgColorRecordHeader"
             >
 
-    </RelativeLayout>
+    </android.widget.Toolbar>
+
+
+    <co.yishun.onemoment.app.ui.view.SquareFrameLayout
+            android:id="@+id/recordSurfaceParent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        <TextureView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/surfaceView"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Loading Camera..."
+                android:gravity="center"
+                android:background="@android:color/transparent"
+                />
+    </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
+
+    <!--<ImageView-->
+            <!--android:visibility="invisible"-->
+            <!--android:id="@+id/recordSurfaceImage"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@id/recordHeader"-->
+            <!--android:layout_above="@id/recordBottom"-->
+            <!--android:background="#7f000000"-->
+            <!--android:clickable="false"-->
+            <!--android:focusable="false"-->
+            <!--android:scaleType="center"/>-->
 
     <RelativeLayout
+            android:layout_weight="2"
             android:id="@+id/recordBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/fragmentRecordBottomHeight"
-            android:background="@color/fragmentRecordBottomBackgroundColor"
-            android:layout_alignParentBottom="true"
+            android:background="@color/bgColorRecordBottom"
             android:paddingBottom="20dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
@@ -65,38 +99,4 @@
                 />
 
     </RelativeLayout>
-
-    <FrameLayout
-            android:id="@+id/recordSurfaceParent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/recordBottom"
-            android:layout_below="@id/recordHeader"
-            >
-
-        <TextureView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/surfaceView"/>
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Loading Camera..."
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                />
-    </FrameLayout>
-
-    <ImageView
-            android:id="@+id/recordSurfaceImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/recordHeader"
-            android:layout_above="@id/recordBottom"
-            android:background="#7f000000"
-            android:clickable="false"
-            android:focusable="false"
-            android:scaleType="center"/>
-
-</RelativeLayout>
+</LinearLayout>
