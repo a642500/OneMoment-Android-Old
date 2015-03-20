@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="bgColorRecordHeader">#242424</color>
-    <color name="bgColorRecordBottom">#242424</color>
+    <color name="colorPrimary">#151515</color>
+    <color name="colorPrimaryDark">#151515</color>
+    <color name="bgColorRecordHeader">#151515</color>
+    <color name="bgColorRecordBottom">#151515</color>
 
     <color name="bgColorCalenderDay">#3D3D3D</color>
     <color name="bgColorCalenderDaySelected">#FF853F</color>
