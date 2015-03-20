@@ -30,7 +30,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <android.widget.Toolbar
+    <FrameLayout
             android:layout_weight="2"
             android:id="@+id/recordHeader"
             android:layout_width="match_parent"
@@ -39,37 +39,74 @@
             android:paddingLeft="@dimen/activity_vertical_margin"
             android:background="@color/bgColorRecordHeader"
             android:layout_gravity="center_horizontal"
+
             >
 
-        <LinearLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                >
 
-            <Switch
+            <ImageSwitcher
                     android:id="@+id/recordFlashSwitch"
                     android:minHeight="48dp"
                     android:minWidth="48dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:layout_gravity="left"
-                    android:background="@color/bgColorRecordHeader"
-                    />
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="16dp"
+                    >
 
-            <Switch
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_flashlight_switch_on"
+                        android:scaleType="centerInside"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_flashlight_switch_off"
+                        android:scaleType="centerInside"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+            </ImageSwitcher>
+
+            <ImageSwitcher
                     android:id="@+id/cameraSwitch"
                     android:minHeight="48dp"
                     android:minWidth="48dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:layout_gravity="right"
-                    android:background="@color/bgColorRecordHeader"
-                    />
-        </LinearLayout>
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="16dp"
+                    >
 
-    </android.widget.Toolbar>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_camera_switch"
+                        android:scaleType="centerInside"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_camera_switch"
+                        android:scaleType="centerInside"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        />
+            </ImageSwitcher>
+        </RelativeLayout>
+
+    </FrameLayout>
 
 
     <co.yishun.onemoment.app.ui.view.SquareFrameLayout
@@ -112,8 +149,8 @@
             android:minHeight="@dimen/fragmentRecordBottomHeight"
             android:background="@color/bgColorRecordBottom"
             android:paddingBottom="20dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:paddingTop="20dp"
             >
 
@@ -122,12 +159,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
+                android:minHeight="56dp"
+                android:minWidth="56dp"
                 android:scaleType="fitXY"
                 android:background="@android:color/transparent"
-                android:src="@drawable/btn_record_video"
+                android:src="@drawable/ic_shotting"
                 />
 
+        <ImageButton
+                android:id="@+id/albumBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_album"
+                android:background="@null"
+                />
     </RelativeLayout>
 </LinearLayout>

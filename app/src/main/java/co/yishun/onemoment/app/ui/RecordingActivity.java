@@ -16,8 +16,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.Switch;
+import android.widget.ImageSwitcher;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
@@ -37,7 +36,7 @@ import java.io.*;
  * A {@link TextureView} is used as the camera preview which limits the code to API 14+.
  * Created by Carlos on 2/14/15.
  */
-@Fullscreen
+//@Fullscreen
 @EActivity(R.layout.recording_layout)
 public class RecordingActivity extends Activity {
     public static final int NOT_PREPARED = 0;
@@ -76,8 +75,13 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @ViewById Switch recordFlashSwitch;
-    @ViewById Switch cameraSwitch;
+    @Fun @Click void albumBtnClicked(View view) {
+        //TODO
+        new AlbumActivity_.IntentBuilder_(this).start();
+    }
+
+    @ViewById ImageSwitcher recordFlashSwitch;
+    @ViewById ImageSwitcher cameraSwitch;
 
     @AfterViews void initViews() {
         //TODO can switch when recording?
@@ -87,27 +91,72 @@ public class RecordingActivity extends Activity {
         boolean hasFlash = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         recordFlashSwitch.setEnabled(hasFlash);
         recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
-        recordFlashSwitch.setOnCheckedChangeListener(
-                hasFlash ?
-                        (buttonView, isChecked) -> {
-                            Camera.Parameters p = mCamera.getParameters();
-                            p.setFlashMode(isChecked ? Camera.Parameters.FLASH_MODE_TORCH : Camera.Parameters.FLASH_MODE_OFF);
-                            mCamera.setParameters(p);
-                        }
-                        : null);
+        recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
+                    if (mCamera != null) {
+                        Camera.Parameters p = mCamera.getParameters();
+                        p.setFlashMode(
+//                                isChecked ?
+                                Camera.Parameters.FLASH_MODE_TORCH
+//                                        : Camera.Parameters.FLASH_MODE_OFF
+                        );
+                        mCamera.setParameters(p);
+                        recordFlashSwitch.showNext();
+                    }
+                }
+
+        );
+        recordFlashSwitch.getNextView().setOnClickListener(v -> {
+                    if (mCamera != null) {
+                        Camera.Parameters p = mCamera.getParameters();
+                        p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        mCamera.setParameters(p);
+                        recordFlashSwitch.showNext();
+                    }
+                }
+
+        );
+//        recordFlashSwitch.setOnCheckedChangeListener(
+//                hasFlash ?
+//                        (buttonView, isChecked) -> {
+//
+//                        }
+//                        : null
+//        );
 
         boolean hasFront = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
         cameraSwitch.setEnabled(hasFront);
-        cameraSwitch.setVisibility(!hasFront ? View.VISIBLE : View.INVISIBLE);
-        cameraSwitch.setOnCheckedChangeListener(
+        cameraSwitch.setVisibility(hasFront ? View.VISIBLE : View.INVISIBLE);
+        cameraSwitch.getCurrentView().setOnClickListener(
                 hasFront ?
-                        (v, isChecked) -> {
-                            CameraHelper.setFrontCamera(isChecked);
+                        v -> {
+                            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
                             releaseCamera();
+//                            recordFlashSwitch.reset();
                             preview();
                         }
                         : null
         );
+        cameraSwitch.getNextView().setOnClickListener(
+                hasFront ?
+                        v -> {
+                            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
+                            releaseCamera();
+//                            recordFlashSwitch.reset();
+                            preview();
+                        }
+                        : null
+        );
+
+//        setOnCheckedChangeListener(
+//                hasFront ?
+//                        (v, isChecked) -> {
+//                            CameraHelper.setFrontCamera(isChecked);
+//                            releaseCamera();
+////                            recordFlashSwitch.setChecked(false);//reset flashlight switch's status
+//                            preview();
+//                        }
+//                        : null
+//        );
 
 
     }
@@ -115,6 +164,11 @@ public class RecordingActivity extends Activity {
     @Fun
     private void setCaptureButtonText(String title) {
 //        captureButton.setText(title);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        preview();
     }
 
     @Override
@@ -147,7 +201,7 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @AfterViews
+    //    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background void preview() {
         // BEGIN_INCLUDE (configure_preview)
@@ -156,12 +210,10 @@ public class RecordingActivity extends Activity {
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
 
-        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-                mPreview.setOpaque(false);
-                Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
-                mPreview.setTransform(mat);
-            }
+        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            mPreview.setOpaque(false);
+            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
+            mPreview.setTransform(mat);
         });
 
         mCamera.setParameters(parameters);
