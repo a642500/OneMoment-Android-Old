@@ -69,6 +69,7 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.1.1'
     compile 'org.androidannotations:androidannotations-api:3.2'
     compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
+    compile 'com.squareup:android-times-square:1.5.0@aar'
 
     compile 'net.orfjackal.retrolambda:retrolambda:1.8.1'
 
