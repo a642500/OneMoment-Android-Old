@@ -3,4 +3,10 @@
 
     <color name="bgColorRecordHeader">#242424</color>
     <color name="bgColorRecordBottom">#242424</color>
+
+    <color name="bgColorCalenderDay">#3D3D3D</color>
+    <color name="bgColorCalenderDaySelected">#FF853F</color>
+    <color name="textColorCalenderCurrentDay">#FF853F</color>
+    <color name="textColorCalenderDayOfWeek">#fff</color>
+    <color name="textColorCalenderTitle">#02fba1</color>
 </resources>
