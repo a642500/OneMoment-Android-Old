@@ -161,11 +161,6 @@ public class RecordingActivity extends Activity {
 
     }
 
-    @Fun
-    private void setCaptureButtonText(String title) {
-//        captureButton.setText(title);
-    }
-
     @Override protected void onResume() {
         super.onResume();
         preview();
@@ -302,7 +297,6 @@ public class RecordingActivity extends Activity {
             mCamera.lock();         // take camera access back from MediaRecorder
 
             // inform the user that recording has stopped
-            setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
             Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();

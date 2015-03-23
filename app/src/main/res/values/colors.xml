@@ -9,4 +9,5 @@
     <color name="textColorCalenderCurrentDay">#FF853F</color>
     <color name="textColorCalenderDayOfWeek">#fff</color>
     <color name="textColorCalenderTitle">#02fba1</color>
+    <color name="textColorCalenderTileNum">#02fba1</color>
 </resources>

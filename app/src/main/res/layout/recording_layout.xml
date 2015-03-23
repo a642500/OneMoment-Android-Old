@@ -120,13 +120,13 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/surfaceView"/>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Loading Camera..."
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                />
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="Loading Camera..."-->
+        <!--android:gravity="center"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:id="@+id/"/>-->
     </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
 
     <!--<ImageView-->

@@ -1,5 +1,6 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,16 +24,19 @@ public class AlbumActivity extends ActionBarActivity {
 
     Calendar today = Calendar.getInstance();
 
-    @ViewById CalendarPickerView calendarPickerView;
-    
+    @ViewById
+    CalendarPickerView calendarPickerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @ViewById Toolbar toolbar;
+    @ViewById
+    Toolbar toolbar;
 
-    @AfterViews void initToolbar() {
+    @AfterViews
+    void initToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Today");
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
@@ -46,23 +50,24 @@ public class AlbumActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_album, menu);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-        
+
         return super.onOptionsItemSelected(item);
     }
 
-    @AfterViews void initCalender() {
+    @AfterViews
+    void initCalender() {
         Calendar thisMonth = Calendar.getInstance();
         int maxDay = thisMonth.getMaximum(Calendar.DAY_OF_MONTH);
         thisMonth.add(Calendar.YEAR, 1);
@@ -73,15 +78,21 @@ public class AlbumActivity extends ActionBarActivity {
     }
 
 
-    @Fun @Click void shotBtn(View view) {
+    @Fun
+    @Click
+    void shootingBtn(View view) {
+        RecordingActivity_.intent(this).flags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT).start();
+    }
+
+    @Fun
+    @Click
+    void replayBtn(View view) {
 
     }
 
-    @Fun @Click void replayBtn(View view) {
-
-    }
-
-    @Fun @Click void enterWorldBtn(View view) {
+    @Fun
+    @Click
+    void enterWorldBtn(View view) {
 
     }
 }

@@ -23,14 +23,14 @@
                 android:layout_height="wrap_content">
 
             <!--<ImageButton-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:minHeight="48dp"-->
-                    <!--android:minWidth="48dp"-->
-                    <!--android:src="@drawable/ic_overflow"-->
-                    <!--android:background="@null"-->
-                    <!--/>-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:minHeight="48dp"-->
+            <!--android:minWidth="48dp"-->
+            <!--android:src="@drawable/ic_overflow"-->
+            <!--android:background="@null"-->
+            <!--/>-->
 
             <TextView
                     android:id="@android:id/title"
@@ -58,6 +58,7 @@
                     >
 
                 <TextView
+                        android:id="@+id/calendarCurrentDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="11"
@@ -67,6 +68,7 @@
                         />
 
                 <TextView
+                        android:id="@+id/calendarDayOfWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="星期日"
@@ -76,15 +78,38 @@
                         />
             </LinearLayout>
 
-            <TextView
+
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:text="第15个一瞬"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:textColor="@android:color/white"
-                    />
+                    android:paddingBottom="8dp"
+                    >
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/calenderTextCalenderTileNum1"
+                        android:textColor="@android:color/white"
+                        />
+
+                <TextView
+                        android:id="@+id/titleOfCalender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15"
+                        android:textColor="@color/textColorCalenderTileNum"
+                        />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/calenderTextCalenderTileNum2"
+                        android:textColor="@android:color/white"
+                        />
+            </LinearLayout>
         </RelativeLayout>
 
 
@@ -105,12 +130,12 @@
             >
 
         <com.squareup.timessquare.CalendarPickerView
-                android:id="@+id/calendarPickerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bgColorRecordHeader"
-                cal:dayBackground="@color/bgColorCalenderDay"
-                />
+        android:id="@+id/calendarPickerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bgColorRecordHeader"
+        cal:dayBackground="@color/bgColorCalenderDay"
+        />
     </FrameLayout>
 
     <View
@@ -138,8 +163,9 @@
                 android:text="Shot"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/shotBtn"
-                android:drawableTop="@drawable/abc_btn_radio_material"
+                android:id="@+id/shootingBtn"
+                android:drawableTop="@drawable/ic_shoot"
+                android:background="@null"
                 />
 
         <Button
@@ -151,10 +177,12 @@
                 android:id="@+id/replayBtn"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:drawableTop="@drawable/abc_btn_radio_material"
+                android:drawableTop="@drawable/ic_replay"
+                android:background="@null"
                 />
 
         <Button
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"

@@ -13,4 +13,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="calenderTextCalenderTileNum1">The\ </string>
+    <string name="calenderTextCalenderTileNum2">\ Moment</string>
 </resources>
