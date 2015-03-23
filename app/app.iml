@@ -97,8 +97,8 @@
     <orderEntry type="library" exported="" name="picasso-2.5.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-integration-1.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
-    <orderEntry type="library" exported="" name="retrolambda-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="ormlite-android-4.48" level="project" />
+    <orderEntry type="library" exported="" name="retrolambda-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="FFmpegAndroid-0.2.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="androidannotations-api-3.2" level="project" />
@@ -107,8 +107,8 @@
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="androidasync-2.1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-dep-4.10" level="project" />
-    <orderEntry type="library" exported="" name="ion-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="ormlite-core-4.48" level="project" />
+    <orderEntry type="library" exported="" name="ion-2.1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javawriter-2.1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.1" level="project" />
     <orderEntry type="library" exported="" name="android-times-square-1.5.0" level="project" />
