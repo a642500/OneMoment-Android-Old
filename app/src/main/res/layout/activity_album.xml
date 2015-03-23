@@ -4,8 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:paddingLeft="@dimen/activity_vertical_margin"
-              android:paddingRight="@dimen/activity_vertical_margin"
               tools:context="co.yishun.onemoment.app.ui.AlbumActivity"
               android:background="@color/bgColorRecordHeader"
         >
@@ -13,24 +11,25 @@
     <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:minHeight="@dimen/abc_action_bar_default_height_material"
             >
 
         <RelativeLayout
-                android:paddingTop="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <!--<ImageButton-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:minHeight="48dp"-->
-                    <!--android:minWidth="48dp"-->
-                    <!--android:src="@drawable/ic_overflow"-->
-                    <!--android:background="@null"-->
-                    <!--/>-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:minHeight="48dp"-->
+            <!--android:minWidth="48dp"-->
+            <!--android:src="@drawable/ic_overflow"-->
+            <!--android:background="@null"-->
+            <!--/>-->
 
             <TextView
                     android:id="@android:id/title"
@@ -49,74 +48,100 @@
                     android:textSize="16sp"
                     android:layout_below="@android:id/title"
                     />
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_below="@id/subtitle"
-                    >
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="11"
-                        android:textStyle="bold"
-                        android:textSize="64dp"
-                        android:textColor="@color/textColorCalenderCurrentDay"
-                        />
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="星期日"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"
-                        android:textColor="@color/textColorCalenderDayOfWeek"
-                        />
-            </LinearLayout>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:text="第15个一瞬"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="@android:color/white"
-                    />
         </RelativeLayout>
 
 
     </android.support.v7.widget.Toolbar>
 
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            >
+
+        <!--<ImageButton-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:minHeight="48dp"-->
+        <!--android:minWidth="48dp"-->
+        <!--android:src="@drawable/ic_overflow"-->
+        <!--android:background="@null"-->
+        <!--/>-->
+
+        <LinearLayout
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11"
+                    android:textStyle="bold"
+                    android:textSize="48sp"
+                    android:textColor="@color/textColorCalenderCurrentDay"
+                    />
+
+            <TextView
+                    android:id="@+id/dayOfWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期日"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/textColorCalenderDayOfWeek"
+                    />
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第15个一瞬"
+                android:layout_gravity="bottom|center_horizontal"
+                android:textColor="@android:color/white"
+                />
+    </FrameLayout>
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
             android:background="@android:color/white"
             />
 
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:background="@android:color/background_dark"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
             >
 
         <com.squareup.timessquare.CalendarPickerView
                 android:id="@+id/calendarPickerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bgColorRecordHeader"
-                cal:dayBackground="@color/bgColorCalenderDay"
+                cal:displayHeader="false"
                 />
     </FrameLayout>
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
             android:background="@android:color/white"
+
             />
 
     <RelativeLayout
@@ -126,8 +151,10 @@
             android:layout_gravity="center_horizontal"
             android:paddingRight="32dp"
             android:paddingLeft="32dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:gravity="center_vertical"
-            android:layout_weight="1">
+            >
 
 
         <Button
