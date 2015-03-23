@@ -55,6 +55,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_below="@id/subtitle"
+                    android:background="@drawable/abc_item_background_holo_light"
                     >
 
                 <TextView
@@ -166,6 +167,7 @@
                 android:layout_centerVertical="true"
                 android:id="@+id/shootingBtn"
                 android:drawableTop="@drawable/abc_btn_radio_material"
+                android:background="@drawable/abc_item_background_holo_light"
                 />
 
         <Button
@@ -178,6 +180,7 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/abc_btn_radio_material"
+                android:background="@drawable/abc_item_background_holo_light"
                 />
 
         <Button
@@ -190,6 +193,7 @@
                 android:layout_centerVertical="true"
                 android:id="@+id/enterWorldBtn"
                 android:drawableTop="@drawable/abc_btn_radio_material"
+                android:background="@drawable/abc_item_background_holo_light"
                 />
     </RelativeLayout>
 
