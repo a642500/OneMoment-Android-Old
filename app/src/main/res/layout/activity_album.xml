@@ -23,14 +23,14 @@
                 android:layout_height="wrap_content">
 
             <!--<ImageButton-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:minHeight="48dp"-->
-            <!--android:minWidth="48dp"-->
-            <!--android:src="@drawable/ic_overflow"-->
-            <!--android:background="@null"-->
-            <!--/>-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minHeight="48dp"-->
+                    <!--android:minWidth="48dp"-->
+                    <!--android:src="@drawable/ic_overflow"-->
+                    <!--android:background="@null"-->
+                    <!--/>-->
 
             <TextView
                     android:id="@android:id/title"
@@ -130,12 +130,12 @@
             >
 
         <com.squareup.timessquare.CalendarPickerView
-        android:id="@+id/calendarPickerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bgColorRecordHeader"
-        cal:dayBackground="@color/bgColorCalenderDay"
-        />
+                android:id="@+id/calendarPickerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bgColorRecordHeader"
+                cal:dayBackground="@color/bgColorCalenderDay"
+                />
     </FrameLayout>
 
     <View
@@ -163,9 +163,8 @@
                 android:text="Shot"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/shootingBtn"
-                android:drawableTop="@drawable/ic_shoot"
-                android:background="@null"
+                android:id="@+id/shotBtn"
+                android:drawableTop="@drawable/abc_btn_radio_material"
                 />
 
         <Button
@@ -177,12 +176,10 @@
                 android:id="@+id/replayBtn"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:drawableTop="@drawable/ic_replay"
-                android:background="@null"
+                android:drawableTop="@drawable/abc_btn_radio_material"
                 />
 
         <Button
-                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
