@@ -52,14 +52,12 @@ public class ResetPassword extends Request<AccountResult> {
         }
     }
     /*
-    * 重置密码
 
     POST /api/v2/reset_password
 
-    * **Required** `key 接口使用秘钥`
+    * **Required** `key`
     * **Required** `phone`
     * **Required** `password`
 
-    成功后会返回账户的信息, 格式同注册返回的格式
      */
 }

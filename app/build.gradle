@@ -17,6 +17,8 @@ repositories {
 }
 
 android {
+    compileOptions.encoding = 'utf-8' // write your encoding here
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

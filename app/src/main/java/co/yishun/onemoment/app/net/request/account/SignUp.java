@@ -17,16 +17,13 @@ public abstract class SignUp {
 
     public static class ByPhone extends Request<AccountResult> {
         /*
-        注册
 
         POST /api/v2/signup
 
-        * **Required** `key 接口使用秘钥`
-        * **Required** `phone 手机号`
-        * **Required** `password 密码`
+        * **Required** `key `
+        * **Required** `phone `
+        * **Required** `password `
 
-        注册完成后会返回用户注册的信息
-        密码不会返回
         */
         private long phone;
         private String password;
@@ -165,7 +162,6 @@ public abstract class SignUp {
         }
 
         /*
-        微博注册
 
         POST /api/v2/weibo_signup
 
@@ -177,7 +173,6 @@ public abstract class SignUp {
         *  *Optional*  `avatar_url`
         *  *Optional*  `location`
 
-        成功后会返回账户的信息, 格式同注册返回的格式
          */
 
     }
@@ -262,19 +257,17 @@ public abstract class SignUp {
             }
         }
         /*
-        微信注册
 
         POST /api/v2/weixin_signup
 
-        * **Required** `key 接口使用秘钥`
-        * **Required** `uid 微博的uid`
+        * **Required** `key`
+        * **Required** `uid`
         *  *Optional*  `nickname`
         *  *Optional*  `introduction`
         *  *Optional*  `gender`
         *  *Optional*  `avatar_url`
         *  *Optional*  `location`
 
-        成功后会返回账户的信息, 格式同注册返回的格式
          */
     }
 }

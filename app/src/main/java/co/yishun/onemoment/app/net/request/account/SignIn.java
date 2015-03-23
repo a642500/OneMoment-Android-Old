@@ -63,16 +63,13 @@ public class SignIn extends Request<AccountResult> {
     }
 
     /*
-    * 验证登陆
 
-    一瞬账号登陆
     POST /api/v2/signin
 
-    * **Required** `key 接口使用秘钥`
-    * **Required** `phone 手机号`
-    * **Required** `password 密码`
+    * **Required** `key`
+    * **Required** `phone`
+    * **Required** `password `
 
-    成功后会返回账户的信息, 格式同注册返回的格式
      */
 
 }

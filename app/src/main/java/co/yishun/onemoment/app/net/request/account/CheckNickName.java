@@ -39,15 +39,14 @@ public class CheckNickName extends Request<NickNameResult> {
         }
     }
     /*
-    检查昵称是否存在
 
     POST /api/v2/check_nickname
 
-    * **Required** `key 接口使用秘钥`
-    * **Required** `nickname 昵称`
+    * **Required** `key
+    * **Required** `nickname`
 
-    若存在会返回NICKNAME_EXISTS的error_code
-    不存在就会返回code=1
+    if exist: NICKNAME_EXISTS
+    note exist: return code=1
     **Return**
 
     ```

@@ -39,11 +39,10 @@ public abstract class PhoneVerification {
             }
         }
            /*
-    * 发送验证码(重发验证码也是这个接口)
 
     POST /api/v2/send_verify_sms
 
-    * **Required** `key 接口使用秘钥`
+    * **Required** `key `
     * **Required** `phone`
 
     **Return**
@@ -74,15 +73,13 @@ public abstract class PhoneVerification {
         }
 
         /*
-                * 验证
 
             POST /api/v2/verify_phone
 
-            * **Required** `key 接口使用秘钥`
+            * **Required** `key
             * **Required** `phone`
             * **Required** `verify_code`
 
-            只有验证功能, 没有创建账户的功能
 
             **Return**
 

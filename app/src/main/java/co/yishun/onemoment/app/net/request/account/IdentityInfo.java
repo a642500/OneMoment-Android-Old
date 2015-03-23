@@ -32,15 +32,12 @@ public abstract class IdentityInfo {
             //do nothing
         }
     /*
-    获取账户个人信息(基础信息)
 
     GET /api/v2/account/<account_id>?key=<key>
 
-    * **Required** `key 接口使用秘钥`
-    * **Required** `<account_id> 账户ID 第三方登陆的UID Restful形式跟在url后面`
+    * **Required** `key
+    * **Required** `<account_id>
 
-    根据一瞬账户的ID或者微博的ID获取账户信息
-    成功后会返回账户的信息, 格式同注册返回的格式
     */
     }
 
@@ -104,21 +101,18 @@ public abstract class IdentityInfo {
             //do nothing
         }
     /*
-    * 修改账户个人信息(基础信息)
 
     PUT /api/v2/account/<account_id>
     POST /api/v2/update_account/<account_id>
 
-    * **Required** `key 接口使用秘钥`
-    * **Required** `<account_id> 账户ID Restful形式跟在url后面`
+    * **Required** `key `
+    * **Required** `<account_id> `
     *  *Optional*  `nickname`
     *  *Optional*  `gender`
     *  *Optional*  `introduction`
     *  *Optional*  `location`
     *  *Optional*  `avatar_url`
 
-    加入了nickname的查重处理
-    成功后会返回账户的信息, 格式同注册返回的格式
 
      */
     }
