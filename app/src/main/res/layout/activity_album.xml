@@ -23,14 +23,14 @@
                 android:layout_height="wrap_content">
 
             <!--<ImageButton-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:minHeight="48dp"-->
-                    <!--android:minWidth="48dp"-->
-                    <!--android:src="@drawable/ic_overflow"-->
-                    <!--android:background="@null"-->
-                    <!--/>-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:minHeight="48dp"-->
+            <!--android:minWidth="48dp"-->
+            <!--android:src="@drawable/ic_overflow"-->
+            <!--android:background="@null"-->
+            <!--/>-->
 
             <TextView
                     android:id="@android:id/title"
@@ -135,6 +135,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/bgColorRecordHeader"
                 cal:dayBackground="@color/bgColorCalenderDay"
+                cal:dayTextColor="@android:color/white"
                 />
     </FrameLayout>
 
