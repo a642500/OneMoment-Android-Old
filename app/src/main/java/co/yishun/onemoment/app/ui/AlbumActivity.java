@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +22,6 @@ import java.util.Date;
 
 @EActivity(R.layout.activity_album)
 public class AlbumActivity extends ActionBarActivity {
-
-    Calendar today = Calendar.getInstance();
 
     @ViewById
     CalendarPickerView calendarPickerView;
@@ -66,17 +65,54 @@ public class AlbumActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private final Calendar displayedMonth = Calendar.getInstance();
+    ;
+
     @AfterViews
     void initCalender() {
-        Calendar thisMonth = Calendar.getInstance();
-        int maxDay = thisMonth.getMaximum(Calendar.DAY_OF_MONTH);
-        thisMonth.add(Calendar.YEAR, 1);
-        thisMonth.set(Calendar.DAY_OF_MONTH, maxDay + 1);//TODO set time from begin to now
-
-        Date today = new Date();
-        calendarPickerView.init(today, thisMonth.getTime()).withSelectedDate(today);
+        showThisMonth();
     }
 
+    /**
+     * fresh calender by {@link AlbumActivity#displayedMonth}
+     */
+    private void showMonthCalender() {
+        Pair<Date, Date> mon = getFirstAndLastDayOf(displayedMonth);
+        calendarPickerView.init(mon.first, mon.second);
+    }
+
+    @Fun
+    private Pair<Date, Date> getFirstAndLastDayOf(Calendar anyday) {
+        Calendar min = (Calendar) displayedMonth.clone();
+        Calendar max = (Calendar) displayedMonth.clone();
+        min.set(Calendar.DAY_OF_MONTH, displayedMonth.getActualMinimum(Calendar.DAY_OF_MONTH));
+        max.set(Calendar.DAY_OF_MONTH, displayedMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return new Pair<>(min.getTime(), max.getTime());
+    }
+
+    void showNextMonthCalender() {
+        displayedMonth.add(Calendar.MONTH, 1);
+        showMonthCalender();
+    }
+
+    void showPreviewMonthCalender() {
+        displayedMonth.add(Calendar.MONTH, -1);
+        showMonthCalender();
+    }
+
+    void showThisMonth() {
+        Calendar calendar = Calendar.getInstance();
+        displayedMonth.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        displayedMonth.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        showMonthCalender();
+    }
+
+
+    @Fun
+    @Click
+    void backToToday(View view) {
+        showThisMonth();
+    }
 
     @Fun
     @Click
