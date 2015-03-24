@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:inputType="phone"
-                android:text="@string/loginPhoneHint"
+                android:hint="@string/loginPhoneHint"
                 />
 
         <EditText
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:inputType="phone"
-                android:text="@string/loginVerificationHint"
+                android:hint="@string/loginVerificationHint"
                 />
 
         <!--<Button-->
@@ -51,7 +51,7 @@
                 android:id="@+id/nextBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="56dp"
+                android:minHeight="48dp"
                 android:text="@string/loginNextBtnString"
                 android:background="@color/bgColorLoginBtn"
                 />

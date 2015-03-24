@@ -8,7 +8,7 @@
     <string name="loginVerificationHint">Verification code</string>
     <string name="loginVerificationBtnString">get verification code</string>
     <string name="loginNextBtnString">Next</string>
-    <string name="loginLoginBtnString">Already has an Account? Login</string>
+    <string name="loginLoginBtnString">Forgotten? To find here ></string>
     <string name="title_activity_album">AlbumActivity</string>
 
     <string name="hello_world">Hello world!</string>
