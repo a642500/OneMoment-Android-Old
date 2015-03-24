@@ -37,9 +37,11 @@ public class AlbumActivity extends ActionBarActivity {
     @AfterViews
     void initToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Today");
+        toolbar.setTitle(getString(R.string.albumTitle));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.textColorCalenderTitle));
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
         toolbar.setSubtitle(format.format(new Date()));
+        toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
     }
 
 

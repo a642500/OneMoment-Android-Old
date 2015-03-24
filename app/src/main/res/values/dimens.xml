@@ -5,4 +5,8 @@
 
     <dimen name="fragmentRecordHeaderHeight">56dp</dimen>
     <dimen name="fragmentRecordBottomHeight">72dp</dimen>
+
+    <dimen name="calenderCellDefaultHeight">48dp</dimen>
+    <dimen name="calenderCellDefaultWidth">48dp</dimen>
+
 </resources>

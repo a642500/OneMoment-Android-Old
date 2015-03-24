@@ -11,5 +11,10 @@
     <color name="textColorCalenderCurrentDay">#FF853F</color>
     <color name="textColorCalenderDayOfWeek">#fff</color>
     <color name="textColorCalenderTitle">#02fba1</color>
+    <color name="textColorCalenderSubtitle">#fff</color>
     <color name="textColorCalenderTileNum">#02fba1</color>
+
+    <color name="calenderCellDefaultMaskColor">#FF853F</color>
+    <color name="calenderCellDefaultMaskColorTransparent">#99FF853F</color>
+
 </resources>
