@@ -61,7 +61,8 @@
 
         <activity
                 android:theme="@style/AppTheme.NoActionBar"
-                android:name=".ui.LoginActivity_"/>
+                android:name=".ui.LoginActivity_"
+                android:label="@string/loginByPhoneTitle"/>
 
         <service android:name=".sync.SyncService"/>
 

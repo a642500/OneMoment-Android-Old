@@ -59,6 +59,7 @@ public class LoginActivity extends ActionBarActivity {
     @AfterViews
     void initToolbar() {
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setTitle(getString(R.string.loginByPhoneTitle));
 
     }
