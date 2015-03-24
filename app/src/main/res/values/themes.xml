@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:background">@drawable/bg_main</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
