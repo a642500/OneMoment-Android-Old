@@ -133,7 +133,7 @@ public class AlbumActivity extends ActionBarActivity {
 
     @Fun
     @Click
-    void enterWorldBtn(View view) {
+    void syncBtn(View view) {
 
     }
 }

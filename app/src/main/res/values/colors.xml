@@ -19,4 +19,6 @@
 
     <color name="bgColorLoginBtn">#17d79e</color>
     <color name="bgColorLoginToolbar">#253d3d3d</color>
+    
+    <color name="dividerColorAlbum">#CCffffff</color>
 </resources>
