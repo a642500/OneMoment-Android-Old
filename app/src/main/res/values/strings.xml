@@ -3,7 +3,7 @@
 
     <string name="fragmentRecordShootBtnString">Shoot</string>
 
-    <string name="loginTitle">Register</string>
+    <string name="loginTitle">Login</string>
     <string name="loginPhoneHint">Phone number</string>
     <string name="loginVerificationHint">Verification code</string>
     <string name="loginVerificationBtnString">get verification code</string>
