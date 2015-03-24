@@ -17,4 +17,6 @@
     <string name="calenderTextCalenderTileNum1">The&#160;</string>
     <string name="calenderTextCalenderTileNum2">&#160;Moment</string>
     <string name="albumTitle">Today</string>
+
+    <string name="loginByPhoneTitle">Login by phone</string>
 </resources>

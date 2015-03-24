@@ -59,7 +59,9 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
 
-        <activity android:name=".ui.LoginActivity_"/>
+        <activity
+                android:theme="@style/AppTheme.NoActionBar"
+                android:name=".ui.LoginActivity_"/>
 
         <service android:name=".sync.SyncService"/>
 

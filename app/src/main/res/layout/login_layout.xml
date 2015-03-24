@@ -5,8 +5,11 @@
         >
 
     <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="56dp"
+            android:background="@color/bgColorLoginToolbar"
+            >
 
     </android.support.v7.widget.Toolbar>
 
@@ -36,13 +39,13 @@
                 android:text="@string/loginVerificationHint"
                 />
 
-        <Button
-                android:id="@+id/verificationBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:text="@string/loginVerificationBtnString"
-                />
+        <!--<Button-->
+        <!--android:id="@+id/verificationBtn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:minHeight="56dp"-->
+        <!--android:text="@string/loginVerificationBtnString"-->
+        <!--/>-->
 
         <Button
                 android:id="@+id/nextBtn"
@@ -50,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="56dp"
                 android:text="@string/loginNextBtnString"
+                android:background="@color/bgColorLoginBtn"
                 />
 
 
@@ -62,6 +66,6 @@
             android:minHeight="56dp"
             android:layout_alignParentBottom="true"
             android:text="@string/loginLoginBtnString"
-            android:background="@color/bgColorRecordBottom"
+            android:background="@drawable/abc_item_background_holo_light"
             />
 </RelativeLayout>

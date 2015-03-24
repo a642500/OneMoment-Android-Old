@@ -17,4 +17,6 @@
     <color name="calenderCellDefaultMaskColor">#FF853F</color>
     <color name="calenderCellDefaultMaskColorTransparent">#99FF853F</color>
 
+    <color name="bgColorLoginBtn">#17d79e</color>
+    <color name="bgColorLoginToolbar">#803D3D3D</color>
 </resources>
