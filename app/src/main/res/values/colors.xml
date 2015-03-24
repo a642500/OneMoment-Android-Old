@@ -15,8 +15,8 @@
     <color name="textColorCalenderTileNum">#02fba1</color>
 
     <color name="calenderCellDefaultMaskColor">#FF853F</color>
-    <color name="calenderCellDefaultMaskColorTransparent">#99FF853F</color>
+    <color name="calenderCellDefaultMaskColorTransparent">#40FF853F</color>
 
     <color name="bgColorLoginBtn">#17d79e</color>
-    <color name="bgColorLoginToolbar">#903D3D3D</color>
+    <color name="bgColorLoginToolbar">#253d3d3d</color>
 </resources>
