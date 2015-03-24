@@ -100,18 +100,31 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/dividerColorAlbum"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             />
 
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="16dp"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             >
 
+        <GridView
+                android:id="@+id/calenderGrid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="7">
+
+        </GridView>
+
         <com.squareup.timessquare.CalendarPickerView
+                android:visibility="gone"
                 android:id="@+id/calendarPickerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -125,6 +138,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/dividerColorAlbum"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             />
 
     <RelativeLayout

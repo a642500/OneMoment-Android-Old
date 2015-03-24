@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
+import android.widget.*;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
 import com.squareup.timessquare.CalendarPickerView;
@@ -26,52 +24,6 @@ public class AlbumActivity extends ActionBarActivity {
 
     @ViewById
     CalendarPickerView calendarPickerView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getString(R.string.albumTitle));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.textColorCalenderTitle));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
-        toolbar.setSubtitle(format.format(new Date()));
-        toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_album, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-        switch (item.getItemId()) {
-            case R.id.action_login:
-                LoginActivity_.intent(this).start();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private final Calendar displayedMonth = Calendar.getInstance();
-    ;
 
     @AfterViews
     void initCalender() {
@@ -118,6 +70,98 @@ public class AlbumActivity extends ActionBarActivity {
     void backToToday(View view) {
         showThisMonth();
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @ViewById
+    Toolbar toolbar;
+
+    @AfterViews
+    void initToolbar() {
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getString(R.string.albumTitle));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.textColorCalenderTitle));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
+        toolbar.setSubtitle(format.format(new Date()));
+        toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
+    }
+
+    @ViewById
+    GridView calenderGrid;
+
+    @AfterViews
+    void initCalenderGrid() {
+        calenderGrid.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return 31;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return position;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater in = getLayoutInflater();
+                return new CellView(in, parent, position).view;
+            }
+
+            class CellView {
+                final View view;
+                ImageView backgroundImageView;
+                ImageView foregroundImageView;
+                TextView foregroundTextView;
+
+                public CellView(LayoutInflater inflater, ViewGroup parent, int position) {
+                    this.view = inflater.inflate(R.layout.calender_cell, parent, false);
+                    backgroundImageView = (ImageView) view.findViewById(R.id.backgroundImageView);
+                    foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
+                    foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);
+
+                    foregroundTextView.setText(String.valueOf(position));
+
+                    view.setTag(this);
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_album, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+        switch (item.getItemId()) {
+            case R.id.action_login:
+                LoginActivity_.intent(this).start();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private final Calendar displayedMonth = Calendar.getInstance();
 
     @Fun
     @Click
