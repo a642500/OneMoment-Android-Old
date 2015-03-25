@@ -49,6 +49,7 @@
                     android:textSize="64dp"
                     android:background="@null"
                     android:textColor="@color/textColorCalenderCurrentDay"
+                    android:typeface="monospace"
                     />
 
             <TextView
@@ -104,7 +105,8 @@
             android:layout_marginLeft="16dp"
             />
 
-    <FrameLayout
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -114,6 +116,37 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             >
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                >
+
+            <ImageButton
+                    android:id="@+id/previousMonthBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back"
+                    />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6月份"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center"
+                    />
+
+            <ImageButton
+                    android:id="@+id/nextMonthBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back"
+                    />
+        </LinearLayout>
+
 
         <GridView
                 android:id="@+id/calenderGrid"
@@ -132,7 +165,7 @@
                 cal:dayBackground="@color/bgColorCalenderDay"
                 cal:dayTextColor="@android:color/white"
                 />
-    </FrameLayout>
+    </LinearLayout>
 
     <View
             android:layout_width="match_parent"

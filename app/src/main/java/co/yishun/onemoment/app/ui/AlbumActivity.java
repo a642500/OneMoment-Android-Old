@@ -71,6 +71,18 @@ public class AlbumActivity extends ActionBarActivity {
         showThisMonth();
     }
 
+    @Fun
+    @Click
+    void nextMonthBtn(View view) {
+        showNextMonthCalender();
+    }
+
+    @Fun
+    @Click
+    void previousMonthBtn(View view) {
+        showPreviewMonthCalender();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,46 +106,7 @@ public class AlbumActivity extends ActionBarActivity {
 
     @AfterViews
     void initCalenderGrid() {
-        calenderGrid.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return 31;
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return position;
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                LayoutInflater in = getLayoutInflater();
-                return new CellView(in, parent, position).view;
-            }
-
-            class CellView {
-                final View view;
-                ImageView backgroundImageView;
-                ImageView foregroundImageView;
-                TextView foregroundTextView;
-
-                public CellView(LayoutInflater inflater, ViewGroup parent, int position) {
-                    this.view = inflater.inflate(R.layout.calender_cell, parent, false);
-                    backgroundImageView = (ImageView) view.findViewById(R.id.backgroundImageView);
-                    foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
-                    foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);
-
-                    foregroundTextView.setText(String.valueOf(position));
-
-                    view.setTag(this);
-                }
-            }
-        });
+        calenderGrid.setAdapter(new CalenderAdapter(getLayoutInflater()));
     }
 
 
@@ -179,5 +152,97 @@ public class AlbumActivity extends ActionBarActivity {
     @Click
     void syncBtn(View view) {
 
+    }
+
+
+    static class CalenderAdapter extends BaseAdapter {
+        private final LayoutInflater mInflater;
+        private final Calendar mCalender;
+
+
+        public CalenderAdapter(LayoutInflater inflater, Calendar calendar) {
+            mInflater = inflater;
+            mCalender = calendar;
+        }
+
+        public CalenderAdapter(LayoutInflater mInflater) {
+            this.mInflater = mInflater;
+            mCalender = Calendar.getInstance();
+        }
+
+        public void showPreviewMonthCalender() {
+            mCalender.add(Calendar.MONTH, -1);
+            notifyDataSetInvalidated();
+        }
+
+        public void showNextMonthCalender() {
+            mCalender.add(Calendar.MONTH, 1);
+            notifyDataSetInvalidated();
+        }
+
+        @Override
+        public int getCount() {
+            return getMaxDayOf(mCalender) + getOffsetOfDay();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Fun
+        private int getDayOfWeekOfFirstDayOf(Calendar anyday) {
+            Calendar calendar = (Calendar) anyday.clone();
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            return calendar.get(Calendar.DAY_OF_WEEK);
+        }
+
+        @Fun
+        private int getMaxDayOf(Calendar anyday) {
+            return anyday.getActualMaximum(Calendar.DAY_OF_MONTH);
+        }
+
+        private int getOffsetOfDay() {
+            return getDayOfWeekOfFirstDayOf(mCalender) - 1;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position - getOffsetOfDay();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = new CellView(parent).view;
+            }
+            CellView holder = (CellView) convertView.getTag();
+            int day = (int) getItemId(position);
+            if (day <= 0) {
+                convertView.setVisibility(View.INVISIBLE);
+                convertView.setEnabled(false);
+                convertView.setOnClickListener(null);
+            } else {
+                holder.foregroundTextView.setText(String.valueOf(day));
+                convertView.setEnabled(true);
+            }
+            //TODO update background
+            return convertView;
+        }
+
+        class CellView {
+            final View view;
+            ImageView backgroundImageView;
+            ImageView foregroundImageView;
+            TextView foregroundTextView;
+
+            public CellView(ViewGroup parent) {
+                this.view = mInflater.inflate(R.layout.calender_cell, parent, false);
+                backgroundImageView = (ImageView) view.findViewById(R.id.backgroundImageView);
+                foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
+                foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);
+                view.setTag(this);
+            }
+        }
     }
 }
