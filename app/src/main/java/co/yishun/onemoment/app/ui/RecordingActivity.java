@@ -268,7 +268,7 @@ public class RecordingActivity extends Activity {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        mCurrentVideoPath = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO).toString();
+        mCurrentVideoPath = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, this).toString();
         mMediaRecorder.setOutputFile(mCurrentVideoPath);
         mMediaRecorder.setOrientationHint(90);
         // END_INCLUDE (configure_media_recorder)
@@ -353,7 +353,7 @@ public class RecordingActivity extends Activity {
             @Override
             public void onFinish() {
                 Log.i(TAG, "finish");
-                onConvert(0);
+                onConvert(0, from, to);
             }
         }).start();
     }
@@ -388,9 +388,14 @@ public class RecordingActivity extends Activity {
 
 
     @UiThread
-    void onConvert(int exitCode) {
+    void onConvert(int exitCode, String origin, String conveted) {
         if (0 == exitCode) {
             Toast.makeText(this, "Convert success", Toast.LENGTH_LONG).show();
+            File file = new File(origin);
+            if (file.exists() && new File(conveted).exists()) {
+                file.delete();
+            }
+
         } else Toast.makeText(this, "Convert Failed: ErrorCode " + exitCode, Toast.LENGTH_LONG).show();
         mConvertDialog.dismiss();
     }

@@ -23,6 +23,8 @@ public class Config {
     public static final String URL_VERIFICATION_VERIFY = "/api/v2/verify_phone";
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
 
+    public static final String VIDEO_STORE_DIR = "moment";
+
     private static final int FFMPEG_RAW_ID = R.raw.ffmpeg;
 
 

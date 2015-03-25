@@ -17,10 +17,12 @@
 package co.yishun.onemoment.app.util;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import co.yishun.onemoment.app.config.Config;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -131,25 +133,8 @@ public class CameraHelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public static File getOutputMediaFile(int type) {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-        if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
-            return null;
-        }
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraSample");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("CameraSample", "failed to create directory");
-                return null;
-            }
-        }
+    public static File getOutputMediaFile(int type, Context context) {
+        File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
 
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -161,9 +146,8 @@ public class CameraHelper {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_" + timeStamp + ".mp4");
         } else {
-            return null;
+            throw new IllegalStateException("unsupported type");
         }
-
         return mediaFile;
     }
 
@@ -175,7 +159,7 @@ public class CameraHelper {
      */
     public static String getConvertedMediaFile(String path) {
         File file = new File(path);
-        String s = file.getParentFile().toString() + "/Converted_" + file.getName();
+        String s = file.getParentFile().toString() + "/CON_" + file.getName();
         LogUtil.i(TAG, s);
         return s;
     }
