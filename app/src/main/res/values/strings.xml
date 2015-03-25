@@ -22,4 +22,13 @@
     <string name="albumShotBtnText">Shoot</string>
     <string name="albumReplayBtnText">Replay</string>
     <string name="albumSyncBtnText">Sync</string>
+
+    <string name="albumWeekTitleSun">Sun</string>
+    <string name="albumWeekTitleMon">Mon</string>
+    <string name="albumWeekTitleTue">Tue</string>
+    <string name="albumWeekTitleWed">Wed</string>
+    <string name="albumWeekTitleThu">Thu</string>
+    <string name="albumWeekTitleFri">Fri</string>
+    <string name="albumWeekTitleSat">Sat</string>
+    <string name="albumMonthTitle">月份</string>
 </resources>

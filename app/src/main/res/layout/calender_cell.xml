@@ -27,7 +27,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
             android:textSize="17sp"
             android:text="31"/>
 </FrameLayout>

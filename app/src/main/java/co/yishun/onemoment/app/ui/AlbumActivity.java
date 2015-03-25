@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.util.LogUtil;
 import com.squareup.timessquare.CalendarPickerView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -26,6 +29,7 @@ public class AlbumActivity extends ActionBarActivity {
     CalendarPickerView calendarPickerView;
 
     @AfterViews
+    @Deprecated
     void initCalender() {
         showThisMonth();
     }
@@ -33,12 +37,14 @@ public class AlbumActivity extends ActionBarActivity {
     /**
      * fresh calender by {@link AlbumActivity#displayedMonth}
      */
+    @Deprecated
     private void showMonthCalender() {
         Pair<Date, Date> mon = getFirstAndLastDayOf(displayedMonth);
         calendarPickerView.init(mon.first, mon.second);
     }
 
     @Fun
+    @Deprecated
     private Pair<Date, Date> getFirstAndLastDayOf(Calendar anyday) {
         Calendar min = (Calendar) displayedMonth.clone();
         Calendar max = (Calendar) displayedMonth.clone();
@@ -47,16 +53,19 @@ public class AlbumActivity extends ActionBarActivity {
         return new Pair<>(min.getTime(), max.getTime());
     }
 
+    @Deprecated
     void showNextMonthCalender() {
         displayedMonth.add(Calendar.MONTH, 1);
         showMonthCalender();
     }
 
+    @Deprecated
     void showPreviewMonthCalender() {
         displayedMonth.add(Calendar.MONTH, -1);
         showMonthCalender();
     }
 
+    @Deprecated
     void showThisMonth() {
         Calendar calendar = Calendar.getInstance();
         displayedMonth.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
@@ -74,13 +83,13 @@ public class AlbumActivity extends ActionBarActivity {
     @Fun
     @Click
     void nextMonthBtn(View view) {
-        showNextMonthCalender();
+        mAdapter.showNextMonthCalender();
     }
 
     @Fun
     @Click
     void previousMonthBtn(View view) {
-        showPreviewMonthCalender();
+        mAdapter.showPreviewMonthCalender();
     }
 
     @Override
@@ -104,9 +113,15 @@ public class AlbumActivity extends ActionBarActivity {
     @ViewById
     GridView calenderGrid;
 
+    @ViewById
+    TextView monthTextView;
+
+    private CalenderAdapter mAdapter;
+
     @AfterViews
     void initCalenderGrid() {
-        calenderGrid.setAdapter(new CalenderAdapter(getLayoutInflater()));
+        mAdapter = new CalenderAdapter(getLayoutInflater(), monthTextView);
+        calenderGrid.setAdapter(mAdapter);
     }
 
 
@@ -156,18 +171,24 @@ public class AlbumActivity extends ActionBarActivity {
 
 
     static class CalenderAdapter extends BaseAdapter {
+        private static final String TAG = LogUtil.makeTag(CalenderAdapter.class);
         private final LayoutInflater mInflater;
         private final Calendar mCalender;
+        private final TextView mUpdateMonthTextView;
 
 
-        public CalenderAdapter(LayoutInflater inflater, Calendar calendar) {
+        public CalenderAdapter(LayoutInflater inflater, Calendar calendar, TextView updateMonthTextView) {
             mInflater = inflater;
             mCalender = calendar;
+            this.mUpdateMonthTextView = updateMonthTextView;
+            updateMonthTextView();
         }
 
-        public CalenderAdapter(LayoutInflater mInflater) {
+        public CalenderAdapter(LayoutInflater mInflater, TextView updateMonthTextView) {
             this.mInflater = mInflater;
             mCalender = Calendar.getInstance();
+            mUpdateMonthTextView = updateMonthTextView;
+            updateMonthTextView();
         }
 
         public void showPreviewMonthCalender() {
@@ -178,6 +199,23 @@ public class AlbumActivity extends ActionBarActivity {
         public void showNextMonthCalender() {
             mCalender.add(Calendar.MONTH, 1);
             notifyDataSetInvalidated();
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            updateMonthTextView();
+            super.notifyDataSetChanged();
+        }
+
+        @Fun
+        private void updateMonthTextView() {
+            mUpdateMonthTextView.setText(mCalender.get(Calendar.MONTH) + 1 + mInflater.getContext().getString(R.string.albumMonthTitle));
+        }
+
+        @Override
+        public void notifyDataSetInvalidated() {
+            updateMonthTextView();
+            super.notifyDataSetInvalidated();
         }
 
         @Override
@@ -194,22 +232,35 @@ public class AlbumActivity extends ActionBarActivity {
         private int getDayOfWeekOfFirstDayOf(Calendar anyday) {
             Calendar calendar = (Calendar) anyday.clone();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            return calendar.get(Calendar.DAY_OF_WEEK);
+            int a = calendar.get(Calendar.DAY_OF_WEEK);
+            Log.d(TAG, String.valueOf(a));
+            return a;
         }
 
         @Fun
         private int getMaxDayOf(Calendar anyday) {
-            return anyday.getActualMaximum(Calendar.DAY_OF_MONTH);
+            int max = anyday.getActualMaximum(Calendar.DAY_OF_MONTH);
+            return max;
         }
 
         private int getOffsetOfDay() {
-            return getDayOfWeekOfFirstDayOf(mCalender) - 1;
+            return getDayOfWeekOfFirstDayOf(mCalender) - 1 + WEEK_TITLE_RES.length;
         }
 
         @Override
         public long getItemId(int position) {
-            return position - getOffsetOfDay();
+            return position - getOffsetOfDay() + 1;
         }
+
+        public static final int[] WEEK_TITLE_RES = new int[]{
+                R.string.albumWeekTitleSun,
+                R.string.albumWeekTitleMon,
+                R.string.albumWeekTitleTue,
+                R.string.albumWeekTitleWed,
+                R.string.albumWeekTitleThu,
+                R.string.albumWeekTitleFri,
+                R.string.albumWeekTitleSat
+        };
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -217,17 +268,29 @@ public class AlbumActivity extends ActionBarActivity {
                 convertView = new CellView(parent).view;
             }
             CellView holder = (CellView) convertView.getTag();
-            int day = (int) getItemId(position);
-            if (day <= 0) {
-                convertView.setVisibility(View.INVISIBLE);
-                convertView.setEnabled(false);
-                convertView.setOnClickListener(null);
+            if (position < WEEK_TITLE_RES.length) {
+                holder.view.setEnabled(false);
+                holder.view.setVisibility(View.VISIBLE);
+                holder.foregroundTextView.setText(WEEK_TITLE_RES[position]);
+                holder.setViewHeightSlim();
+                holder.backgroundImageView.setVisibility(View.INVISIBLE);
+                holder.foregroundImageView.setVisibility(View.INVISIBLE);
+                holder.view.setOnClickListener(null);
+            } else if (position < getOffsetOfDay()) {
+                holder.view.setVisibility(View.INVISIBLE);
+                holder.view.setEnabled(false);
+                holder.view.setOnClickListener(null);
             } else {
-                holder.foregroundTextView.setText(String.valueOf(day));
-                convertView.setEnabled(true);
+                holder.recoverViewHeight();
+                holder.view.setVisibility(View.VISIBLE);
+                holder.view.setEnabled(true);
+                holder.backgroundImageView.setVisibility(View.INVISIBLE);
+                holder.foregroundImageView.setVisibility(View.VISIBLE);
+                //add background
+                holder.foregroundTextView.setVisibility(View.VISIBLE);
+                holder.foregroundTextView.setText(String.valueOf(position - getOffsetOfDay() + 1));
             }
-            //TODO update background
-            return convertView;
+            return holder.view;
         }
 
         class CellView {
@@ -242,6 +305,18 @@ public class AlbumActivity extends ActionBarActivity {
                 foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
                 foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);
                 view.setTag(this);
+            }
+
+            public void setViewHeightSlim() {
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, mInflater.getContext().getResources().getDisplayMetrics());
+                view.setLayoutParams(params);
+            }
+
+            public void recoverViewHeight() {
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, mInflater.getContext().getResources().getDisplayMetrics());
+                view.setLayoutParams(params);
             }
         }
     }
