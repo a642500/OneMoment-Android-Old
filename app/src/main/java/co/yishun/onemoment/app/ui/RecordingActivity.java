@@ -3,7 +3,6 @@ package co.yishun.onemoment.app.ui;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.hardware.Camera;
@@ -24,6 +23,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import org.androidannotations.annotations.*;
 
@@ -43,7 +43,8 @@ public class RecordingActivity extends Activity {
     public static final int PREPARED = 1;
     public static final int PREPARED_FAILED = -1;
     private static final String TAG = LogUtil.makeTag(RecordingActivity.class);
-    @ViewById(R.id.surfaceView) TextureView mPreview;
+    @ViewById(R.id.surfaceView)
+    TextureView mPreview;
     private Camera mCamera;
     //    @ViewById(R.id.recordVideoBtn)
 //    ImageButton captureButton;
@@ -59,7 +60,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mConvertDialog = new ProgressDialog.Builder(this).setTitle("Converting video...").setCancelable(false).create();
+        this.mConvertDialog = new MaterialDialog.Builder(this).content(getString(R.string.recordConvertingHint)).cancelable(false).progress(true, 0).build();
     }
 
     /**
@@ -69,21 +70,28 @@ public class RecordingActivity extends Activity {
      *
      * @param view the view generating the event.
      */
-    @Fun @Click(R.id.recordVideoBtn) void onCaptureClick(View view) {
+    @Fun
+    @Click(R.id.recordVideoBtn)
+    void onCaptureClick(View view) {
         if (!isRecording) {
             record();
         }
     }
 
-    @Fun @Click void albumBtnClicked(View view) {
+    @Fun
+    @Click
+    void albumBtnClicked(View view) {
         //TODO
         new AlbumActivity_.IntentBuilder_(this).start();
     }
 
-    @ViewById ImageSwitcher recordFlashSwitch;
-    @ViewById ImageSwitcher cameraSwitch;
+    @ViewById
+    ImageSwitcher recordFlashSwitch;
+    @ViewById
+    ImageSwitcher cameraSwitch;
 
-    @AfterViews void initViews() {
+    @AfterViews
+    void initViews() {
         //TODO can switch when recording?
         //TODO flashlight  http://stackoverflow.com/questions/6068803/how-to-turn-on-camera-flash-light-programmatically-in-android
         PackageManager packageManager = getPackageManager();
@@ -161,7 +169,8 @@ public class RecordingActivity extends Activity {
 
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         preview();
     }
@@ -198,7 +207,8 @@ public class RecordingActivity extends Activity {
 
     //    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Background void preview() {
+    @Background
+    void preview() {
         // BEGIN_INCLUDE (configure_preview)
         mCamera = CameraHelper.getCameraInstance();
         final Camera.Parameters parameters = mCamera.getParameters();
@@ -228,7 +238,8 @@ public class RecordingActivity extends Activity {
      * Asynchronous task for preparing the {@link MediaRecorder} since it's a long blocking
      * operation.
      */
-    @SupposeBackground void prepare() {
+    @SupposeBackground
+    void prepare() {
         Camera.Parameters parameters = mCamera.getParameters();
         Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
         CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
@@ -277,7 +288,8 @@ public class RecordingActivity extends Activity {
         prepareStatus = PREPARED;
     }
 
-    @Background void record() {
+    @Background
+    void record() {
         prepare();
         if (prepareStatus == PREPARED) {
             mMediaRecorder.start();
@@ -288,7 +300,8 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @UiThread(delay = 1200L) void stopRecordAfterSomeTime() {
+    @UiThread(delay = 1200L)
+    void stopRecordAfterSomeTime() {
         Log.i(TAG, "time run out, isRecording: " + isRecording);
         if (isRecording) {
             // stop recording and release camera
@@ -304,34 +317,41 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @UiThread void startConvert() {
+    @UiThread
+    void startConvert() {
         //TODO alert convert
         mConvertDialog.show();
         convert(mCurrentVideoPath, CameraHelper.getConvertedMediaFile(mCurrentVideoPath));
     }
 
-    @Background void convert(String from, String to) {
+    @Background
+    void convert(String from, String to) {
         Converter.with(this).from(from).cropToStandard().to(to).setHandler(new FFmpegExecuteResponseHandler() {
-            @Override public void onSuccess(String message) {
+            @Override
+            public void onSuccess(String message) {
                 Log.i(TAG, "success: " + message);
             }
 
-            @Override public void onProgress(String message) {
+            @Override
+            public void onProgress(String message) {
                 Log.i(TAG, "progress: " + message);
 
             }
 
-            @Override public void onFailure(String message) {
+            @Override
+            public void onFailure(String message) {
                 Log.e(TAG, "fail: " + message);
 
             }
 
-            @Override public void onStart() {
+            @Override
+            public void onStart() {
                 Log.i(TAG, "start");
 
             }
 
-            @Override public void onFinish() {
+            @Override
+            public void onFinish() {
                 Log.i(TAG, "finish");
                 onConvert(0);
             }
@@ -367,7 +387,8 @@ public class RecordingActivity extends Activity {
     }
 
 
-    @UiThread void onConvert(int exitCode) {
+    @UiThread
+    void onConvert(int exitCode) {
         if (0 == exitCode) {
             Toast.makeText(this, "Convert success", Toast.LENGTH_LONG).show();
         } else Toast.makeText(this, "Convert Failed: ErrorCode " + exitCode, Toast.LENGTH_LONG).show();

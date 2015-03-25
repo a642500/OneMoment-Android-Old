@@ -3,6 +3,8 @@
 
     <string name="fragmentRecordShootBtnString">Shoot</string>
 
+    <string name="recordConvertingHint">Converting video…</string>
+
     <string name="loginTitle">Login</string>
     <string name="loginPhoneHint">Phone number</string>
     <string name="loginVerificationHint">Verification code</string>
