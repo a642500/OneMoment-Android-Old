@@ -37,4 +37,6 @@
     <string name="albumWeekTitleFri">Fri</string>
     <string name="albumWeekTitleSat">Sat</string>
     <string name="albumMonthTitle">月份</string>
+
+    <string name="aboutTitle">About</string>
 </resources>
