@@ -10,8 +10,8 @@
     <string name="loginPhoneHint">Phone number</string>
     <string name="loginVerificationHint">Verification code</string>
     <string name="loginVerificationBtnString">get verification code</string>
-    <string name="loginNextBtnString">Next</string>
-    <string name="loginLoginBtnString">Forgotten? To find here ></string>
+    <string name="loginSignInBtnString">Login</string>
+    <string name="loginForgetBtnString">Forgotten? To find here ></string>
     <string name="title_activity_album">AlbumActivity</string>
 
     <string name="action_identity">Identity</string>

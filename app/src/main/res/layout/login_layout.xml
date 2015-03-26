@@ -31,11 +31,11 @@
                 />
 
         <EditText
-                android:id="@+id/verificationEditText"
+                android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:inputType="phone"
+                android:inputType="textPassword"
                 android:hint="@string/loginVerificationHint"
                 />
 
@@ -48,11 +48,11 @@
         <!--/>-->
 
         <Button
-                android:id="@+id/nextBtn"
+                android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="@string/loginNextBtnString"
+                android:text="@string/loginSignInBtnString"
                 android:background="@color/bgColorLoginBtn"
                 />
 
@@ -60,12 +60,12 @@
     </LinearLayout>
 
     <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/findPasswordBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="56dp"
             android:layout_alignParentBottom="true"
-            android:text="@string/loginLoginBtnString"
+            android:text="@string/loginForgetBtnString"
             android:background="@drawable/abc_item_background_holo_light"
             />
 </RelativeLayout>

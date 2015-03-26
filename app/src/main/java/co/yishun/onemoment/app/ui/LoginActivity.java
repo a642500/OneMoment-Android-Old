@@ -4,16 +4,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
-import co.yishun.onemoment.app.net.request.account.PhoneVerification;
+import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.result.AccountResult;
-import co.yishun.onemoment.app.net.result.VerificationResult;
 import co.yishun.onemoment.app.util.AccountHelper;
-import com.koushikdutta.async.future.FutureCallback;
+import co.yishun.onemoment.app.util.LogUtil;
 import org.androidannotations.annotations.*;
 
 /**
@@ -21,32 +21,37 @@ import org.androidannotations.annotations.*;
  */
 @EActivity(R.layout.login_layout)
 public class LoginActivity extends ActionBarActivity {
+    private static final String TAG = LogUtil.makeTag(LoginActivity.class);
+
     private String mPhoneNum;
-    private String mVerificationCode;
+    private String mPassword;
 
     @AfterTextChange(R.id.phoneEditText)
     void onPhoneChange(Editable text, TextView phone) {
         mPhoneNum = text.toString();
     }
 
-    @AfterTextChange(R.id.verificationEditText)
-    void onVerificationCodeChange(Editable text, TextView phone) {
-        mVerificationCode = text.toString();
+    @AfterTextChange(R.id.passwordEditText)
+    void onPasswordChange(Editable text, TextView phone) {
+        mPassword = text.toString();
     }
 
+
+    @Click
+    void findPasswordBtnClicked(@NonNull View view) {
+
+    }
 
     @Click(R.id.loginBtn)
-    void onLogin(@NonNull View loginBtn) {
-
-    }
-
-    @Click(R.id.nextBtn)
-    void onNext(@NonNull View nextBtn) {
-        if (checkPhoneNum() && checkVerificationCode())
-            new PhoneVerification.Verify().setPhone(mPhoneNum).setVerifyCode(mVerificationCode).setCallback(new FutureCallback<VerificationResult>() {
-                @Override
-                public void onCompleted(Exception e, VerificationResult result) {
-
+    void loginBtn(@NonNull View view) {
+        if (checkPhoneNum() && checkPassword())
+            new SignIn().setPhone(Long.parseLong(mPhoneNum)).setPassword(mPassword).setCallback((e, result) -> {
+                Log.i(TAG, "sign in callback, code: " + result.getCode());
+                if (result.getCode() == ErrorCode.SUCCESS) {
+                    Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+                    AccountHelper.saveIdentityInfo(result.getData(), this);
+                } else {
+                    Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
                 }
             });
         else
@@ -81,8 +86,8 @@ public class LoginActivity extends ActionBarActivity {
         return AccountHelper.isValidPhoneNum(mPhoneNum);
     }
 
-    private boolean checkVerificationCode() {
-        return AccountHelper.isValidVerificationCode(mVerificationCode);
+    private boolean checkPassword() {
+        return AccountHelper.isValidPassword(mPassword);
     }
 
 }

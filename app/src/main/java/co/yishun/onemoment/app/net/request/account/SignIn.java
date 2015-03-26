@@ -1,11 +1,14 @@
 package co.yishun.onemoment.app.net.request.account;
 
+import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Carlos on 2/15/15.
@@ -40,6 +43,7 @@ public class SignIn extends Request<AccountResult> {
                     .setBodyParameter("phone", String.valueOf(phone))
                     .setBodyParameter("password", password)
                     .as(AccountResult.class).setCallback(callback);
+            Log.i(TAG, "load sign in");
 
         }
     }

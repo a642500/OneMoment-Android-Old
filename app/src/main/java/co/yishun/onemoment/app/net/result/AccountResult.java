@@ -5,9 +5,11 @@ import co.yishun.onemoment.app.net.request.account.ResetPassword;
 import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.request.account.SignUp;
 
+import java.io.Serializable;
+
 /**
  * This class will be produced by Gson.
- * <p/>
+ * <p>
  * It can be used as the returned result of
  * <h1>{@link SignUp}</h1>
  * {@link SignUp.ByPhone}<br/>
@@ -18,15 +20,15 @@ import co.yishun.onemoment.app.net.request.account.SignUp;
  * <h1>{@link IdentityInfo}</h1>
  * {@link IdentityInfo.Get}<br/>
  * {@link IdentityInfo.Update}<br/>
- * <p/>
+ * <p>
  * Created by Carlos on 2/15/15.
  */
-public class AccountResult {
+public class AccountResult implements Serializable {
     private int code;
     private String msg;
     private Data data;
 
-    public static class Data {
+    public static class Data implements Serializable {
         private String _id;
         private String phone;
         private boolean available;
