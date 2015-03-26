@@ -61,7 +61,7 @@ public class LoginActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setTitle(getString(R.string.loginByPhoneTitle));
-
+        toolbar.setNavigationOnClickListener(v -> LoginActivity.this.onBackPressed());
     }
 
 
