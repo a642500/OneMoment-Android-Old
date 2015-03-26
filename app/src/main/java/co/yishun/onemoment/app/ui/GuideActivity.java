@@ -36,6 +36,8 @@ public class GuideActivity extends Activity {
     @UiThread
     void onGuideFinish() {
         changeEnableStatus();
+        RecordingActivity_.intent(this).start();
+        this.finish();
     }
 
     /**
