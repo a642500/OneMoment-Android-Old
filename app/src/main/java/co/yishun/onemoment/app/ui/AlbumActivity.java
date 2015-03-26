@@ -1,7 +1,10 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -11,19 +14,29 @@ import android.view.*;
 import android.widget.*;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.data.Moment;
+import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.squareup.picasso.Picasso;
 import com.squareup.timessquare.CalendarPickerView;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 
+import java.io.File;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+interface OnMonthChangeListener {
+    void onMonthChange(Calendar calendar);
+}
+
 
 @EActivity(R.layout.activity_album)
-public class AlbumActivity extends ActionBarActivity {
+public class AlbumActivity extends ActionBarActivity implements OnMonthChangeListener {
 
     @ViewById
     CalendarPickerView calendarPickerView;
@@ -120,10 +133,21 @@ public class AlbumActivity extends ActionBarActivity {
 
     @AfterViews
     void initCalenderGrid() {
-        mAdapter = new CalenderAdapter(getLayoutInflater(), monthTextView);
+        mAdapter = new CalenderAdapter(this);
         calenderGrid.setAdapter(mAdapter);
+        mAdapter.setOnMonthChangeListener(this);
     }
 
+    @Override
+    public void onMonthChange(Calendar calendar) {
+        monthTextView.setText(calendar.get(Calendar.MONTH) + 1 + getString(R.string.albumMonthTitle));
+    }
+
+
+//        @Fun
+//        private void updateMonthTextView() {
+//            mUpdateMonthTextView.setText(mCalender.get(Calendar.MONTH) + 1 + mInflater.getContext().getString(R.string.albumMonthTitle));
+//        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,25 +194,28 @@ public class AlbumActivity extends ActionBarActivity {
     }
 
 
+    @EBean
     static class CalenderAdapter extends BaseAdapter {
         private static final String TAG = LogUtil.makeTag(CalenderAdapter.class);
-        private final LayoutInflater mInflater;
         private final Calendar mCalender;
-        private final TextView mUpdateMonthTextView;
+        private final Context mContext;
+        private OnMonthChangeListener onMonthChangeListener;
 
-
-        public CalenderAdapter(LayoutInflater inflater, Calendar calendar, TextView updateMonthTextView) {
-            mInflater = inflater;
-            mCalender = calendar;
-            this.mUpdateMonthTextView = updateMonthTextView;
-            updateMonthTextView();
+        public CalenderAdapter(Context context) {
+            this.mContext = context;
+            mCalender = Calendar.getInstance();
+            onChange(mCalender);
         }
 
-        public CalenderAdapter(LayoutInflater mInflater, TextView updateMonthTextView) {
-            this.mInflater = mInflater;
-            mCalender = Calendar.getInstance();
-            mUpdateMonthTextView = updateMonthTextView;
-            updateMonthTextView();
+        public void setOnMonthChangeListener(OnMonthChangeListener listener) {
+            onMonthChangeListener = listener;
+        }
+
+
+        private void onChange(Calendar calendar) {
+            if (onMonthChangeListener != null) {
+                onMonthChangeListener.onMonthChange(calendar);
+            }
         }
 
         public void showPreviewMonthCalender() {
@@ -203,18 +230,14 @@ public class AlbumActivity extends ActionBarActivity {
 
         @Override
         public void notifyDataSetChanged() {
-            updateMonthTextView();
+            onChange(mCalender);
             super.notifyDataSetChanged();
         }
 
-        @Fun
-        private void updateMonthTextView() {
-            mUpdateMonthTextView.setText(mCalender.get(Calendar.MONTH) + 1 + mInflater.getContext().getString(R.string.albumMonthTitle));
-        }
 
         @Override
         public void notifyDataSetInvalidated() {
-            updateMonthTextView();
+            onChange(mCalender);
             super.notifyDataSetInvalidated();
         }
 
@@ -281,16 +304,36 @@ public class AlbumActivity extends ActionBarActivity {
                 holder.view.setEnabled(false);
                 holder.view.setOnClickListener(null);
             } else {
+                int num = position - getOffsetOfDay() + 1;
                 holder.recoverViewHeight();
                 holder.view.setVisibility(View.VISIBLE);
                 holder.view.setEnabled(true);
                 holder.backgroundImageView.setVisibility(View.INVISIBLE);
                 holder.foregroundImageView.setVisibility(View.VISIBLE);
-                //add background
                 holder.foregroundTextView.setVisibility(View.VISIBLE);
-                holder.foregroundTextView.setText(String.valueOf(position - getOffsetOfDay() + 1));
+                holder.foregroundTextView.setText(String.valueOf(num));
+
+                fillBackground(holder.backgroundImageView, num);
             }
             return holder.view;
+        }
+
+        @Background
+        void fillBackground(ImageView imageView, int day) {
+            Calendar today = ((Calendar) (mCalender.clone()));
+            today.set(Calendar.DAY_OF_MONTH, day);
+            String time = new SimpleDateFormat(Config.TIME_FORMAT).format(today.getTime());
+            try {
+                List<Moment> result = OpenHelperManager.getHelper(mContext, MomentDatabaseHelper.class).getDao(Moment.class)
+                        .queryBuilder().where()
+                        .eq("time", time).query();
+                if (result.size() > 0) {
+                    imageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(result.get(0).getPath(), MediaStore.Images.Thumbnails.MICRO_KIND));
+                    imageView.setVisibility(View.VISIBLE);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         class CellView {
@@ -300,7 +343,7 @@ public class AlbumActivity extends ActionBarActivity {
             TextView foregroundTextView;
 
             public CellView(ViewGroup parent) {
-                this.view = mInflater.inflate(R.layout.calender_cell, parent, false);
+                this.view = LayoutInflater.from(mContext).inflate(R.layout.calender_cell, parent, false);
                 backgroundImageView = (ImageView) view.findViewById(R.id.backgroundImageView);
                 foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
                 foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);
@@ -309,13 +352,13 @@ public class AlbumActivity extends ActionBarActivity {
 
             public void setViewHeightSlim() {
                 ViewGroup.LayoutParams params = view.getLayoutParams();
-                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, mInflater.getContext().getResources().getDisplayMetrics());
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, mContext.getResources().getDisplayMetrics());
                 view.setLayoutParams(params);
             }
 
             public void recoverViewHeight() {
                 ViewGroup.LayoutParams params = view.getLayoutParams();
-                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, mInflater.getContext().getResources().getDisplayMetrics());
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, mContext.getResources().getDisplayMetrics());
                 view.setLayoutParams(params);
             }
         }

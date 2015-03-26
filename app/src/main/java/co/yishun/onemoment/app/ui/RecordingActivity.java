@@ -21,13 +21,17 @@ import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
+import co.yishun.onemoment.app.data.Moment;
+import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
+import java.sql.SQLException;
 
 //TODO stop record by MediaRecorder.setMaxDuration()
 
@@ -388,18 +392,22 @@ public class RecordingActivity extends Activity {
 
 
     @UiThread
-    void onConvert(int exitCode, String origin, String conveted) {
+    void onConvert(int exitCode, String origin, String converted) {
         if (0 == exitCode) {
             Toast.makeText(this, "Convert success", Toast.LENGTH_LONG).show();
             File file = new File(origin);
-            if (file.exists() && new File(conveted).exists()) {
+            if (file.exists() && new File(converted).exists()) {
                 file.delete();
             }
-
+            Moment moment = new Moment.MomentBuilder().setPath(converted).build();
+            try {
+                OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).create(moment);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else Toast.makeText(this, "Convert Failed: ErrorCode " + exitCode, Toast.LENGTH_LONG).show();
         mConvertDialog.dismiss();
     }
-
 
     /**
      * @param previewView view to display preview

@@ -1,12 +1,16 @@
 package co.yishun.onemoment.app.data;
 
+import co.yishun.onemoment.app.config.Config;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * This bean is used in Ormlite and OrmliteProvider.
- * <p/>
+ * <p>
  * Created by Carlos on 2/13/15.
  */
 @AdditionalAnnotation.DefaultContentUri(authority = Contract.AUTHORITY, path = Contract.Moment.CONTENT_URI_PATH)
@@ -16,19 +20,36 @@ public class Moment {
     @DatabaseField(columnName = Contract.Moment._ID, generatedId = true)
     private int id;
 
-    @DatabaseField String path;
+    @DatabaseField
+    String path;
 
     //auto set when created
     @DatabaseField
     private long timeStamp;
 
+    @DatabaseField
+    private String time;
+
     public Moment() {
         //keep for ormlite
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     private static Moment newInstance() {
         Moment m = new Moment();
         m.timeStamp = System.currentTimeMillis();
+        m.time = new SimpleDateFormat(Config.TIME_FORMAT).format(new Date());
         return m;
     }
 

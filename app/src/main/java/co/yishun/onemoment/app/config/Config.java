@@ -27,6 +27,8 @@ public class Config {
 
     private static final int FFMPEG_RAW_ID = R.raw.ffmpeg;
 
+    public static final String TIME_FORMAT = "yyyyMMdd";
+
 
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
 
