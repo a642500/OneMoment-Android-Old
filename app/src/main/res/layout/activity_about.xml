@@ -17,7 +17,7 @@
             android:layout_below="@id/toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingTop="64dp"
             android:src="@drawable/ic_shooting"
             android:layout_centerHorizontal="true"
             />
@@ -34,15 +34,33 @@
             android:layout_centerHorizontal="true"
             />
 
-    <TextView
+    <LinearLayout
             android:id="@+id/aboutVersion"
             android:layout_below="@id/aboutAppName"
-            android:text="@string/version"
-            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            />
+            android:gravity="center">
+
+        <TextView
+
+                android:text="@string/aboutVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_centerHorizontal="true"
+                />
+
+        <TextView
+
+                android:text="@string/appVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorVersionColor"
+                android:layout_centerHorizontal="true"
+                />
+    </LinearLayout>
+
 
     <Button
             android:id="@+id/checkNewBtn"
@@ -54,7 +72,7 @@
             android:layout_marginRight="16dp"
             android:minHeight="56dp"
             android:text="@string/aboutCheckNew"
-            android:background="@drawable/bg_square_frame_unselected"
+            android:background="@drawable/bg_square_frame"
             />
 
     <Button
@@ -66,7 +84,7 @@
             android:layout_marginRight="16dp"
             android:minHeight="56dp"
             android:text="@string/aboutRecommend"
-            android:background="@drawable/bg_square_frame_unselected"
+            android:background="@drawable/bg_square_frame"
             />
 
 

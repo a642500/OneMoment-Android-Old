@@ -23,4 +23,5 @@
     <color name="dividerColorAlbum">#CCffffff</color>
 
     <color name="textColorLogoColor">#FF853F</color>
+    <color name="textColorVersionColor">#02fba1</color>
 </resources>

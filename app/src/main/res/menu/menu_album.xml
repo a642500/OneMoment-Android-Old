@@ -5,7 +5,7 @@
     <item
             android:id="@+id/action_identity"
             android:title="@string/action_identity"
-            android:orderInCategory="1000"
+            android:orderInCategory="0"
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_friends"
             />
@@ -13,26 +13,26 @@
     <item
             android:id="@+id/action_sync_settings"
             android:title="@string/action_sync_settings"
-            android:orderInCategory="100"
+            android:orderInCategory="1"
             app:showAsAction="never"/>
     <item
             android:id="@+id/action_suggest"
             android:title="@string/action_suggest"
-            android:orderInCategory="99"
+            android:orderInCategory="2"
             app:showAsAction="never"/>
     <item
             android:id="@+id/action_rate"
             android:title="@string/action_rate"
-            android:orderInCategory="98"
+            android:orderInCategory="3"
             app:showAsAction="never"/>
     <item
             android:id="@+id/action_help"
             android:title="@string/action_help"
-            android:orderInCategory="97"
+            android:orderInCategory="4"
             app:showAsAction="never"/>
     <item
             android:id="@+id/action_about"
             android:title="@string/action_about"
-            android:orderInCategory="96"
+            android:orderInCategory="5"
             app:showAsAction="never"/>
 </menu>
