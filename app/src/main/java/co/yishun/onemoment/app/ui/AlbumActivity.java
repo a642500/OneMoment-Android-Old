@@ -184,7 +184,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
 
                 break;
             case R.id.action_about:
-
+                AlbumActivity_.intent(this).start();
                 break;
             default:
 
