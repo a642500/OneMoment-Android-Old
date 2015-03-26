@@ -330,6 +330,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
                 if (result.size() > 0) {
                     imageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(result.get(0).getPath(), MediaStore.Images.Thumbnails.MICRO_KIND));
                     imageView.setVisibility(View.VISIBLE);
+                    imageView.setTag(result.get(0));//TODO add onclick
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
