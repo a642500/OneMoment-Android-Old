@@ -21,4 +21,6 @@
     <color name="bgColorLoginToolbar">#253d3d3d</color>
 
     <color name="dividerColorAlbum">#CCffffff</color>
+
+    <color name="textColorLogoColor">#FF853F</color>
 </resources>

@@ -39,4 +39,7 @@
     <string name="albumMonthTitle">月份</string>
 
     <string name="aboutTitle">About</string>
+    <string name="aboutVersion">Version</string>
+    <string name="aboutCheckNew">Check new version</string>
+    <string name="aboutRecommend">Recommend to friends</string>
 </resources>
