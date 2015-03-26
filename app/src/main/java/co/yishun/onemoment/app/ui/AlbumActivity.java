@@ -17,6 +17,7 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.picasso.Picasso;
@@ -166,9 +167,29 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         //noinspection SimplifiableIfStatement
 
         switch (item.getItemId()) {
-            case R.id.action_login:
+            case R.id.action_identity:
+                //TODO
                 LoginActivity_.intent(this).start();
                 break;
+            case R.id.action_sync_settings:
+
+                break;
+            case R.id.action_suggest:
+
+                break;
+            case R.id.action_rate:
+
+                break;
+            case R.id.action_help:
+
+                break;
+            case R.id.action_about:
+
+                break;
+            default:
+
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

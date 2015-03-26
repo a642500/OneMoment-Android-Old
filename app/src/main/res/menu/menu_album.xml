@@ -2,14 +2,37 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="co.yishun.onemoment.app.ui.AlbumActivity">
-      <item android:id="@+id/action_login"
-            android:title="@string/loginTitle"
+    <item
+            android:id="@+id/action_identity"
+            android:title="@string/action_identity"
             android:orderInCategory="1000"
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_friends"
             />
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/action_sync_settings"
+            android:title="@string/action_sync_settings"
+            android:orderInCategory="100"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_suggest"
+            android:title="@string/action_suggest"
+            android:orderInCategory="99"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_rate"
+            android:title="@string/action_rate"
+            android:orderInCategory="98"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_help"
+            android:title="@string/action_help"
+            android:orderInCategory="97"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_about"
+            android:title="@string/action_about"
+            android:orderInCategory="96"
+            app:showAsAction="never"/>
 </menu>
