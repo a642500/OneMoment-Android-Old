@@ -100,10 +100,10 @@ public class LoginActivity extends ActionBarActivity {
     public static void showLoginDialog(Context context) {
         final MaterialDialog dialog = new MaterialDialog.Builder(context).customView(R.layout.login_dialog, false).build();
         View view = dialog.getCustomView();
-        view.findViewById(android.R.id.closeButton).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
             LoginActivity_.intent(context).start();
             dialog.dismiss();
         });
+        dialog.show();
     }
 }

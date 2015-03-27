@@ -169,7 +169,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         switch (item.getItemId()) {
             case R.id.action_identity:
                 //TODO
-                LoginActivity_.intent(this).start();
+                LoginActivity_.showLoginDialog(this);
                 break;
             case R.id.action_sync_settings:
 
