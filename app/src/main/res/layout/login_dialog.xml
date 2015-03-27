@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:layout_gravity="center"
+             android:background="@color/bgLoginDialogColor"
+        >
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loginDialogTitle"
+                android:textAppearance="@android:style/TextAppearance.DialogWindowTitle"
+                />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loginDialogByWeibo"
+                android:drawableLeft="@drawable/ic_weibo"
+                android:drawablePadding="5dp"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loginDialogInstruction"
+                android:padding="8dp"
+                />
+
+        <Button
+                android:id="@+id/loginByPhoneBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loginDialogEntryByPhone"
+                android:background="@drawable/abc_item_background_holo_light"
+                />
+    </LinearLayout>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_close"
+            android:id="@android:id/closeButton"
+            />
+</FrameLayout>

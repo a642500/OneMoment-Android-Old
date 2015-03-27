@@ -1,5 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +17,7 @@ import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.afollestad.materialdialogs.MaterialDialog;
 import org.androidannotations.annotations.*;
 
 /**
@@ -94,4 +97,13 @@ public class LoginActivity extends ActionBarActivity {
         return AccountHelper.isValidPassword(mPassword);
     }
 
+    public static void showLoginDialog(Context context) {
+        final MaterialDialog dialog = new MaterialDialog.Builder(context).customView(R.layout.login_dialog, false).build();
+        View view = dialog.getCustomView();
+        view.findViewById(android.R.id.closeButton).setOnClickListener(v -> dialog.dismiss());
+        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
+            LoginActivity_.intent(context).start();
+            dialog.dismiss();
+        });
+    }
 }
