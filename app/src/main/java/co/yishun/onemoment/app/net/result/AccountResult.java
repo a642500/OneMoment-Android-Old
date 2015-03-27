@@ -29,6 +29,9 @@ public class AccountResult implements Serializable {
     private Data data;
 
     public static class Data implements Serializable {
+        public Data() {
+        }
+
         private String _id;
         private String phone;
         private boolean available;

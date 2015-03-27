@@ -5,6 +5,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
+import co.yishun.onemoment.app.util.DecodeUtil;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.koushikdutta.async.future.FutureCallback;
 
@@ -38,11 +39,30 @@ public class SignIn extends Request<AccountResult> {
     public void setCallback(final FutureCallback<AccountResult> callback) {
         check();
         if (builder != null && callback != null) {
-            builder.load(getUrl())
-                    .setBodyParameter("key", key)
-                    .setBodyParameter("phone", String.valueOf(phone))
-                    .setBodyParameter("password", password)
-                    .as(AccountResult.class).setCallback(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("phone", String.valueOf(phone))
+                        .setBodyParameter("password", password)
+                        .asString().setCallback((e, result) -> {
+                    if (e != null) {
+                        e.printStackTrace();
+                    }
+                    if (result != null) {
+                        Log.d(TAG, "result " + result);
+                        String s = DecodeUtil.decode(result);
+                        LogUtil.d(TAG, s);
+                        if (s != null) {
+                            String sMin = s.substring(0, s.lastIndexOf('}'));
+                            LogUtil.d(TAG, sMin);
+                        }
+                    }
+                }).get();
+//                as(AccountResult.class)
+//                        .setCallback(callback).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
             Log.i(TAG, "load sign in");
 
         }

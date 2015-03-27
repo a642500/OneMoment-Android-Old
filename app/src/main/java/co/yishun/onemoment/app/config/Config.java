@@ -7,6 +7,9 @@ import co.yishun.onemoment.app.R;
  * Created by Carlos on 2/15/15.
  */
 public class Config {
+
+    public static final String AES_KEY = "QJBBNfrwp2oN4ZBwT9qZ4MGObN8y56bEydJj48L8xVs=";
+
     private final static String URL_MAIN = "http://test.yishun.co";
 
     private final static String URL_SIGN_UP_BY_PHONE = "/api/v2/signup";

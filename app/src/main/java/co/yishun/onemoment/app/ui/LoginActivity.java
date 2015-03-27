@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
@@ -45,9 +46,12 @@ public class LoginActivity extends ActionBarActivity {
     @Click(R.id.loginBtn)
     void loginBtn(@NonNull View view) {
         if (checkPhoneNum() && checkPassword())
-            new SignIn().setPhone(Long.parseLong(mPhoneNum)).setPassword(mPassword).setCallback((e, result) -> {
-                Log.i(TAG, "sign in callback, code: " + result.getCode());
-                if (result.getCode() == ErrorCode.SUCCESS) {
+            ((SignIn) (new SignIn().with(this))).setPhone(Long.parseLong(mPhoneNum)).setPassword(mPassword).setCallback((e, result) -> {
+
+                if (e != null) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
+                } else if (result.getCode() == ErrorCode.SUCCESS) {
                     Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
                     AccountHelper.saveIdentityInfo(result.getData(), this);
                 } else {
