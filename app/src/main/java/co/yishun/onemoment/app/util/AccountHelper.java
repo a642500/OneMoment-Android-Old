@@ -9,10 +9,7 @@ import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.result.AccountResult;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * Created by Carlos on 2/15/15.
@@ -112,6 +109,28 @@ public class AccountHelper {
 
     private static AccountManager getAccountManager(Context context) {
         return (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+    }
+
+    private static AccountResult.Data mIdentityInfo = null;
+
+    public static void loadInfo(Context context) {
+        try {
+            String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+            FileInputStream fin = null;
+            fin = new FileInputStream(path);
+            ObjectInputStream ois = new ObjectInputStream(fin);
+            AccountResult.Data data = (AccountResult.Data) ois.readObject();
+            mIdentityInfo = data;
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static AccountResult.Data getIdentityInfo(Context con) {
+        if (mIdentityInfo == null) {
+            loadInfo(con);
+        }
+        return mIdentityInfo;
     }
 
     public static boolean updateAccount(Context context, Account account) {

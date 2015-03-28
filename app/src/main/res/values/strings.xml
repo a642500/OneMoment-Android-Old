@@ -56,6 +56,12 @@
     <string name="findPasswordNextBtn">Next</string>
 
     <string name="identityInfoTitle">Identity Info</string>
+    <string name="identityInfoProfile">Profile</string>
+    <string name="identityInfoName">Nickname</string>
+    <string name="identityInfoWeibo">Sina Weibo</string>
+    <string name="identityInfoGender">Gender</string>
+    <string name="identityInfoArea">Area</string>
+    <string name="identityInfoLogout">Log Out</string>
 
 
 </resources>

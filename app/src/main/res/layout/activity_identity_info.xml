@@ -5,7 +5,7 @@
             tools:context="co.yishun.onemoment.app.ui.IdentityInfoActivity">
 
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -16,6 +16,212 @@
                 android:background="@color/bgColorLoginToolbar"
                 />
 
+        <RelativeLayout
+                android:id="@+id/profileItem"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/colorTransparentGray"
+                >
 
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:text="@string/identityInfoProfile"
+                    />
+
+            <ImageView
+                    android:id="@+id/rightIcon0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+            <quickutils.core.views.image.CircleImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_shooting"
+                    android:layout_toLeftOf="@id/rightIcon0"
+                    android:layout_centerVertical="true"
+                    />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/nickNameItem"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:padding="16dp"
+                android:background="@color/colorTransparentGray"
+                >
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:text="@string/identityInfoName"
+                    />
+
+            <ImageView
+                    android:id="@+id/rightIcon1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+            <TextView
+                    android:id="@+id/nickNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jaqucline"
+                    android:paddingRight="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_toLeftOf="@id/rightIcon1"
+                    android:layout_centerVertical="true"
+                    />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/weiboItem"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/colorTransparentGray"
+                >
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:text="@string/identityInfoWeibo"
+                    />
+
+            <ImageView
+                    android:id="@+id/rightIcon2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+            <TextView
+                    android:id="@+id/weiboTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jaqucline"
+                    android:paddingRight="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_toLeftOf="@id/rightIcon2"
+                    android:layout_centerVertical="true"
+                    />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/genderItem"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/colorTransparentGray"
+                >
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:text="@string/identityInfoGender"
+                    />
+
+            <ImageView
+                    android:id="@+id/rightIcon3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+            <TextView
+                    android:id="@+id/genderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jaqucline"
+                    android:paddingRight="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_toLeftOf="@id/rightIcon3"
+                    android:layout_centerVertical="true"
+                    />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/areaItem"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/colorTransparentGray"
+                >
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:text="@string/identityInfoArea"
+                    />
+
+            <ImageView
+                    android:id="@+id/rightIcon4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_right"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+            <TextView
+                    android:id="@+id/areaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jaqucline"
+                    android:paddingRight="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_toLeftOf="@id/rightIcon4"
+                    android:layout_centerVertical="true"
+                    />
+        </RelativeLayout>
+
+        <Button
+                android:id="@+id/logoutBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_orange_btn"
+                android:text="@string/identityInfoLogout"
+                />
     </LinearLayout>
 </ScrollView>

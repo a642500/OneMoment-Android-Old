@@ -1,6 +1,8 @@
 package co.yishun.onemoment.app;
 
 import android.app.Application;
+import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.util.AccountHelper;
 import org.androidannotations.annotations.EApplication;
 import quickutils.core.QuickUtils;
 
@@ -9,6 +11,9 @@ import quickutils.core.QuickUtils;
  */
 @EApplication
 public class MyApplication extends Application {
+    {
+        AccountHelper.loadInfo(this);
+    }
 
     @Override
     public void onCreate() {
