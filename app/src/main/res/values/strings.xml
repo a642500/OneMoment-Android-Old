@@ -6,13 +6,18 @@
 
     <string name="recordConvertingHint">Converting video…</string>
 
+    <string name="loginDialogTitle">Login</string>
+    <string name="loginDialogByWeibo">Login By Sina Weibo</string>
+    <string name="loginDialogInstruction">to enable sync feature</string>
+    <string name="loginDialogEntryByPhone">Login By Phone</string>
+    <string name="loginByPhoneTitle">Login by phone</string>
+
     <string name="loginTitle">Login</string>
     <string name="loginPhoneHint">Phone number</string>
-    <string name="loginVerificationHint">Verification code</string>
+    <string name="loginPasswordHint">Verification code</string>
     <string name="loginVerificationBtnString">get verification code</string>
     <string name="loginSignInBtnString">Login</string>
     <string name="loginForgetBtnString">Forgotten? To find here ></string>
-    <string name="title_activity_album">AlbumActivity</string>
 
     <string name="action_identity">Identity</string>
     <string name="action_sync_settings">Sync Settings</string>
@@ -23,17 +28,11 @@
 
     <string name="calenderTextCalenderTileNum1">The&#160;</string>
     <string name="calenderTextCalenderTileNum2">&#160;Moment</string>
-    <string name="albumTitle">Today</string>
 
-    <string name="loginDialogTitle">Login</string>
-    <string name="loginDialogByWeibo">Login By Sina Weibo</string>
-    <string name="loginDialogInstruction">to enable sync feature</string>
-    <string name="loginDialogEntryByPhone">Login By Phone</string>
-    <string name="loginByPhoneTitle">Login by phone</string>
+    <string name="albumTitle">Today</string>
     <string name="albumShotBtnText">Shoot</string>
     <string name="albumReplayBtnText">Replay</string>
     <string name="albumSyncBtnText">Sync</string>
-
     <string name="albumWeekTitleSun">Sun</string>
     <string name="albumWeekTitleMon">Mon</string>
     <string name="albumWeekTitleTue">Tue</string>
@@ -49,5 +48,9 @@
     <string name="aboutRecommend">Recommend to friends</string>
     <string name="aboutUpdated">Has been updated!</string>
     <string name="aboutChecking">Checking…</string>
+
+    <string name="findPasswordTitle">FindPasswordActivity</string>
+    <string name="findPasswordPhoneHint">Phone number</string>
+    <string name="findPasswordVerificationHint">Verification code</string>
 
 </resources>
