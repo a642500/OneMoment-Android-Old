@@ -3,6 +3,11 @@
 
     <color name="colorPrimary">#151515</color>
     <color name="colorPrimaryDark">#151515</color>
+    <color name="colorOrange">#FF853F</color>
+    
+    <color name="colorTransparentGray">#20000000</color>
+
+
     <color name="bgColorRecordHeader">#151515</color>
     <color name="bgColorRecordBottom">#151515</color>
 
@@ -33,5 +38,6 @@
 
     <color name="bgColorNextBtn">#FE8F3E</color>
     <color name="bgColorGetVerificationCodeBtn">#17d79e</color>
+    <color name="bgColorNextBtnSelected">#ffc97131</color>
 
 </resources>
