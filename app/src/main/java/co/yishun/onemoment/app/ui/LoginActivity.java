@@ -98,7 +98,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public static void showLoginDialog(Context context) {
-        final MaterialDialog dialog = new MaterialDialog.Builder(context).customView(R.layout.login_dialog, false).build();
+        final MaterialDialog dialog = new MaterialDialog.Builder(context).customView(R.layout.login_dialog, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
         View view = dialog.getCustomView();
         view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
             LoginActivity_.intent(context).start();

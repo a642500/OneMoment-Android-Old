@@ -24,8 +24,11 @@
 
     <color name="textColorLogoColor">#FF853F</color>
     <color name="textColorVersionColor">#02fba1</color>
-    
-    <color name="bgLoginDialogColor">#151515</color>
+
+    <color name="bgLoginDialogColor">#212121</color>
     <color name="bgLoginDialogSinaBtnColor">#FF853F</color>
     <color name="bgLoginDialogSinaBtnColorPressed">#ff6b351c</color>
+
+    <color name="bgUpdatedDialogColor">#212121</color>
+
 </resources>

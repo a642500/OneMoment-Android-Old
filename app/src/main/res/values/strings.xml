@@ -47,4 +47,6 @@
     <string name="aboutVersion">Version&#160;</string>
     <string name="aboutCheckNew">Check new version</string>
     <string name="aboutRecommend">Recommend to friends</string>
+    <string name="aboutUpdated">Has been updated!</string>
+
 </resources>
