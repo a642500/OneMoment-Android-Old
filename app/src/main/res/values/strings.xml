@@ -52,5 +52,7 @@
     <string name="findPasswordTitle">FindPasswordActivity</string>
     <string name="findPasswordPhoneHint">Phone number</string>
     <string name="findPasswordVerificationHint">Verification code</string>
+    <string name="findPasswordGetVerificationCodeBtn">Get Verification Code</string>
+    <string name="findPasswordNextBtn">Next</string>
 
 </resources>
