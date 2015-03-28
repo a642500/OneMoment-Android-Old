@@ -48,5 +48,6 @@
     <string name="aboutCheckNew">Check new version</string>
     <string name="aboutRecommend">Recommend to friends</string>
     <string name="aboutUpdated">Has been updated!</string>
+    <string name="aboutChecking">Checking…</string>
 
 </resources>

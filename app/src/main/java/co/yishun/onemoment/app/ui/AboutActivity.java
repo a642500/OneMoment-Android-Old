@@ -30,10 +30,17 @@ public class AboutActivity extends ActionBarActivity {
 
     @Click(R.id.checkNewBtn)
     void checkNew() {
-        showUpdateDialog(this);
+        showCheckUpdateDialog(this);
+        //TODO check
     }
 
-    public static void showUpdateDialog(Context context) {
-        new MaterialDialog.Builder(context).backgroundColorRes(R.color.bgUpdatedDialogColor).customView(R.layout.updated_dialog).show();
+    public static MaterialDialog showUpdateDialog(Context context) {
+        return new MaterialDialog.Builder(context).backgroundColorRes(R.color.bgUpdatedDialogColor).customView(R.layout.updated_dialog, false).show();
     }
+
+    public static MaterialDialog showCheckUpdateDialog(Context context) {
+        return new MaterialDialog.Builder(context).customView(R.layout.dialog_check, false).backgroundColorRes(R.color.bgUpdatedDialogColor).show();
+    }
+
+
 }
