@@ -28,7 +28,7 @@
     <string name="loginDialogTitle">Login</string>
     <string name="loginDialogByWeibo">Login By Sina Weibo</string>
     <string name="loginDialogInstruction">to enable sync feature</string>
-    <string name="loginDialogEntryByPhone">Login By Phone></string>
+    <string name="loginDialogEntryByPhone">Login By Phone</string>
     <string name="loginByPhoneTitle">Login by phone</string>
     <string name="albumShotBtnText">Shoot</string>
     <string name="albumReplayBtnText">Replay</string>

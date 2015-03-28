@@ -9,7 +9,6 @@
         android:gravity="center_horizontal"
         android:padding="8dp"
         android:layout_gravity="center"
-        android:background="@color/bgLoginDialogColor"
         >
 
 
@@ -44,9 +43,13 @@
 
     <Button
             android:id="@+id/loginByPhoneBtn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="32dp"
+            android:paddingRight="16dp"
             android:text="@string/loginDialogEntryByPhone"
             android:background="@drawable/bg_normal_btn"
+            android:drawableRight="@drawable/ic_right"
+            android:drawablePadding="16dp"
             />
 </LinearLayout>
