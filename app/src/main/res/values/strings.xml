@@ -49,7 +49,7 @@
     <string name="aboutUpdated">Has been updated!</string>
     <string name="aboutChecking">Checking…</string>
 
-    <string name="findPasswordTitle">FindPasswordActivity</string>
+    <string name="findPasswordTitle">Find Password</string>
     <string name="findPasswordPhoneHint">Phone number</string>
     <string name="findPasswordVerificationHint">Verification code</string>
     <string name="findPasswordGetVerificationCodeBtn">Get Verification Code</string>

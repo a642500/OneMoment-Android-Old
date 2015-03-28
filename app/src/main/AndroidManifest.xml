@@ -83,7 +83,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".ui.FindPasswordActivity"
+            android:name=".ui.FindPasswordActivity_"
             android:label="@string/findPasswordTitle" >
         </activity>
     </application>
