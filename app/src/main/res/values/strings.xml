@@ -55,4 +55,7 @@
     <string name="findPasswordGetVerificationCodeBtn">Get Verification Code</string>
     <string name="findPasswordNextBtn">Next</string>
 
+    <string name="identityInfoTitle">Identity Info</string>
+
+
 </resources>
