@@ -137,7 +137,11 @@ public class AccountHelper {
         return true;
     }
 
-    public static void deleteAccount() {
+    public static void deleteAccount(Context context) {
+    }
+
+    public static void deleteIdentityInfo(Context context) {
+
     }
 
     private static void enableSync(Context context) {

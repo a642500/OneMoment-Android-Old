@@ -50,14 +50,13 @@ public class IdentityInfoActivity extends ActionBarActivity {
         Picasso.with(this).load(data.getAvatar_url()).into(profileImageView);
         nickNameTextView.setText(data.getNickname());
         weiboTextView.setText(data.getWeibo_uid());
-
     }
 
     @Click({R.id.profileItem, R.id.nickNameItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem, R.id.logoutBtn})
     void onItemClick(View view) {
         switch (view.getId()) {
             case R.id.profileItem:
-                
+
                 break;
             case R.id.nickNameItem:
                 break;
@@ -72,5 +71,12 @@ public class IdentityInfoActivity extends ActionBarActivity {
             default:
                 break;
         }
+    }
+
+    @Click(R.id.logoutBtn)
+    void logout(View view) {
+        AccountHelper.deleteAccount(this);
+        AccountHelper.deleteIdentityInfo(this);
+        this.finish();
     }
 }
