@@ -11,10 +11,6 @@ import quickutils.core.QuickUtils;
  */
 @EApplication
 public class MyApplication extends Application {
-    {
-        AccountHelper.loadInfo(this);
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

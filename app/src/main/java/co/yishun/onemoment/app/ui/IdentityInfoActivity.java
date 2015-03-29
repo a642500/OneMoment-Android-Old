@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
@@ -52,8 +53,9 @@ public class IdentityInfoActivity extends ActionBarActivity {
         weiboTextView.setText(data.getWeibo_uid());
     }
 
-    @Click({R.id.profileItem, R.id.nickNameItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem, R.id.logoutBtn})
-    void onItemClick(View view) {
+    @Click({R.id.profileItem, R.id.nickNameItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem})
+    void infoItem(View view) {
+        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
         switch (view.getId()) {
             case R.id.profileItem:
 
