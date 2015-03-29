@@ -85,14 +85,16 @@
         <activity
                 android:name=".ui.FindPasswordActivity_"
                 android:label="@string/findPasswordTitle"
-                android:theme="@style/AppTheme.NoActionBar"
-                >
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".ui.IdentityInfoActivity_"
                 android:label="@string/identityInfoTitle"
-                android:theme="@style/AppTheme.NoActionBar"
-                >
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+                android:name=".ui.VideoSaveActivity_"
+                android:label="@string/videoSaveTitle">
         </activity>
     </application>
 

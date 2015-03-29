@@ -62,6 +62,11 @@
     <string name="identityInfoGender">Gender</string>
     <string name="identityInfoArea">Area</string>
     <string name="identityInfoLogout">Log Out</string>
+    <string name="videoSaveTitle">@string/app_name</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="recordEndSave">save</string>
 
 
 </resources>
