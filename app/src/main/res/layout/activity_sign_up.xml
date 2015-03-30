@@ -1,8 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="co.yishun.onemoment.app.ui.FindPasswordActivity">
+        >
 
     <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:inputType="phone"
-                android:hint="@string/findPasswordPhoneHint"
+                android:hint="@string/signUpPhone"
                 />
 
         <EditText
@@ -35,28 +35,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:inputType="text"
-                android:hint="@string/findPasswordVerificationHint"
+                android:inputType="textPassword"
+                android:hint="@string/signUpVerificationCode"
                 />
-
-        <!--<Button-->
-        <!--android:id="@+id/verificationBtn"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:minHeight="56dp"-->
-        <!--android:text="@string/loginVerificationBtnString"-->
-        <!--/>-->
 
         <Button
                 android:id="@+id/getVerificationCodeBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="@string/findPasswordGetVerificationCodeBtn"
+                android:text="@string/signUpGetVerificationCode"
                 android:textColor="@color/bgColorGetVerificationCodeBtn"
                 android:background="@drawable/bg_square_frame_green"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 />
 
         <Button
@@ -64,12 +54,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="@string/findPasswordNextBtn"
+                android:text="@string/signUpNext"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/bg_orange_btn"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 />
 
 
     </LinearLayout>
+
+    <Button
+            android:id="@+id/loginEntryBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:layout_alignParentBottom="true"
+            android:text="@string/signUpLoginEntry"
+            android:background="@drawable/bg_normal_btn"
+            />
 </RelativeLayout>

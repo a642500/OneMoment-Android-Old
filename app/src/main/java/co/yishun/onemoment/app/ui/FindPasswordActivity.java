@@ -37,7 +37,7 @@ public class FindPasswordActivity extends ActionBarActivity {
         mPhoneNum = text.toString();
     }
 
-    @AfterTextChange(R.id.verificationEditText)
+    @AfterTextChange(R.id.verificationCodeEditText)
     void onPasswordChange(Editable text, TextView phone) {
         mVerificationCode = text.toString();
     }
