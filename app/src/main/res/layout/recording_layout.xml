@@ -25,155 +25,169 @@
 <!--</FrameLayout>-->
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+        >
 
-    <FrameLayout
-            android:layout_weight="2"
-            android:id="@+id/recordHeader"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/fragmentRecordHeaderHeight"
-            android:paddingRight="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_vertical_margin"
-            android:background="@color/bgColorRecordHeader"
-            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            >
-
-        <RelativeLayout
+        <FrameLayout
+                android:layout_weight="2"
+                android:id="@+id/recordHeader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/fragmentRecordHeaderHeight"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:background="@color/bgColorRecordHeader"
+                android:layout_gravity="center_horizontal"
+
                 >
 
-            <ImageSwitcher
-                    android:id="@+id/recordFlashSwitch"
-                    android:minHeight="48dp"
-                    android:minWidth="48dp"
-                    android:layout_width="wrap_content"
+            <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:paddingLeft="16dp"
                     >
 
-                <ImageButton
+                <ImageSwitcher
+                        android:id="@+id/recordFlashSwitch"
+                        android:minHeight="48dp"
+                        android:minWidth="48dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_flashlight_switch_on"
-                        android:scaleType="centerInside"
-                        android:layout_gravity="center"
-                        android:background="@drawable/abc_item_background_holo_light"
-                        />
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:paddingLeft="16dp"
+                        >
 
-                <ImageButton
+                    <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_flashlight_switch_on"
+                            android:scaleType="centerInside"
+                            android:layout_gravity="center"
+                            android:background="@drawable/abc_item_background_holo_light"
+                            />
+
+                    <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_flashlight_switch_off"
+                            android:scaleType="centerInside"
+                            android:layout_gravity="center"
+                            android:background="@drawable/abc_item_background_holo_light"
+                            />
+                </ImageSwitcher>
+
+                <ImageSwitcher
+                        android:id="@+id/cameraSwitch"
+                        android:minHeight="48dp"
+                        android:minWidth="48dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_flashlight_switch_off"
-                        android:scaleType="centerInside"
-                        android:layout_gravity="center"
-                        android:background="@drawable/abc_item_background_holo_light"
-                        />
-            </ImageSwitcher>
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:paddingRight="16dp"
+                        >
 
-            <ImageSwitcher
-                    android:id="@+id/cameraSwitch"
-                    android:minHeight="48dp"
-                    android:minWidth="48dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="16dp"
-                    >
+                    <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_camera_switch"
+                            android:scaleType="centerInside"
+                            android:layout_gravity="center"
+                            android:background="@null"
+                            />
 
-                <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_camera_switch"
-                        android:scaleType="centerInside"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        />
+                    <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_camera_switch"
+                            android:scaleType="centerInside"
+                            android:layout_gravity="center"
+                            android:background="@null"
+                            />
+                </ImageSwitcher>
+            </RelativeLayout>
 
-                <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_camera_switch"
-                        android:scaleType="centerInside"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        />
-            </ImageSwitcher>
-        </RelativeLayout>
-
-    </FrameLayout>
+        </FrameLayout>
 
 
-    <co.yishun.onemoment.app.ui.view.SquareFrameLayout
-            android:id="@+id/recordSurfaceParent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-        <TextureView
-                android:layout_width="fill_parent"
+        <co.yishun.onemoment.app.ui.view.SquareFrameLayout
+                android:id="@+id/recordSurfaceParent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/surfaceView"/>
+                >
 
-        <!--<TextView-->
+            <TextureView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/surfaceView"/>
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="Loading Camera..."-->
+            <!--android:gravity="center"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:id="@+id/"/>-->
+        </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
+
+        <!--<ImageView-->
+        <!--android:visibility="invisible"-->
+        <!--android:id="@+id/recordSurfaceImage"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:text="Loading Camera..."-->
-        <!--android:gravity="center"-->
-        <!--android:background="@android:color/transparent"-->
-        <!--android:id="@+id/"/>-->
-    </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
+        <!--android:layout_below="@id/recordHeader"-->
+        <!--android:layout_above="@id/recordBottom"-->
+        <!--android:background="#7f000000"-->
+        <!--android:clickable="false"-->
+        <!--android:focusable="false"-->
+        <!--android:scaleType="center"/>-->
 
-    <!--<ImageView-->
-    <!--android:visibility="invisible"-->
-    <!--android:id="@+id/recordSurfaceImage"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@id/recordHeader"-->
-    <!--android:layout_above="@id/recordBottom"-->
-    <!--android:background="#7f000000"-->
-    <!--android:clickable="false"-->
-    <!--android:focusable="false"-->
-    <!--android:scaleType="center"/>-->
+        <RelativeLayout
+                android:layout_weight="3"
+                android:id="@+id/recordBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/fragmentRecordBottomHeight"
+                android:background="@color/bgColorRecordBottom"
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="20dp"
+                >
 
-    <RelativeLayout
-            android:layout_weight="3"
-            android:id="@+id/recordBottom"
+            <ImageButton
+                    android:id="@+id/recordVideoBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:minHeight="56dp"
+                    android:minWidth="56dp"
+                    android:scaleType="fitXY"
+                    android:background="@drawable/abc_item_background_holo_light"
+                    android:src="@drawable/ic_shooting"
+                    />
+
+            <ImageButton
+                    android:id="@+id/albumBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_album"
+                    android:background="@drawable/abc_item_background_holo_light"
+                    />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/welcomeOverlay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/fragmentRecordBottomHeight"
-            android:background="@color/bgColorRecordBottom"
-            android:paddingBottom="20dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="20dp"
-            >
-
-        <ImageButton
-                android:id="@+id/recordVideoBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:minHeight="56dp"
-                android:minWidth="56dp"
-                android:scaleType="fitXY"
-                android:background="@drawable/abc_item_background_holo_light"
-                android:src="@drawable/ic_shooting"
-                />
-
-        <ImageButton
-                android:id="@+id/albumBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_album"
-                android:background="@drawable/abc_item_background_holo_light"
-                />
-    </RelativeLayout>
-</LinearLayout>
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_welcome"
+            />
+</FrameLayout>

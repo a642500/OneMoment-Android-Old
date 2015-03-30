@@ -16,6 +16,7 @@ import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
@@ -65,6 +66,7 @@ public class RecordingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mConvertDialog = new MaterialDialog.Builder(this).content(getString(R.string.recordConvertingHint)).cancelable(false).progress(true, 0).build();
+
     }
 
     /**
@@ -176,6 +178,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         preview();
     }
 
@@ -235,7 +238,17 @@ public class RecordingActivity extends Activity {
             Log.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
             prepareStatus = PREPARED_FAILED;
         }
+//        mPreview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
         mCamera.startPreview();
+    }
+
+    @ViewById
+    ImageView welcomeOverlay;
+
+    @UiThread
+    void hideSplash() {
+        welcomeOverlay.setVisibility(View.GONE);
     }
 
     /**
