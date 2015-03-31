@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dayOfWeek">
+        <item>@string/dayOfWeekSun</item>
+        <item>@string/dayOfWeekMon</item>
+        <item>@string/dayOfWeekTue</item>
+        <item>@string/dayOfWeekWed</item>
+        <item>@string/dayOfWeekThu</item>
+        <item>@string/dayOfWeekFri</item>
+        <item>@string/dayOfWeekSat</item>
+    </string-array>
+</resources>

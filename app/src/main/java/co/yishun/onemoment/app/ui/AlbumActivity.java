@@ -99,6 +99,19 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     }
 
     @ViewById
+    TextView calendarCurrentDay;
+    @ViewById
+    TextView calendarDayOfWeek;
+
+    @AfterViews
+    void initToday() {
+        Calendar today = Calendar.getInstance();
+        calendarCurrentDay.setText(String.valueOf(today.get(Calendar.DAY_OF_MONTH)));
+        String[] weeks = getResources().getStringArray(R.array.dayOfWeek);
+        calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
+    }
+
+    @ViewById
     GridView calenderGrid;
 
     @ViewById
@@ -193,6 +206,18 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     @Click
     void syncBtn(View view) {
 
+    }
+
+    @ViewById
+    TextView titleOfCalender;
+
+    @AfterViews
+    void setOneMomentCount() {
+        try {
+            titleOfCalender.setText(String.valueOf(OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).countOf()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

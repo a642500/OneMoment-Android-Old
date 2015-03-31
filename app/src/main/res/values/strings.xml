@@ -74,4 +74,11 @@
     <string name="signUpLoginEntry">Already has an account? Sign in ></string>
 
 
+    <string name="dayOfWeekSun">Sun</string>
+    <string name="dayOfWeekMon">Mon</string>
+    <string name="dayOfWeekTue">Tue</string>
+    <string name="dayOfWeekWed">Wed</string>
+    <string name="dayOfWeekThu">Thu</string>
+    <string name="dayOfWeekFri">Fri</string>
+    <string name="dayOfWeekSat">Sat</string>
 </resources>
