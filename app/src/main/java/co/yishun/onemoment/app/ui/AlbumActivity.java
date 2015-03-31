@@ -64,6 +64,24 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         LogUtil.d(TAG, "onCreate");
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
     @Fun
     @Deprecated
     private Pair<Date, Date> getFirstAndLastDayOf(Calendar anyday) {
