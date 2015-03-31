@@ -12,14 +12,9 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
-import android.view.animation.Transformation;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -34,7 +29,6 @@ import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import nl.codesoup.cubicbezier.CubicBezierInterpolator;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
@@ -440,18 +434,30 @@ public class RecordingActivity extends Activity {
     void onConvert(int exitCode, String origin, String converted) {
         if (0 == exitCode) {
             Toast.makeText(this, "Convert success", Toast.LENGTH_LONG).show();
-            File file = new File(origin);
-            if (file.exists() && new File(converted).exists()) {
-                file.delete();
-            }
-            Moment moment = new Moment.MomentBuilder().setPath(converted).build();
-            try {
-                OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).create(moment);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            saveData(origin, converted);
         } else Toast.makeText(this, "Convert Failed: ErrorCode " + exitCode, Toast.LENGTH_LONG).show();
         mConvertDialog.dismiss();
+    }
+
+    @Background
+    void saveData(String origin, String converted) {
+        //delete origin file
+        File file = new File(origin);
+        if (file.exists() && new File(converted).exists()) {
+            file.delete();
+        }
+
+        try {
+            //create and save thumb image
+            String thumbPath = CameraHelper.createThumbImage(this, converted);
+
+            //register at database
+            Moment moment = new Moment.MomentBuilder().setPath(converted).setThumbPath(thumbPath).build();
+            OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).create(moment);
+
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

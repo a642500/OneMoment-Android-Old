@@ -18,13 +18,16 @@ package co.yishun.onemoment.app.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.media.ThumbnailUtils;
 import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
+import android.provider.MediaStore;
 import co.yishun.onemoment.app.config.Config;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -162,6 +165,33 @@ public class CameraHelper {
         String s = file.getParentFile().toString() + "/CON_" + file.getName();
         LogUtil.i(TAG, s);
         return s;
+    }
+
+    @Deprecated
+    public static String getThumbFilePath(String convertedFilePath) {
+        File file = new File(convertedFilePath);
+        String parent = file.getParentFile().getParent();
+        String re = parent + Config.VIDEO_THUMB_STORE_DIR + getThumbFileName(convertedFilePath);
+        return re;
+    }
+
+    public static String getThumbFileName(String videoPathOrThumbPath) {
+        File file = new File(videoPathOrThumbPath);
+        String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+        return fileName + ".png";
+    }
+
+    public static String createThumbImage(Context context, String videoPath) throws IOException {
+        File thumbStorageDir = context.getDir(Config.VIDEO_THUMB_STORE_DIR, Context.MODE_PRIVATE);
+        File thumbFile = new File(thumbStorageDir.getPath() + File.separator + getThumbFileName(videoPath));
+
+        if (thumbFile.exists()) thumbFile.delete();
+        FileOutputStream fOut = new FileOutputStream(thumbFile);
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+        fOut.flush();
+        fOut.close();
+        return thumbFile.getPath();
     }
 
 }

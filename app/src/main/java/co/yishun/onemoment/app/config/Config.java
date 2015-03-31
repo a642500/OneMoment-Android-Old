@@ -27,6 +27,7 @@ public class Config {
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
 
     public static final String VIDEO_STORE_DIR = "moment";
+    public static final String VIDEO_THUMB_STORE_DIR = "thumbs";
     public static final String IDENTITY_DIR = "identity";
     public static final String IDENTITY_INFO_FILE_NAME = "info";
 

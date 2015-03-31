@@ -1,6 +1,8 @@
 package co.yishun.onemoment.app.data;
 
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.util.CameraHelper;
+import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
@@ -22,6 +24,9 @@ public class Moment {
 
     @DatabaseField
     String path;
+
+    @DatabaseField
+    String thumbPath;
 
     //auto set when created
     @DatabaseField
@@ -55,10 +60,17 @@ public class Moment {
 
 
     public static class MomentBuilder {
+        private static final String TAG = LogUtil.makeTag(MomentBuilder.class);
         private String mPath;
+        private String mThumbPath = null;
 
         public MomentBuilder setPath(String path) {
             mPath = path;
+            return this;
+        }
+
+        public MomentBuilder setThumbPath(String path) {
+            mThumbPath = path;
             return this;
         }
 
@@ -66,6 +78,7 @@ public class Moment {
             check();
             Moment m = Moment.newInstance();
             m.path = mPath;
+            m.thumbPath = mThumbPath;
             return m;
         }
 
