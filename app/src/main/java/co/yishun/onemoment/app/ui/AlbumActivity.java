@@ -18,6 +18,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.util.AccountHelper;
+import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.picasso.Picasso;
@@ -25,6 +26,7 @@ import com.squareup.timessquare.CalendarPickerView;
 import org.androidannotations.annotations.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -262,9 +264,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         private int getDayOfWeekOfFirstDayOf(Calendar anyday) {
             Calendar calendar = (Calendar) anyday.clone();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            int a = calendar.get(Calendar.DAY_OF_WEEK);
-            LogUtil.d(TAG, String.valueOf(a));
-            return a;
+            return calendar.get(Calendar.DAY_OF_WEEK);
         }
 
         @Fun
@@ -328,7 +328,6 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         @Background
         void fillBackground(ImageView imageView, int day) {
 //            return;
-            LogUtil.d(TAG, "fill background start,day: " + day);
             Calendar today = ((Calendar) (mCalender.clone()));
             today.set(Calendar.DAY_OF_MONTH, day);
             String time = new SimpleDateFormat(Config.TIME_FORMAT).format(today.getTime());
@@ -337,11 +336,16 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
                         .queryBuilder().where()
                         .eq("time", time).query();
                 if (result.size() > 0) {
-                    imageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(result.get(0).getPath(), MediaStore.Images.Thumbnails.MICRO_KIND));
+                    LogUtil.d(TAG, "fill background start,day: " + day + "; moment size: " + result.size());
+                    String thumbPath = result.get(0).getThumbPath();
+                    LogUtil.i(TAG, "thumb path: " + thumbPath);
+                    if (thumbPath == null) CameraHelper.createThumbImage(mContext, result.get(0).getPath());
+                    assert thumbPath != null;
+                    Picasso.with(mContext).load(new File(thumbPath)).into(imageView);
                     imageView.setVisibility(View.VISIBLE);
                     imageView.setTag(result.get(0));//TODO add onclick
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }
         }

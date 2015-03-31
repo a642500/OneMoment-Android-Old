@@ -58,6 +58,9 @@ public class Moment {
         return m;
     }
 
+    public String getThumbPath() {
+        return thumbPath;
+    }
 
     public static class MomentBuilder {
         private static final String TAG = LogUtil.makeTag(MomentBuilder.class);
