@@ -36,7 +36,7 @@ import java.util.List;
  * Camera related utilities.
  */
 public class CameraHelper {
-
+    static final Object lock = new Object();
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private static boolean isFrontCamera = false;
@@ -77,7 +77,10 @@ public class CameraHelper {
      * @return the default camera on the device. Return null if there is no camera on the device.
      */
     public static Camera getCameraInstance() {
-        return isFrontCamera ? getDefaultFrontFacingCameraInstance() : getDefaultBackFacingCameraInstance();
+        LogUtil.d(TAG, "lock at getInstance");
+        synchronized (lock) {
+            return isFrontCamera ? getDefaultFrontFacingCameraInstance() : getDefaultBackFacingCameraInstance();
+        }
     }
 
     public static void setFrontCamera(boolean isFront) {
@@ -88,12 +91,19 @@ public class CameraHelper {
         return isFrontCamera;
     }
 
+    public static void releaseCamera(Camera camera) {
+        LogUtil.d(TAG, "lock at release");
+        synchronized (lock) {
+            camera.release();
+        }
+        LogUtil.d(TAG, "unlock at getInstance");
+    }
 
     /**
      * @return the default rear/back facing camera on the device. Returns null if camera is not
      * available.
      */
-    public static Camera getDefaultBackFacingCameraInstance() {
+    private static Camera getDefaultBackFacingCameraInstance() {
         return getDefaultCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
@@ -101,7 +111,7 @@ public class CameraHelper {
      * @return the default front facing camera on the device. Returns null if camera is not
      * available.
      */
-    public static Camera getDefaultFrontFacingCameraInstance() {
+    private static Camera getDefaultFrontFacingCameraInstance() {
         return getDefaultCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
     }
 

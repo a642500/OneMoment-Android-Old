@@ -17,4 +17,6 @@ public class MyApplication extends Application {
         QuickUtils.init(this);
 
     }
+
+    public boolean isRelease = true;
 }

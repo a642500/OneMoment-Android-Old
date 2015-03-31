@@ -19,6 +19,7 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
+import co.yishun.onemoment.app.MyApplication;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
@@ -202,13 +203,13 @@ public class RecordingActivity extends Activity {
 
     @Override
     protected void onPause() {
-        LogUtil.d(TAG, "onPause start");
+        LogUtil.d(TAG, "onPause start: " + System.currentTimeMillis());
         super.onPause();
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
-        LogUtil.d(TAG, "onPause end");
+        LogUtil.d(TAG, "onPause end: " + System.currentTimeMillis());
     }
 
     @Override
@@ -230,20 +231,36 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    private void releaseCamera() {
+    @Background
+    void releaseCamera() {
         if (mCamera != null) {
             // release the camera for other applications
-            mCamera.release();
+            // Don't use:mCamera.release();
+            CameraHelper.releaseCamera(mCamera);
             mCamera = null;
+//            ((MyApplication) getApplication()).isRelease = true;
         }
+
     }
+
 
     //    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background
     void preview() {
+
         // BEGIN_INCLUDE (configure_preview)
+//        while (!((MyApplication) getApplication()).isRelease) {
+//                try {
+//                    LogUtil.i(TAG, "camera not release, wait");
+//                    wait(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//            }
+//        }
         mCamera = CameraHelper.getCameraInstance();
+        LogUtil.d(TAG, "unlock at getInstance");
+        ((MyApplication) getApplication()).isRelease = false;
         final Camera.Parameters parameters = mCamera.getParameters();
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
@@ -268,6 +285,7 @@ public class RecordingActivity extends Activity {
         mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
         mCamera.startPreview();
     }
+
 
     @ViewById
     ImageView welcomeOverlay;
