@@ -6,13 +6,14 @@
               android:orientation="vertical"
               tools:context="co.yishun.onemoment.app.ui.AlbumActivity"
               android:background="@null"
-        >
+              android:baselineAligned="true">
 
     <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/abc_action_bar_default_height_material"
+            android:minHeight="56dp"
+            android:paddingBottom="0dp"
             />
 
 
@@ -45,11 +46,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="11"
-                    android:textStyle="bold"
-                    android:textSize="64dp"
-                    android:background="@null"
+                    android:textSize="48dp"
                     android:textColor="@color/textColorCalenderCurrentDay"
-                    android:typeface="monospace"
+                    android:background="@null"
                     />
 
             <TextView
@@ -123,7 +122,7 @@
             <ImageButton
                     android:id="@+id/previousMonthBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_left"
                     android:paddingRight="16dp"
                     android:paddingLeft="16dp"
@@ -144,7 +143,7 @@
             <ImageButton
                     android:id="@+id/nextMonthBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingRight="16dp"
                     android:paddingLeft="16dp"
                     android:src="@drawable/ic_right"
@@ -184,13 +183,13 @@
             android:layout_marginLeft="16dp"
             />
 
-    <RelativeLayout
+    <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:paddingRight="32dp"
             android:paddingLeft="32dp"
             android:gravity="center_vertical"
@@ -200,11 +199,10 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
                 android:text="@string/albumShotBtnText"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
                 android:id="@+id/shootingBtn"
                 android:drawableTop="@drawable/ic_shoot"
                 android:background="@drawable/abc_item_background_holo_light"
@@ -213,11 +211,11 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
                 android:text="@string/albumReplayBtnText"
                 android:id="@+id/replayBtn"
-                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/ic_replay"
                 android:background="@drawable/abc_item_background_holo_light"
@@ -226,15 +224,14 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
                 android:text="@string/albumSyncBtnText"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:id="@+id/syncBtn"
                 android:drawableTop="@drawable/ic_sync"
                 android:background="@drawable/abc_item_background_holo_light"
                 />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
