@@ -163,16 +163,6 @@
                 android:numColumns="7">
 
         </GridView>
-
-        <com.squareup.timessquare.CalendarPickerView
-                android:visibility="gone"
-                android:id="@+id/calendarPickerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                cal:dayBackground="@color/bgColorCalenderDay"
-                cal:dayTextColor="@android:color/white"
-                />
     </LinearLayout>
 
     <View

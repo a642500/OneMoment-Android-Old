@@ -40,23 +40,6 @@ interface OnMonthChangeListener {
 public class AlbumActivity extends ActionBarActivity implements OnMonthChangeListener {
 
     private static final String TAG = LogUtil.makeTag(AlbumActivity.class);
-    @ViewById
-    CalendarPickerView calendarPickerView;
-
-    @AfterViews
-    @Deprecated
-    void initCalender() {
-        showThisMonth();
-    }
-
-    /**
-     * fresh calender by {@link AlbumActivity#displayedMonth}
-     */
-    @Deprecated
-    private void showMonthCalender() {
-        Pair<Date, Date> mon = getFirstAndLastDayOf(displayedMonth);
-        calendarPickerView.init(mon.first, mon.second);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,40 +66,9 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     }
 
     @Fun
-    @Deprecated
-    private Pair<Date, Date> getFirstAndLastDayOf(Calendar anyday) {
-        Calendar min = (Calendar) displayedMonth.clone();
-        Calendar max = (Calendar) displayedMonth.clone();
-        min.set(Calendar.DAY_OF_MONTH, displayedMonth.getActualMinimum(Calendar.DAY_OF_MONTH));
-        max.set(Calendar.DAY_OF_MONTH, displayedMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
-        return new Pair<>(min.getTime(), max.getTime());
-    }
-
-    @Deprecated
-    void showNextMonthCalender() {
-        displayedMonth.add(Calendar.MONTH, 1);
-        showMonthCalender();
-    }
-
-    @Deprecated
-    void showPreviewMonthCalender() {
-        displayedMonth.add(Calendar.MONTH, -1);
-        showMonthCalender();
-    }
-
-    @Deprecated
-    void showThisMonth() {
-        Calendar calendar = Calendar.getInstance();
-        displayedMonth.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-        displayedMonth.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        showMonthCalender();
-    }
-
-
-    @Fun
     @Click
     void backToToday(View view) {
-        showThisMonth();
+        mAdapter.showTodayMonthCalender();
     }
 
     @Fun
@@ -157,6 +109,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         mAdapter = new CalenderAdapter(this);
         calenderGrid.setAdapter(mAdapter);
         mAdapter.setOnMonthChangeListener(this);
+        mAdapter.showTodayMonthCalender();
     }
 
     @Override
@@ -251,8 +204,8 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         public CalenderAdapter(Context context) {
             this.mContext = context;
             mCalender = Calendar.getInstance();
-            onChange(mCalender);
         }
+
 
         public void setOnMonthChangeListener(OnMonthChangeListener listener) {
             onMonthChangeListener = listener;
@@ -272,6 +225,13 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
 
         public void showNextMonthCalender() {
             mCalender.add(Calendar.MONTH, 1);
+            notifyDataSetInvalidated();
+        }
+
+        public void showTodayMonthCalender() {
+            Calendar today = Calendar.getInstance();
+            mCalender.set(Calendar.YEAR, today.get(Calendar.YEAR));
+            mCalender.set(Calendar.MONTH, today.get(Calendar.MONTH));
             notifyDataSetInvalidated();
         }
 
