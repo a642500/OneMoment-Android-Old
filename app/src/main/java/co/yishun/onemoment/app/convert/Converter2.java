@@ -23,19 +23,19 @@ class Converter2 extends Converter {
         try {
             mFFmpeg.loadBinary(new FFmpegLoadBinaryResponseHandler() {
                 @Override public void onFailure() {
-                    Log.e(TAG, "load error");
+                    LogUtil.e(TAG, "load error");
                 }
 
                 @Override public void onSuccess() {
-                    Log.i(TAG, "load success");
+                    LogUtil.i(TAG, "load success");
                 }
 
                 @Override public void onStart() {
-                    Log.i(TAG, "load start");
+                    LogUtil.i(TAG, "load start");
                 }
 
                 @Override public void onFinish() {
-                    Log.i(TAG, "load finish");
+                    LogUtil.i(TAG, "load finish");
                 }
             });
         } catch (FFmpegNotSupportedException e) {

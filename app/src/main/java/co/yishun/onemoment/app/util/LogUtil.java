@@ -3,7 +3,7 @@ package co.yishun.onemoment.app.util;
 import android.util.Log;
 
 /**
- * This util is used to generate custom log.You can write log to some file on sdcard.
+ * This util is used to generate custom Log.You can write log to some file on sdcard.
  * <p/>
  * Created by Carlos on 2/7/15.
  */
@@ -58,7 +58,7 @@ public class LogUtil {
 
     /**
      * Send a protected log message.
-     * This log must write into a encrypted log file, and it won't print in the Android System log.
+     * This log must write into a encrypted log file, and it won't print in the Android System Log.
      *
      * @param tag Used to identify the source of a log message.  It usually identifies
      *            the class or activity where the log call occurs.
@@ -70,7 +70,7 @@ public class LogUtil {
 
     /**
      * Send a protected log message and log the exception.
-     * This log must write into a encrypted log file, and it won't print in the Android System log.
+     * This log must write into a encrypted log file, and it won't print in the Android System Log.
      *
      * @param tag Used to identify the source of a log message.  It usually identifies
      *            the class or activity where the log call occurs.

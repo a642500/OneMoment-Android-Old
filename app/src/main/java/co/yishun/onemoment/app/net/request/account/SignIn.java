@@ -49,7 +49,7 @@ public class SignIn extends Request<AccountResult> {
                         e.printStackTrace();
                     }
                     if (result != null) {
-                        Log.d(TAG, "result " + result);
+                        LogUtil.d(TAG, "result " + result);
                         String s = DecodeUtil.decode(result);
                         LogUtil.d(TAG, s);
                         if (s != null) {
@@ -63,7 +63,7 @@ public class SignIn extends Request<AccountResult> {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-            Log.i(TAG, "load sign in");
+            LogUtil.i(TAG, "load sign in");
 
         }
     }

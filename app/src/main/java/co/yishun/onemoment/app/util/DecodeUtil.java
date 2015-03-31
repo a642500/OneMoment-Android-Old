@@ -39,7 +39,7 @@ public class DecodeUtil {
 
 
             byte[] key = Base64.decode(Config.AES_KEY.getBytes("UTF-8"), Base64.DEFAULT);
-            Log.d(TAG, "key: " + new String(key));
+            LogUtil.d(TAG, "key: " + new String(key));
             SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivT));

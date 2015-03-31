@@ -36,7 +36,7 @@ public class AccountHelper {
 
         try {
             String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-            Log.i(TAG, "identity info path: " + path);
+            LogUtil.i(TAG, "identity info path: " + path);
             FileOutputStream fout = new FileOutputStream(path);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(data);

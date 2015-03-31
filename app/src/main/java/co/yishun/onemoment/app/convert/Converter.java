@@ -88,7 +88,7 @@ public abstract class Converter {
     final public void start() {
         mCommand.append(' ');
         mCommand.append(mOutput);
-        Log.i(TAG, this.toString());
+        LogUtil.i(TAG, this.toString());
         run();
     }
 

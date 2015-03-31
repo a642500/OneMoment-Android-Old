@@ -39,6 +39,7 @@ interface OnMonthChangeListener {
 @EActivity(R.layout.activity_album)
 public class AlbumActivity extends ActionBarActivity implements OnMonthChangeListener {
 
+    private static final String TAG = LogUtil.makeTag(AlbumActivity.class);
     @ViewById
     CalendarPickerView calendarPickerView;
 
@@ -55,6 +56,12 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     private void showMonthCalender() {
         Pair<Date, Date> mon = getFirstAndLastDayOf(displayedMonth);
         calendarPickerView.init(mon.first, mon.second);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LogUtil.d(TAG, "onCreate");
     }
 
     @Fun
@@ -104,11 +111,6 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     @Click
     void previousMonthBtn(View view) {
         mAdapter.showPreviewMonthCalender();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @ViewById
@@ -208,6 +210,12 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d(TAG, "onResume");
+    }
+
     @Fun
     @Click
     void syncBtn(View view) {
@@ -277,7 +285,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
             Calendar calendar = (Calendar) anyday.clone();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             int a = calendar.get(Calendar.DAY_OF_WEEK);
-            Log.d(TAG, String.valueOf(a));
+            LogUtil.d(TAG, String.valueOf(a));
             return a;
         }
 
@@ -341,6 +349,8 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
 
         @Background
         void fillBackground(ImageView imageView, int day) {
+//            return;
+            LogUtil.d(TAG, "fill background start,day: " + day);
             Calendar today = ((Calendar) (mCalender.clone()));
             today.set(Calendar.DAY_OF_MONTH, day);
             String time = new SimpleDateFormat(Config.TIME_FORMAT).format(today.getTime());

@@ -184,11 +184,19 @@ public class RecordingActivity extends Activity {
 
     @Override
     protected void onPause() {
+        LogUtil.d(TAG, "onPause start");
         super.onPause();
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
+        LogUtil.d(TAG, "onPause end");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.d(TAG, "onDestroy");
     }
 
     private void releaseMediaRecorder() {
@@ -235,7 +243,7 @@ public class RecordingActivity extends Activity {
             // with {@link SurfaceView}
             mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
         } catch (IOException e) {
-            Log.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
+            LogUtil.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
             prepareStatus = PREPARED_FAILED;
         }
 //        mPreview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
@@ -294,11 +302,11 @@ public class RecordingActivity extends Activity {
         try {
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
-            Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+            LogUtil.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             prepareStatus = PREPARED_FAILED;
         } catch (IOException e) {
-            Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
+            LogUtil.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             prepareStatus = PREPARED_FAILED;
         }
@@ -319,7 +327,7 @@ public class RecordingActivity extends Activity {
 
     @UiThread(delay = 1200L)
     void stopRecordAfterSomeTime() {
-        Log.i(TAG, "time run out, isRecording: " + isRecording);
+        LogUtil.i(TAG, "time run out, isRecording: " + isRecording);
         if (isRecording) {
             // stop recording and release camera
             mMediaRecorder.stop();  // stop the recording
@@ -346,30 +354,30 @@ public class RecordingActivity extends Activity {
         Converter.with(this).from(from).cropToStandard().to(to).setHandler(new FFmpegExecuteResponseHandler() {
             @Override
             public void onSuccess(String message) {
-                Log.i(TAG, "success: " + message);
+                LogUtil.i(TAG, "success: " + message);
             }
 
             @Override
             public void onProgress(String message) {
-                Log.i(TAG, "progress: " + message);
+                LogUtil.i(TAG, "progress: " + message);
 
             }
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "fail: " + message);
+                LogUtil.e(TAG, "fail: " + message);
 
             }
 
             @Override
             public void onStart() {
-                Log.i(TAG, "start");
+                LogUtil.i(TAG, "start");
 
             }
 
             @Override
             public void onFinish() {
-                Log.i(TAG, "finish");
+                LogUtil.i(TAG, "finish");
                 onConvert(0, from, to);
             }
         }).start();
