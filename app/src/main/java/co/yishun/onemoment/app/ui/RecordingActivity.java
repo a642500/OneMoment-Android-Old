@@ -258,9 +258,10 @@ public class RecordingActivity extends Activity {
 //                    e.printStackTrace();
 //            }
 //        }
+        //TODO cause crash when quick resume activity.
         mCamera = CameraHelper.getCameraInstance();
         LogUtil.d(TAG, "unlock at getInstance");
-        ((MyApplication) getApplication()).isRelease = false;
+//        ((MyApplication) getApplication()).isRelease = false;
         final Camera.Parameters parameters = mCamera.getParameters();
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
