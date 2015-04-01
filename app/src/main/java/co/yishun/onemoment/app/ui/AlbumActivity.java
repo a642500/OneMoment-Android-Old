@@ -2,13 +2,9 @@ package co.yishun.onemoment.app.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.Pair;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
@@ -20,9 +16,9 @@ import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import co.yishun.onemoment.app.util.WeiboHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.picasso.Picasso;
-import com.squareup.timessquare.CalendarPickerView;
 import org.androidannotations.annotations.*;
 
 import java.io.File;
@@ -145,6 +141,8 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         return true;
     }
 
+    private WeiboHelper mWeiboHelper = null;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -157,7 +155,7 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         switch (item.getItemId()) {
             case R.id.action_identity:
                 if (AccountHelper.isLogin()) IdentityInfoActivity_.intent(this).start();
-                else LoginActivity.showLoginDialog(this);
+                else mWeiboHelper = LoginActivity.showLoginDialog(this);
                 break;
             case R.id.action_sync_settings:
 //                if (AccountHelper.isLogin())
@@ -184,6 +182,14 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
     }
 
     private final Calendar displayedMonth = Calendar.getInstance();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mWeiboHelper != null) {
+            mWeiboHelper.ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+    }
 
     @Fun
     @Click

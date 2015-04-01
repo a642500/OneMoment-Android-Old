@@ -1,7 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +19,9 @@ import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
 
 /**
@@ -97,13 +101,37 @@ public class LoginActivity extends ActionBarActivity {
         return AccountHelper.isValidPassword(mPassword);
     }
 
-    public static void showLoginDialog(Context context) {
-        final MaterialDialog dialog = new MaterialDialog.Builder(context).customView(R.layout.login_dialog, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
+    public static WeiboHelper showLoginDialog(Activity activity) {
+        final MaterialDialog dialog = new MaterialDialog.Builder(activity).customView(R.layout.login_dialog, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
         View view = dialog.getCustomView();
         view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
-            LoginActivity_.intent(context).start();
+            LoginActivity_.intent(activity).start();
+            dialog.dismiss();
+        });
+        final WeiboHelper helper = new WeiboHelper(activity);
+        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> {
+            helper.login(new WeiboHelper.WeiboLoginListener() {
+                @Override
+                public void onSuccess(Oauth2AccessToken token) {
+                    Toast.makeText(activity, activity.getString(R.string.weiboLoginSuccess), Toast.LENGTH_SHORT).show();
+                    //TODO use token to sign up
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onFail() {
+                    Toast.makeText(activity, activity.getString(R.string.weiboLoginFail), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(activity, activity.getString(R.string.weiboLoginCancel), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
             dialog.dismiss();
         });
         dialog.show();
+        return helper;
     }
 }

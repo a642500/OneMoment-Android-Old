@@ -150,4 +150,5 @@ public class AccountHelper {
     public static boolean isLogin() {
         return false;
     }
+
 }

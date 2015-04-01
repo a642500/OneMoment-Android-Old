@@ -73,6 +73,10 @@
     <string name="signUpNext">Next</string>
     <string name="signUpLoginEntry">Already has an account? Sign in ></string>
 
+    <string name="weiboLoginSuccess">Login Success</string>
+    <string name="weiboLoginFail">Login Failed</string>
+    <string name="weiboLoginCancel">Login Cancel</string>
+
 
     <string name="dayOfWeekSun">Sun</string>
     <string name="dayOfWeekMon">Mon</string>
