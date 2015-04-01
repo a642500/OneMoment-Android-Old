@@ -23,6 +23,7 @@ import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.webkit.DownloadListener;
 import co.yishun.onemoment.app.config.Config;
 
 import java.io.File;
@@ -57,17 +58,28 @@ public class CameraHelper {
             return null;
 
         Camera.Size optimalSize = null;
-        double minHeightDiff = Double.MAX_VALUE;
-        double minWidthDiff = Double.MAX_VALUE;
+//        double minHeightDiff = Double.MAX_VALUE;
+//        double minWidthDiff = Double.MAX_VALUE;
+
+        double ratio = ((double) targetWidth) / targetHeight;
+        LogUtil.i(TAG, "target height: " + targetHeight + ", target ratio: " + ratio);
+        double minRatioDiff = Double.MAX_VALUE;
 
         for (Camera.Size size : sizes) {
-            LogUtil.v("iter height", "width: " + size.width + ", height: " + size.height);
-            if (size.height >= targetHeight && Math.abs(size.height - targetHeight) <= minHeightDiff
-                    && size.width >= targetWidth && Math.abs(size.width - targetWidth) <= minWidthDiff) {
+            if (size.height < targetHeight || size.width < targetWidth) continue;
+            double sizeRatio = ((float) size.width) / size.height;
+            double ratioDiff = Math.abs(sizeRatio - ratio);
+            if (ratioDiff < minRatioDiff) {
+                minRatioDiff = ratioDiff;
                 optimalSize = size;
-                minHeightDiff = Math.abs(size.height - targetHeight);
-                minWidthDiff = Math.abs(size.width - targetWidth);
             }
+            LogUtil.v("iter height", "width: " + size.width + ", height: " + size.height + ", ratio: " + sizeRatio);
+//                if (size.height >= targetHeight && Math.abs(size.height - targetHeight) <= minHeightDiff
+//                        && size.width >= targetWidth && Math.abs(size.width - targetWidth) <= minWidthDiff) {
+//                    optimalSize = size;
+//                    minHeightDiff = Math.abs(size.height - targetHeight);
+//                    minWidthDiff = Math.abs(size.width - targetWidth);
+//                }
         }
         LogUtil.i("selected size", "width: " + optimalSize.width + ", height: " + optimalSize.height);
         return optimalSize;

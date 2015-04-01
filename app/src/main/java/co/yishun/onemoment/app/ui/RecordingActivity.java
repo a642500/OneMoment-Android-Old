@@ -265,12 +265,18 @@ public class RecordingActivity extends Activity {
         final Camera.Parameters parameters = mCamera.getParameters();
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
+//        mPreview.setOpaque(false);
 
         mPreview.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             mPreview.setOpaque(false);
             Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
             mPreview.setTransform(mat);
         });
+//        runOnUiThread(() -> {
+//            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
+//            mPreview.setTransform(mat);
+//        });
+
 
         mCamera.setParameters(parameters);
         mCamera.setDisplayOrientation(90);
@@ -492,20 +498,26 @@ public class RecordingActivity extends Activity {
         int viewHeight = previewView.getHeight();
         LogUtil.v(TAG, "view width: " + viewWidth);
         if (viewHeight != viewWidth)
-            LogUtil.w(TAG, "preview view width not equals height, width is " + viewWidth + ", height is" + viewHeight);
+            LogUtil.w(TAG, "preview view width not equals height, width is " + viewWidth + ", height is " + viewHeight);
         LogUtil.v(TAG, "crop width: " + cropSize.first);
         if (!cropSize.first.equals(cropSize.second)) {
             LogUtil.w(TAG, "target size first not equals second, first is " + cropSize.first + ", second is" + cropSize.second);
         }
 
         //set scale
-        float scaleX = viewWidth / cropSize.first;
-        float scaleY = viewHeight / cropSize.second;
-        LogUtil.i(TAG, "scaleX " + scaleX + "; scaleY " + scaleY);
-        mat.setScale(scaleX, scaleY);
+        double ratio = ((double) cropSize.first) / cropSize.second;
+        assert ratio == 1.0d;
+        int viewLength = Math.min(viewHeight, viewWidth);
+        int croppedLength = Math.min(size.height, size.width);
 
+        float scale = viewLength / croppedLength;
+
+//        float scaleX = viewWidth / cropSize.first;
+//        float scaleY = viewHeight / cropSize.second;
+//        LogUtil.i(TAG, "scaleX " + scaleX + "; scaleY " + scaleY);
+        mat.setScale(scale, 1);
         //move to center
-        mat.postTranslate(size.width / 2 - viewWidth / 2, size.height / 2 - viewHeight / 2);
+//        mat.postTranslate(croppedLength * scale / 2 - viewLength / 2, croppedLength * scale / 2 - viewLength / 2);
         return mat;
     }
 
