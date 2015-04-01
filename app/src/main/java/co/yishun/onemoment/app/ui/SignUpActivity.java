@@ -8,13 +8,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
-import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.PhoneVerification;
-import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.afollestad.materialdialogs.MaterialDialog;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
@@ -42,40 +41,72 @@ public class SignUpActivity extends ActionBarActivity {
     }
 
     @Click
+    @Background
     void getVerificationCodeBtnClicked(@NonNull View view) {
         if (checkPhoneNum()) {
+            showProgress();
             ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(mPhoneNum).setCallback((e, result) -> {
                 if (result.getCode() == ErrorCode.SUCCESS) {
-                    Toast.makeText(this, getString(R.string.signUpVerificationCodeSuccessToast), Toast.LENGTH_SHORT).show();
+                    showNotification(R.string.signUpVerificationCodeSuccessToast);
                     //TODO disable btn temporary
                     //TODO add handle sms
                 } else {
-                    Toast.makeText(this, getString(R.string.signUpVerificationCodeFailedToast), Toast.LENGTH_SHORT).show();
+                    showNotification(R.string.signUpVerificationCodeFailedToast);
                 }
+                hideProgress();
             });
         } else
-            Toast.makeText(this, "Your phone is invalid", Toast.LENGTH_SHORT).show();
+            showNotification("Your phone is invalid");
     }
 
     @Click
+    @Background
     void nextBtnClicked(@NonNull View view) {
-        if (checkPhoneNum() && checkVerificationCode())
+        if (checkPhoneNum() && checkVerificationCode()) {
+            showProgress();
             ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(mPhoneNum).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    Toast.makeText(this, "verify failed!", Toast.LENGTH_SHORT).show();
+                    showNotification("verify failed!");
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    Toast.makeText(this, "verify success", Toast.LENGTH_SHORT).show();
+                    showNotification("verify success");
                 } else {
-                    Toast.makeText(this, "verify failed!", Toast.LENGTH_SHORT).show();
+                    showNotification("verify failed!");
                 }
+                hideProgress();
             });
-        else
-            Toast.makeText(this, "Your phone or verification code is wrong", Toast.LENGTH_SHORT).show();
+        } else
+            showNotification("Your phone or verification code is wrong");
     }
 
     @ViewById
     Toolbar toolbar;
+
+    private MaterialDialog mProgressDialog;
+
+    @UiThread
+    void showProgress() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new MaterialDialog.Builder(this).progress(true, 0).content(R.string.signUpLoading).build();
+        }
+        mProgressDialog.show();
+    }
+
+    @UiThread
+    void showNotification(String string) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
+
+    @UiThread
+    void showNotification(int stringRes) {
+        showNotification(getString(stringRes));
+    }
+
+
+    @UiThread
+    void hideProgress() {
+        mProgressDialog.hide();
+    }
 
     @AfterViews
     void initToolbar() {
@@ -93,7 +124,7 @@ public class SignUpActivity extends ActionBarActivity {
 
                 break;
             default:
-                Toast.makeText(this, "success", Toast.LENGTH_LONG).show();
+                showNotification("success");
                 break;
         }
     }
