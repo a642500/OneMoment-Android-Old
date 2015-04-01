@@ -146,4 +146,8 @@ public class AccountHelper {
 
     private static void enableSync(Context context) {
     }
+
+    public static boolean isLogin() {
+        return false;
+    }
 }
