@@ -39,7 +39,6 @@ public class WeiboHelper {
         ssoHandler.authorize(new WeiboAuthListener() {
             @Override
             public void onComplete(Bundle values) {
-                // 从 Bundle 中解析 Token
                 Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
                 if (accessToken.isSessionValid()) {
 //                    AccessTokenKeeper.writeAccessToken(mActivity.getApplicationContext(), accessToken);
