@@ -24,8 +24,10 @@ import java.util.Arrays;
 public class DecodeUtil {
     private static final String TAG = LogUtil.makeTag(DecodeUtil.class);
 
-    public static String decode(String string) throws NotValidException {
+    public static String decode(String string) {
+        if (string == null) return null;
         try {
+            LogUtil.v(TAG, "origin text: " + string);
             int split = string.indexOf(':');
             String iv = string.substring(0, split);
             String etext = string.substring(split + 1, string.length());
@@ -44,13 +46,13 @@ public class DecodeUtil {
             Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivT));
             byte[] re = cipher.doFinal(etextT);
-            return new String(re);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | UnsupportedEncodingException e) {
+            String s = new String(re);
+            String json = s.substring(0, s.lastIndexOf('}')+1);
+            LogUtil.v(TAG, "json: " + json);
+            return json;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public class NotValidException extends IllegalArgumentException {
     }
 }

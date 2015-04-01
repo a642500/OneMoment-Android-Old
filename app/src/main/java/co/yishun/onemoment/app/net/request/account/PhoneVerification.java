@@ -2,8 +2,13 @@ package co.yishun.onemoment.app.net.request.account;
 
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
+import co.yishun.onemoment.app.net.result.NickNameResult;
 import co.yishun.onemoment.app.net.result.VerificationResult;
+import co.yishun.onemoment.app.util.DecodeUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Carlos on 2/16/15.
@@ -26,9 +31,14 @@ public abstract class PhoneVerification {
         public void setCallback(FutureCallback<VerificationResult> callback) {
             check();
             if (callback != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("phone", phone)
-                        .as(VerificationResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key)
+                            .setBodyParameter("phone", phone)
+                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -103,10 +113,15 @@ public abstract class PhoneVerification {
         public void setCallback(FutureCallback<VerificationResult> callback) {
             check();
             if (callback != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("phone", phone)
-                        .setBodyParameter("verify_code", verifyCode)
-                        .as(VerificationResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key)
+                            .setBodyParameter("phone", phone)
+                            .setBodyParameter("verify_code", verifyCode)
+                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

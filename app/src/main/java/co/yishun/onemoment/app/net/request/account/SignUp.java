@@ -4,9 +4,15 @@ import android.support.annotation.NonNull;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.net.result.NickNameResult;
+import co.yishun.onemoment.app.net.result.VerificationResult;
 import co.yishun.onemoment.app.util.AccountHelper;
+import co.yishun.onemoment.app.util.DecodeUtil;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Bean to create a SignUp request
@@ -25,13 +31,13 @@ public abstract class SignUp {
         * **Required** `password `
 
         */
-        private long phone;
+        private String phone;
         private String password;
 
         /**
          * @param phoneNum of the account
          */
-        public ByPhone setPhoneNum(long phoneNum) {
+        public ByPhone setPhone(String phoneNum) {
             this.phone = phoneNum;
             return this;
         }
@@ -69,11 +75,15 @@ public abstract class SignUp {
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
             if (callback != null && builder != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("phone", String.valueOf(phone))
-                        .setBodyParameter("password", password)
-                        .as(AccountResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key)
+                            .setBodyParameter("phone", String.valueOf(phone))
+                            .setBodyParameter("password", password)
+                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -128,15 +138,19 @@ public abstract class SignUp {
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
             if (callback != null && builder != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("uid", uid)
-                        .setBodyParameter("nickname", nickname)
-                        .setBodyParameter("introduction", introduction)
-                        .setBodyParameter("gender", gender)
-                        .setBodyParameter("avatar_url", avatarUrl)
-                        .setBodyParameter("location", location)
-                        .as(AccountResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key)
+                            .setBodyParameter("uid", uid)
+                            .setBodyParameter("nickname", nickname)
+                            .setBodyParameter("introduction", introduction)
+                            .setBodyParameter("gender", gender)
+                            .setBodyParameter("avatar_url", avatarUrl)
+                            .setBodyParameter("location", location)
+                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
 
             }
         }

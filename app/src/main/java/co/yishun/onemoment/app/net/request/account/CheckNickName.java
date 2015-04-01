@@ -2,9 +2,14 @@ package co.yishun.onemoment.app.net.request.account;
 
 import android.text.TextUtils;
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.net.result.NickNameResult;
 import co.yishun.onemoment.app.net.request.Request;
+import co.yishun.onemoment.app.util.DecodeUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Carlos on 2/15/15.
@@ -26,9 +31,15 @@ public class CheckNickName extends Request<NickNameResult> {
     public void setCallback(FutureCallback<NickNameResult> callback) {
         check();
         if (builder != null && callback != null) {
-            builder.load(getUrl())
-                    .setBodyParameter("nickname", nickname)
-                    .as(NickNameResult.class).setCallback(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("nickname", nickname).asString().setCallback((e, result) ->
+                                callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), NickNameResult.class))
+                ).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 

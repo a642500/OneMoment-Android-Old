@@ -3,7 +3,12 @@ package co.yishun.onemoment.app.net.request.account;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.net.result.NickNameResult;
+import co.yishun.onemoment.app.util.DecodeUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Carlos on 2/15/15.
@@ -21,9 +26,12 @@ public abstract class IdentityInfo {
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
             if (builder != null && callback != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .as(AccountResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key).asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -84,14 +92,18 @@ public abstract class IdentityInfo {
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
             if (callback != null && builder != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("nickname", nickname)
-                        .setBodyParameter("introduction", introduction)
-                        .setBodyParameter("gender", gender)
-                        .setBodyParameter("avatar_url", avatarUrl)
-                        .setBodyParameter("location", location)
-                        .as(AccountResult.class).setCallback(callback);
+                try {
+                    builder.load(getUrl())
+                            .setBodyParameter("key", key)
+                            .setBodyParameter("nickname", nickname)
+                            .setBodyParameter("introduction", introduction)
+                            .setBodyParameter("gender", gender)
+                            .setBodyParameter("avatar_url", avatarUrl)
+                            .setBodyParameter("location", location)
+                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

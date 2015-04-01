@@ -7,7 +7,9 @@ import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.gson.GsonObjectParser;
 
 import java.util.concurrent.ExecutionException;
 
@@ -16,7 +18,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class SignIn extends Request<AccountResult> {
     public static final String TAG = LogUtil.makeTag(SignIn.class);
-    private long phone;
+    private String phone;
     private String password;
 
     public SignIn setPassword(String password) {
@@ -24,7 +26,7 @@ public class SignIn extends Request<AccountResult> {
         return this;
     }
 
-    public SignIn setPhone(long phone) {
+    public SignIn setPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -42,36 +44,20 @@ public class SignIn extends Request<AccountResult> {
             try {
                 builder.load(getUrl())
                         .setBodyParameter("key", key)
-                        .setBodyParameter("phone", String.valueOf(phone))
+                        .setBodyParameter("phone", phone)
                         .setBodyParameter("password", password)
-                        .asString().setCallback((e, result) -> {
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
-                    if (result != null) {
-                        LogUtil.d(TAG, "result " + result);
-                        String s = DecodeUtil.decode(result);
-                        LogUtil.d(TAG, s);
-                        if (s != null) {
-                            String sMin = s.substring(0, s.lastIndexOf('}'));
-                            LogUtil.d(TAG, sMin);
-                        }
-                    }
-                }).get();
-//                as(AccountResult.class)
-//                        .setCallback(callback).get();
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             LogUtil.i(TAG, "load sign in");
-
         }
     }
 
     @Override
     protected void check() {
         LogUtil.privateLog(TAG, "Check(): " + this.toString());
-        if (!(AccountHelper.isValidPhoneNum(String.valueOf(phone))
+        if (!(AccountHelper.isValidPhoneNum(phone)
                 && AccountHelper.isValidPassword(password)
         )) {
             throw new IllegalStateException("A request with error data");

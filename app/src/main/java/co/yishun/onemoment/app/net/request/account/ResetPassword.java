@@ -3,16 +3,21 @@ package co.yishun.onemoment.app.net.request.account;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.net.result.VerificationResult;
 import co.yishun.onemoment.app.util.AccountHelper;
+import co.yishun.onemoment.app.util.DecodeUtil;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Carlos on 2/15/15.
  */
 public class ResetPassword extends Request<AccountResult> {
     public static final String TAG = LogUtil.makeTag(SignIn.class);
-    private long phone;
+    private String phone;
     private String password;
 
     public ResetPassword setPassword(String password) {
@@ -20,7 +25,7 @@ public class ResetPassword extends Request<AccountResult> {
         return this;
     }
 
-    public ResetPassword setPhone(long phone) {
+    public ResetPassword setPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -34,11 +39,15 @@ public class ResetPassword extends Request<AccountResult> {
     public void setCallback(final FutureCallback<AccountResult> callback) {
         check();
         if (builder != null && callback != null) {
-            builder.load(getUrl())
-                    .setBodyParameter("key", key)
-                    .setBodyParameter("phone", String.valueOf(phone))
-                    .setBodyParameter("password", password)
-                    .as(AccountResult.class).setCallback(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("phone", phone)
+                        .setBodyParameter("password", password)
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
