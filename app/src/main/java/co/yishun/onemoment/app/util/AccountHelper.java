@@ -147,8 +147,9 @@ public class AccountHelper {
     private static void enableSync(Context context) {
     }
 
-    public static boolean isLogin() {
-        return false;
+    public static boolean isLogin(Context context) {
+        String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+        return new File(path).exists();
     }
 
 }

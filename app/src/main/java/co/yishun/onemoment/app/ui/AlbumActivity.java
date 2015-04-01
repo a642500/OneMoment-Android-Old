@@ -1,5 +1,6 @@
 package co.yishun.onemoment.app.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +18,9 @@ import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import co.yishun.onemoment.app.util.WeiboHelper;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
@@ -154,8 +157,8 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
 
         switch (item.getItemId()) {
             case R.id.action_identity:
-                if (AccountHelper.isLogin()) IdentityInfoActivity_.intent(this).start();
-                else mWeiboHelper = LoginActivity.showLoginDialog(this);
+                if (AccountHelper.isLogin(this)) IdentityInfoActivity_.intent(this).start();
+                else mWeiboHelper = showLoginDialog();
                 break;
             case R.id.action_sync_settings:
 //                if (AccountHelper.isLogin())
@@ -227,6 +230,39 @@ public class AlbumActivity extends ActionBarActivity implements OnMonthChangeLis
         }
     }
 
+    public WeiboHelper showLoginDialog() {
+        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.login_dialog, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
+        View view = dialog.getCustomView();
+        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
+            SignUpActivity_.intent(this).start();
+            dialog.dismiss();
+        });
+        final WeiboHelper helper = new WeiboHelper(this);
+        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> {
+            helper.login(new WeiboHelper.WeiboLoginListener() {
+                @Override
+                public void onSuccess(Oauth2AccessToken token) {
+                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginSuccess), Toast.LENGTH_SHORT).show();
+                    //TODO use token to sign up
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onFail() {
+                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginFail), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginCancel), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
+            dialog.dismiss();
+        });
+        dialog.show();
+        return helper;
+    }
 
     @EBean
     static class CalenderAdapter extends BaseAdapter {
