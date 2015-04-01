@@ -72,6 +72,10 @@
     <string name="signUpGetVerificationCode">Get Verification Code</string>
     <string name="signUpNext">Next</string>
     <string name="signUpLoginEntry">Already has an account? Sign in ></string>
+    <string name="signUpPhoneInValidToast">Your phone number is invalid</string>
+    <string name="signUpVerificationCodeInValidToast">Your phone verification code is invalid</string>
+    <string name="signUpVerificationCodeSuccessToast">Verification code has been sent, please check</string>
+    <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
 
     <string name="weiboLoginSuccess">Login Success</string>
     <string name="weiboLoginFail">Login Failed</string>

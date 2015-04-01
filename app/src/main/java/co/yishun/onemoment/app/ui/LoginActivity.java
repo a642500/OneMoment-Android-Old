@@ -53,7 +53,7 @@ public class LoginActivity extends ActionBarActivity {
     @Click(R.id.loginBtn)
     void loginBtn(@NonNull View view) {
         if (checkPhoneNum() && checkPassword())
-            ((SignIn) (new SignIn().with(this))).setPhone(Long.parseLong(mPhoneNum)).setPassword(mPassword).setCallback((e, result) -> {
+            ((SignIn) (new SignIn().with(this))).setPhone(mPhoneNum).setPassword(mPassword).setCallback((e, result) -> {
 
                 if (e != null) {
                     e.printStackTrace();

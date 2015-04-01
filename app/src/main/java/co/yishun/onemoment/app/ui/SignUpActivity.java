@@ -1,6 +1,5 @@
 package co.yishun.onemoment.app.ui;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,13 +8,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
-import co.yishun.onemoment.app.net.request.account.SignIn;
+import co.yishun.onemoment.app.net.request.account.PhoneVerification;
 import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import com.afollestad.materialdialogs.MaterialDialog;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
@@ -43,18 +42,32 @@ public class SignUpActivity extends ActionBarActivity {
     }
 
     @Click
+    void getVerificationCodeBtnClicked(@NonNull View view) {
+        if (checkPhoneNum()) {
+            ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(mPhoneNum).setCallback((e, result) -> {
+                if (result.getCode() == ErrorCode.SUCCESS) {
+                    Toast.makeText(this, getString(R.string.signUpVerificationCodeSuccessToast), Toast.LENGTH_SHORT).show();
+                    //TODO disable btn temporary
+                    //TODO add handle sms
+                } else {
+                    Toast.makeText(this, getString(R.string.signUpVerificationCodeFailedToast), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else
+            Toast.makeText(this, "Your phone is invalid", Toast.LENGTH_SHORT).show();
+    }
+
+    @Click
     void nextBtnClicked(@NonNull View view) {
         if (checkPhoneNum() && checkVerificationCode())
-            ((SignUp.ByPhone) (new SignUp.ByPhone().with(this))).setPhoneNum(Long.parseLong(mPhoneNum)).setPassword(mVerificationCode).setCallback((e, result) -> {
-
+            ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(mPhoneNum).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Sign up failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "verify failed!", Toast.LENGTH_SHORT).show();
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    Toast.makeText(this, "Sign up success", Toast.LENGTH_SHORT).show();
-                    AccountHelper.saveIdentityInfo(result.getData(), this);
+                    Toast.makeText(this, "verify success", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Sign up failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "verify failed!", Toast.LENGTH_SHORT).show();
                 }
             });
         else
