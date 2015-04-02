@@ -1,17 +1,16 @@
 package co.yishun.onemoment.app.ui.account;
 
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.res.StringArrayRes;
 
 /**
  * Created by Carlos on 2015/4/2.
@@ -39,10 +38,96 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     @ViewById
     EditText nickNameEditText;
 
+    @StringArrayRes
+    String[] provinces;
+
+    int[] provincesItemsRes = {
+            R.array.beijinProvinceItem,
+            R.array.tianjinProvinceItem,
+            R.array.hebeiProvinceItem,
+            R.array.shanxi1ProvinceItem,
+            R.array.neimengguProvinceItem,
+            R.array.liaoningProvinceItem,
+            R.array.jilinProvinceItem,
+            R.array.heilongjiangProvinceItem,
+            R.array.shanghaiProvinceItem,
+            R.array.jiangsuProvinceItem,
+            R.array.zhejiangProvinceItem,
+            R.array.anhuiProvinceItem,
+            R.array.fujianProvinceItem,
+            R.array.jiangxiProvinceItem,
+            R.array.shandongProvinceItem,
+            R.array.henanProvinceItem,
+            R.array.hubeiProvinceItem,
+            R.array.hunanProvinceItem,
+            R.array.guangdongProvinceItem,
+            R.array.guangxiProvinceItem,
+            R.array.hainanProvinceItem,
+            R.array.chongqingProvinceItem,
+            R.array.sichuanProvinceItem,
+            R.array.guizhouProvinceItem,
+            R.array.yunnanProvinceItem,
+            R.array.xizangProvinceItem,
+            R.array.shanxi2ProvinceItem,
+            R.array.gansuProvinceItem,
+            R.array.qinghaiProvinceItem,
+            R.array.ningxiaProvinceItem,
+            R.array.xinjiangProvinceItem,
+            R.array.hongkongProvinceItem,
+            R.array.aomenProvinceItem,
+            R.array.taiwanProvinceItem
+    };
+
 
     @Click
     void areaItemClicked(View view) {
+        MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
+                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick).build();
+        View dialogView = dialog.getCustomView();
+        Spinner provinceSpinner = (Spinner) dialogView.findViewById(R.id.provinceSpinner);
+        Spinner districtSpinner = (Spinner) dialogView.findViewById(R.id.districtSpinner);
 
+        districtSpinner.setEnabled(false);
+        provinceSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, provinces));
+        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                districtSpinner.setEnabled(true);
+                districtSpinner.setAdapter(new ArrayAdapter<>(IntegrateInfoActivity.this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        getResources().getStringArray(provincesItemsRes[position])));
+                districtSpinner.setSelection(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                districtSpinner.setEnabled(false);
+            }
+        });
+        provinceSpinner.setSelection(0);
+        dialog.setOnDismissListener(dialog1 -> {
+            String province = (String) provinceSpinner.getSelectedItem();
+            String district = (String) districtSpinner.getSelectedItem();
+            setProvinceAndDistrict(province, district);
+        });
+        dialog.show();
+    }
+
+    @ViewById
+    TextView areaTextView;
+
+    private String mProvince;
+    private String mDistrict;
+
+    @AfterViews
+    void initAreaTextView() {
+        areaTextView.setText(provinces[0] + getResources().getStringArray(provincesItemsRes[0])[0]);
+    }
+
+    private void setProvinceAndDistrict(String pro, String dis) {
+        mProvince = pro;
+        mDistrict = dis;
+        areaTextView.setText(pro + dis);
     }
 
 
@@ -82,7 +167,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void okBtnClicked(View view) {
-
+        new SignUp.ByPhone().setPhone(phone).setPassword(password);
+        //TODO 有密码和手机已经可以注册了！！
     }
 
 
