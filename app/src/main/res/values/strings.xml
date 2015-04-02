@@ -70,13 +70,20 @@
     <string name="signUpPhone">Phone Number</string>
     <string name="signUpVerificationCode">Verification Code</string>
     <string name="signUpGetVerificationCode">Get Verification Code</string>
-    <string name="signUpNext">Next</string>
+    <string name="signUpNextBtn">Next</string>
     <string name="signUpLoginEntry">Already has an account? Sign in ></string>
     <string name="signUpPhoneInValidToast">Your phone number is invalid</string>
     <string name="signUpVerificationCodeInValidToast">Your phone verification code is invalid</string>
     <string name="signUpVerificationCodeSuccessToast">Verification code has been sent, please check</string>
     <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
     <string name="signUpLoading">Loading…</string>
+
+    <string name="setPasswordTitle">Set Password</string>
+    <string name="setPasswordPasswordHint">Password</string>
+    <string name="setPasswordPasswordAgainHint">Again</string>
+    <string name="setPasswordNextBtn">Next</string>
+    <string name="setPasswordPasswordInvalid">Your password is invalid. </string>
+    <string name="setPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
 
     <string name="integrateInfoTitle">Integrate Information</string>
     <string name="integrateInfoNickNameHint">Your Name</string>

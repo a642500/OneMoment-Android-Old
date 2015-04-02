@@ -1,40 +1,34 @@
 package co.yishun.onemoment.app.ui;
 
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.PhoneVerification;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
-public class SignUpActivity extends ActionBarActivity {
+public class SignUpActivity extends BaseActivity {
 
     private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
 
-    private String mPhoneNum;
+    private String phone;
     private String mVerificationCode;
 
     @AfterTextChange(R.id.phoneEditText)
     void onPhoneChange(Editable text, TextView phone) {
-        mPhoneNum = text.toString();
+        this.phone = text.toString();
     }
 
     @AfterTextChange(R.id.verificationCodeEditText)
     void onVerificationCodeChange(Editable text, TextView phone) {
         mVerificationCode = text.toString();
     }
-
 
     @Click
     void loginEntryBtnClicked(@NonNull View view) {
@@ -46,7 +40,7 @@ public class SignUpActivity extends ActionBarActivity {
     void getVerificationCodeBtnClicked(@NonNull View view) {
         if (checkPhoneNum()) {
             showProgress();
-            ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(mPhoneNum).setCallback((e, result) -> {
+            ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(phone).setCallback((e, result) -> {
                 if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification(R.string.signUpVerificationCodeSuccessToast);
                     //TODO disable btn temporary
@@ -65,16 +59,15 @@ public class SignUpActivity extends ActionBarActivity {
     void nextBtnClicked(@NonNull View view) {
         if (checkPhoneNum() && checkVerificationCode()) {
             showProgress();
-            ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(mPhoneNum).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
+            ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(phone).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
                     showNotification("verify failed!");
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification("verify success");
-                    IntegrateInfoActivity_.intent(this)
-                            .extra(IntegrateInfoActivity.EXTRA_SIGN_UP_TYPE, IntegrateInfoActivity.SignUpType.phone)
-                            .extra(IntegrateInfoActivity.EXTRA_PHONE, mPhoneNum)
-                            .start();
+                    SetPasswordActivity_.intent(this)
+                            .extra("phone", phone)
+                            .startForResult(IntegrateInfoActivity.REQUEST_PHONE);
                     this.finish();
                 } else {
                     showNotification("verify failed!");
@@ -85,43 +78,16 @@ public class SignUpActivity extends ActionBarActivity {
             showNotification("Your phone or verification code is wrong");
     }
 
-    @ViewById
-    Toolbar toolbar;
-
-    private MaterialDialog mProgressDialog;
-
-    @UiThread
-    void showProgress() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(R.string.signUpLoading).build();
+    @OnActivityResult(IntegrateInfoActivity.REQUEST_PHONE)
+    void onResult(int resultCode) {
+        switch (resultCode) {
+            case IntegrateInfoActivity.RESULT_SUCCESS:
+                this.finish();
+                break;
+            default:
+                break;
         }
-        mProgressDialog.show();
     }
-
-    @UiThread
-    void showNotification(String string) {
-        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-    }
-
-    @UiThread
-    void showNotification(int stringRes) {
-        showNotification(getString(stringRes));
-    }
-
-
-    @UiThread
-    void hideProgress() {
-        mProgressDialog.hide();
-    }
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.signUpTitle));
-        toolbar.setNavigationOnClickListener(v -> SignUpActivity.this.onBackPressed());
-    }
-
 
     @UiThread
     void signUpSuccess(AccountResult result) {
@@ -136,7 +102,7 @@ public class SignUpActivity extends ActionBarActivity {
     }
 
     private boolean checkPhoneNum() {
-        return AccountHelper.isValidPhoneNum(mPhoneNum);
+        return AccountHelper.isValidPhoneNum(phone);
     }
 
     private boolean checkVerificationCode() {

@@ -1,9 +1,5 @@
 package co.yishun.onemoment.app.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,63 +7,33 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 /**
  * Created by Carlos on 2015/4/2.
  */
 @EActivity(R.layout.activity_integrate_info)
-public class IntegrateInfoActivity extends ActionBarActivity {
+public class IntegrateInfoActivity extends BaseActivity {
     public static final String TAG = LogUtil.makeTag(IntegrateInfoActivity.class);
+    public static final int REQUEST_PHONE = 0;
+    public static final int REQUEST_WEIBO = 1;
 
-    public static final String EXTRA_SIGN_UP_TYPE = "type";
-    public static final String EXTRA_PHONE = "phone";
+    public static final int RESULT_CANCEL = 0;
+    public static final int RESULT_SUCCESS = 1;
 
-    public enum SignUpType {phone, weibo}
 
-    private SignUpType mType;
-    private String mPhone;
+//    public static final String EXTRA_SIGN_UP_TYPE = "type";
+//    public static final String EXTRA_PHONE = "phone";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        handleIntent(getIntent());
-    }
+//    public enum SignUpType {phone, weibo}
 
-    private void handleIntent(Intent intent) {
-        mType = (SignUpType) intent.getSerializableExtra(EXTRA_SIGN_UP_TYPE);
-        switch (mType) {
-            case phone:
-                mPhone = intent.getStringExtra(EXTRA_PHONE);
-                break;
-            case weibo:
-
-                break;
-            default:
-                LogUtil.e(TAG, "unknown sign up type");
-                break;
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        handleIntent(intent);
-    }
-
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.integrateInfoTitle));
-        toolbar.setNavigationOnClickListener(v -> IntegrateInfoActivity.this.onBackPressed());
-    }
+    @Extra
+    String phone;
+    @Extra
+    String password;
 
     @ViewById
     EditText nickNameEditText;
@@ -105,12 +71,9 @@ public class IntegrateInfoActivity extends ActionBarActivity {
                 .theme(Theme.DARK)
                 .title(R.string.integrateInfoGenderHint)
                 .items(R.array.integrateInfoGenderArray)
-                .itemsCallbackSingleChoice(MALE, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        setGender(which);
-                        return true; // allow selection
-                    }
+                .itemsCallbackSingleChoice(MALE, (dialog, view1, which, text) -> {
+                    setGender(which);
+                    return true; // allow selection
                 })
                 .positiveText(R.string.integrateInfoChooseBtn)
                 .show();
@@ -120,5 +83,6 @@ public class IntegrateInfoActivity extends ActionBarActivity {
     void okBtnClicked(View view) {
 
     }
+
 
 }

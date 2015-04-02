@@ -106,6 +106,10 @@
                 android:name=".ui.IntegrateInfoActivity_"
                 android:label="@string/integrateInfoTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+                android:name=".ui.SetPasswordActivity_"
+                android:label="@string/setPasswordTitle"
+                android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
