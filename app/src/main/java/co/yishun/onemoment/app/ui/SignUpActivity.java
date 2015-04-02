@@ -71,6 +71,11 @@ public class SignUpActivity extends ActionBarActivity {
                     showNotification("verify failed!");
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification("verify success");
+                    IntegrateInfoActivity_.intent(this)
+                            .extra(IntegrateInfoActivity.EXTRA_SIGN_UP_TYPE, IntegrateInfoActivity.SignUpType.phone)
+                            .extra(IntegrateInfoActivity.EXTRA_PHONE, mPhoneNum)
+                            .start();
+                    this.finish();
                 } else {
                     showNotification("verify failed!");
                 }

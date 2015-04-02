@@ -1,5 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +22,41 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.activity_integrate_info)
 public class IntegrateInfoActivity extends ActionBarActivity {
     public static final String TAG = LogUtil.makeTag(IntegrateInfoActivity.class);
+
+    public static final String EXTRA_SIGN_UP_TYPE = "type";
+    public static final String EXTRA_PHONE = "phone";
+
+    public enum SignUpType {phone, weibo}
+
+    private SignUpType mType;
+    private String mPhone;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        handleIntent(getIntent());
+    }
+
+    private void handleIntent(Intent intent) {
+        mType = (SignUpType) intent.getSerializableExtra(EXTRA_SIGN_UP_TYPE);
+        switch (mType) {
+            case phone:
+                mPhone = intent.getStringExtra(EXTRA_PHONE);
+                break;
+            case weibo:
+
+                break;
+            default:
+                LogUtil.e(TAG, "unknown sign up type");
+                break;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
 
     @ViewById
     Toolbar toolbar;
