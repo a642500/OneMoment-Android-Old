@@ -76,7 +76,7 @@
     <string name="signUpVerificationCodeInValidToast">Your phone verification code is invalid</string>
     <string name="signUpVerificationCodeSuccessToast">Verification code has been sent, please check</string>
     <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
-    <string name="signUpLoading">Loading…</string>
+    <string name="signUpLoading">Please waiting…</string>
 
     <string name="setPasswordTitle">Set Password</string>
     <string name="setPasswordPasswordHint">Password</string>
