@@ -78,6 +78,18 @@
     <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
     <string name="signUpLoading">Loading…</string>
 
+    <string name="integrateInfoTitle">Integrate Information</string>
+    <string name="integrateInfoNickNameHint">Your Name</string>
+    <string name="integrateInfoAreaHint">Area</string>
+    <string name="integrateInfoGenderHint">Gender</string>
+    <string name="integrateInfoFinishBtn">OK</string>
+
+    <string-array name="integrateInfoGenderArray">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+    <string name="integrateInfoChooseBtn">CHOOSE</string>
+
     <string name="weiboLoginSuccess">Login Success</string>
     <string name="weiboLoginFail">Login Failed</string>
     <string name="weiboLoginCancel">Login Cancel</string>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/bgColorLoginToolbar"
+            />
+
+    <quickutils.core.views.image.CircleImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shooting"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            />
+
+    <EditText
+            android:id="@+id/nickNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="@string/integrateInfoNickNameHint"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            />
+
+    <RelativeLayout
+            android:id="@+id/areaItem"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_square_frame"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/integrateInfoAreaHint"
+                android:padding="16dp"
+                />
+
+        <ImageView
+                android:id="@+id/rightIcon0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_right"
+                android:textColor="@android:color/white"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:padding="16dp"
+                />
+
+        <TextView
+                android:id="@+id/areaTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jaqucline"
+                android:textColor="@android:color/white"
+                android:layout_toLeftOf="@id/rightIcon0"
+                android:layout_centerVertical="true"
+                />
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/genderItem"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_square_frame"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="16dp"
+                android:text="@string/integrateInfoGenderHint"
+                />
+
+        <ImageView
+                android:id="@+id/rightIcon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_right"
+                android:textColor="@android:color/white"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:padding="16dp"
+                />
+
+        <TextView
+                android:id="@+id/genderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="♀"
+                android:textSize="25sp"
+                android:textColor="@android:color/white"
+                android:layout_toLeftOf="@id/rightIcon1"
+                android:layout_centerVertical="true"
+                />
+    </RelativeLayout>
+
+
+    <Button
+            android:id="@+id/okBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/integrateInfoFinishBtn"
+            android:background="@color/bgColorLoginBtn"
+            android:padding="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+</LinearLayout>
