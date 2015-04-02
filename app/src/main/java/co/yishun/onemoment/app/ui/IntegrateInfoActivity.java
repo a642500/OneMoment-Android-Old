@@ -33,7 +33,7 @@ public class IntegrateInfoActivity extends ActionBarActivity {
     }
 
     @ViewById
-    EditText nameEditText;
+    EditText nickNameEditText;
 
 
     @Click
@@ -51,10 +51,10 @@ public class IntegrateInfoActivity extends ActionBarActivity {
     private void setGender(int gender) {
         switch (gender) {
             case MALE:
-                genderTextView.setText('♂');
+                genderTextView.setText(String.valueOf('\u2642'));
                 break;
             case FEMALE:
-                genderTextView.setText('♀');
+                genderTextView.setText(String.valueOf('\u2640'));
                 break;
             default:
                 LogUtil.e(TAG, "unknown gender!!");
