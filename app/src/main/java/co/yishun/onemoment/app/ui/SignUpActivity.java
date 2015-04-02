@@ -14,6 +14,7 @@ import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
@@ -87,7 +88,7 @@ public class SignUpActivity extends ActionBarActivity {
     @UiThread
     void showProgress() {
         if (mProgressDialog == null) {
-            mProgressDialog = new MaterialDialog.Builder(this).progress(true, 0).content(R.string.signUpLoading).build();
+            mProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(R.string.signUpLoading).build();
         }
         mProgressDialog.show();
     }
