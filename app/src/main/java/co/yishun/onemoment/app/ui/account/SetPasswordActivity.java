@@ -1,8 +1,9 @@
-package co.yishun.onemoment.app.ui;
+package co.yishun.onemoment.app.ui.account;
 
 import android.text.Editable;
 import android.view.View;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import org.androidannotations.annotations.AfterTextChange;
@@ -15,7 +16,7 @@ import org.androidannotations.annotations.Extra;
  */
 
 @EActivity(R.layout.activity_set_password)
-public class SetPasswordActivity extends BaseActivity {
+public class SetPasswordActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(SetPasswordActivity.class);
     @Extra
     String phone;

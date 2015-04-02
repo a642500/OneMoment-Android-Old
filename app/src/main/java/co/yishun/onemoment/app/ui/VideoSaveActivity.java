@@ -12,18 +12,6 @@ import org.androidannotations.annotations.ViewById;
 
 
 @EActivity(R.layout.activity_video_save)
-public class VideoSaveActivity extends ActionBarActivity {
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.videoSaveTitle));
-        toolbar.setNavigationOnClickListener(v -> VideoSaveActivity.this.onBackPressed());
-    }
-
-
+public class VideoSaveActivity extends ToolbarBaseActivity {
 
 }

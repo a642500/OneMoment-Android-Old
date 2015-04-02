@@ -1,4 +1,4 @@
-package co.yishun.onemoment.app.ui;
+package co.yishun.onemoment.app.ui.account;
 
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -8,12 +8,13 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.PhoneVerification;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
-public class SignUpActivity extends BaseActivity {
+public class SignUpActivity extends ToolbarBaseActivity {
 
     private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
 

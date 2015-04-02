@@ -20,19 +20,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_identity_info)
-public class IdentityInfoActivity extends ActionBarActivity {
+public class IdentityInfoActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(IdentityInfoActivity.class);
-
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.identityInfoTitle));
-        toolbar.setNavigationOnClickListener(v -> IdentityInfoActivity.this.onBackPressed());
-    }
 
     @ViewById
     ImageView profileImageView;

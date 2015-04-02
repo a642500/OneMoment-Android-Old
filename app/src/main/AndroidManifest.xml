@@ -60,7 +60,7 @@
         <!-- </activity> -->
 
         <activity
-                android:name=".ui.LoginActivity_"
+                android:name=".ui.account.LoginActivity_"
                 android:label="@string/loginByPhoneTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
 
@@ -98,16 +98,16 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".ui.SignUpActivity_"
+                android:name=".ui.account.SignUpActivity_"
                 android:label="@string/signUpTitle"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".ui.IntegrateInfoActivity_"
+                android:name=".ui.account.IntegrateInfoActivity_"
                 android:label="@string/integrateInfoTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-                android:name=".ui.SetPasswordActivity_"
+                android:name=".ui.account.SetPasswordActivity_"
                 android:label="@string/setPasswordTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
     </application>

@@ -1,47 +1,35 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
 
 /**
  * Created by Carlos on 2015/4/2.
  */
 @EActivity
-public abstract class BaseActivity extends ActionBarActivity {
-
-    @ViewById
-    Toolbar toolbar;
+public class BaseActivity extends ActionBarActivity {
 
     @UiThread
-    void showNotification(String text) {
+    public void showNotification(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     @UiThread
-    void showNotification(int textRes) {
+    public void showNotification(int textRes) {
         showNotification(getString(textRes));
     }
 
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-//        toolbar.setTitle(getString(R.string.integrateInfoTitle));
-        toolbar.setNavigationOnClickListener(v -> BaseActivity.this.onBackPressed());
-    }
 
     private MaterialDialog mProgressDialog;
 
     @UiThread
-    void showProgress() {
+    public void showProgress() {
         if (mProgressDialog == null) {
             mProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(R.string.signUpLoading).build();
         }
@@ -49,8 +37,26 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     @UiThread
-    void hideProgress() {
+    public void hideProgress() {
         mProgressDialog.hide();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
 }

@@ -1,10 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.*;
@@ -14,6 +11,7 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -38,33 +36,9 @@ interface OnMonthChangeListener {
 
 
 @EActivity(R.layout.activity_album)
-public class AlbumActivity extends ActionBarActivity implements OnMonthChangeListener {
+public class AlbumActivity extends BaseActivity implements OnMonthChangeListener {
 
     private static final String TAG = LogUtil.makeTag(AlbumActivity.class);
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LogUtil.d(TAG, "onCreate");
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-    }
 
     @Fun
     @Click

@@ -15,18 +15,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_about)
-public class AboutActivity extends ActionBarActivity {
-
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.aboutTitle));
-        toolbar.setNavigationOnClickListener(v -> AboutActivity.this.onBackPressed());
-    }
+public class AboutActivity extends ToolbarBaseActivity {
 
     @Click(R.id.checkNewBtn)
     void checkNew() {

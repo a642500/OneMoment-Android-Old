@@ -1,34 +1,24 @@
-package co.yishun.onemoment.app.ui;
+package co.yishun.onemoment.app.ui.account;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
-import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.request.account.SignIn;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import co.yishun.onemoment.app.util.WeiboHelper;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
 
 /**
  * Created by Carlos on 2/15/15.
  */
 @EActivity(R.layout.login_layout)
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(LoginActivity.class);
 
     private String mPhoneNum;
@@ -68,18 +58,6 @@ public class LoginActivity extends ActionBarActivity {
         else
             Toast.makeText(this, "Your phone or verification code is wrong", Toast.LENGTH_SHORT).show();
     }
-
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.loginByPhoneTitle));
-        toolbar.setNavigationOnClickListener(v -> LoginActivity.this.onBackPressed());
-    }
-
 
     @UiThread
     void signUpSuccess(AccountResult result) {

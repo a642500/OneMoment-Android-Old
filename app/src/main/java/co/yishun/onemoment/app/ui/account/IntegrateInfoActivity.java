@@ -1,9 +1,10 @@
-package co.yishun.onemoment.app.ui;
+package co.yishun.onemoment.app.ui.account;
 
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -16,7 +17,7 @@ import org.androidannotations.annotations.ViewById;
  * Created by Carlos on 2015/4/2.
  */
 @EActivity(R.layout.activity_integrate_info)
-public class IntegrateInfoActivity extends BaseActivity {
+public class IntegrateInfoActivity extends ToolbarBaseActivity {
     public static final String TAG = LogUtil.makeTag(IntegrateInfoActivity.class);
     public static final int REQUEST_PHONE = 0;
     public static final int REQUEST_WEIBO = 1;

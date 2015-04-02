@@ -15,17 +15,7 @@ import co.yishun.onemoment.app.util.LogUtil;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_find_password)
-public class FindPasswordActivity extends ActionBarActivity {
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void initToolbar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setTitle(getString(R.string.findPasswordTitle));
-        toolbar.setNavigationOnClickListener(v -> FindPasswordActivity.this.onBackPressed());
-    }
+public class FindPasswordActivity extends ToolbarBaseActivity {
 
     private static final String TAG = LogUtil.makeTag(FindPasswordActivity.class);
 
