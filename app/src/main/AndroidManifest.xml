@@ -29,6 +29,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         <activity
                 android:name=".ui.guide.GuideActivity_"
+                android:label="@string/guideTitle"
                 android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
