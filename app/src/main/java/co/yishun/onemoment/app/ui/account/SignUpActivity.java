@@ -18,6 +18,7 @@ import org.androidannotations.annotations.*;
 public class SignUpActivity extends ToolbarBaseActivity {
 
     private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
+    public static final int REQUEST_LOGIN = 2;
 
     private String phone;
     private String mVerificationCode;
@@ -34,7 +35,7 @@ public class SignUpActivity extends ToolbarBaseActivity {
 
     @Click
     void loginEntryBtnClicked(@NonNull View view) {
-
+        LoginActivity_.intent(this).extra("phone", phone).startForResult(REQUEST_LOGIN);
     }
 
     @Click
@@ -84,7 +85,18 @@ public class SignUpActivity extends ToolbarBaseActivity {
     }
 
     @OnActivityResult(IntegrateInfoActivity.REQUEST_PHONE)
-    void onResult(int resultCode) {
+    void onSignUpResult(int resultCode) {
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                this.finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @OnActivityResult(REQUEST_LOGIN)
+    void onLoginResult(int resultCode) {
         switch (resultCode) {
             case Activity.RESULT_OK:
                 this.finish();

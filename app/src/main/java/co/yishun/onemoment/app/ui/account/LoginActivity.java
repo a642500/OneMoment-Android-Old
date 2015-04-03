@@ -1,8 +1,11 @@
 package co.yishun.onemoment.app.ui.account;
 
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
@@ -23,6 +26,16 @@ public class LoginActivity extends ToolbarBaseActivity {
 
     private String mPhoneNum;
     private String mPassword;
+    @Extra
+    String phone = "";
+
+    @ViewById
+    EditText phoneEditText;
+
+    @AfterViews
+    void initPhone() {
+        phoneEditText.setText(phone);
+    }
 
     @AfterTextChange(R.id.phoneEditText)
     void onPhoneChange(Editable text, TextView phone) {
@@ -34,6 +47,11 @@ public class LoginActivity extends ToolbarBaseActivity {
         mPassword = text.toString();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
+    }
 
     @Click
     void findPasswordBtnClicked(@NonNull View view) {
@@ -44,31 +62,27 @@ public class LoginActivity extends ToolbarBaseActivity {
     void loginBtn(@NonNull View view) {
         if (checkPhoneNum() && checkPassword())
             ((SignIn) (new SignIn().with(this))).setPhone(mPhoneNum).setPassword(mPassword).setCallback((e, result) -> {
-
                 if (e != null) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
-                } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
-                    AccountHelper.saveIdentityInfo(result.getData(), this);
+                    Toast.makeText(this, "Login failed! Please check your network.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
+                    switch (result.getCode()) {
+                        case ErrorCode.SUCCESS:
+                            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+                            AccountHelper.saveIdentityInfo(result.getData(), this);
+                            setResult(RESULT_OK);
+                            this.finish();
+                            break;
+                        case ErrorCode.ACCOUNT_DOESNT_EXIST:
+                            Toast.makeText(this, "Your account or password is wrong.", Toast.LENGTH_SHORT).show();
+                        default:
+                            Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
             });
         else
-            Toast.makeText(this, "Your phone or verification code is wrong", Toast.LENGTH_SHORT).show();
-    }
-
-    @UiThread
-    void signUpSuccess(AccountResult result) {
-        switch (result.getCode()) {
-            case ErrorCode.SUCCESS:
-
-                break;
-            default:
-                Toast.makeText(this, "success", Toast.LENGTH_LONG).show();
-                break;
-        }
+            Toast.makeText(this, "Your phone or password is invalid.", Toast.LENGTH_SHORT).show();
     }
 
     private boolean checkPhoneNum() {

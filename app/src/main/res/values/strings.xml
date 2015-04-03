@@ -14,8 +14,7 @@
 
     <string name="loginTitle">Login</string>
     <string name="loginPhoneHint">Phone number</string>
-    <string name="loginPasswordHint">Verification code</string>
-    <string name="loginVerificationBtnString">get verification code</string>
+    <string name="loginPasswordHint">Password</string>
     <string name="loginSignInBtnString">Login</string>
     <string name="loginForgetBtnString">Forgotten? To find here ></string>
 
