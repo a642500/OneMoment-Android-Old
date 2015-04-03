@@ -12,10 +12,7 @@ import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.res.StringArrayRes;
 
 /**
@@ -31,7 +28,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     //    public static final String EXTRA_SIGN_UP_TYPE = "type";
 //    public static final String EXTRA_PHONE = "phone";
 
-//    public enum SignUpType {phone, weibo}
+    //    public enum SignUpType {phone, weibo}
     public static final int FEMALE = 1;
     public static final int Private = 2;
     private final String[] gender = {"m", "f", "n"};
@@ -166,6 +163,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     }
 
     @Click
+    @Background
     void okBtnClicked(View view) {
         String nickname = String.valueOf(nickNameEditText.getText());
         if (TextUtils.isEmpty(nickname)) {
