@@ -16,12 +16,17 @@
                 android:background="@color/bgColorLoginToolbar"
                 />
 
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
+
         <RelativeLayout
                 android:id="@+id/profileItem"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:paddingRight="16dp"
                 android:background="@color/colorTransparentGray"
                 >
 
@@ -30,6 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:padding="16dp"
                     android:textColor="@android:color/white"
                     android:text="@string/identityInfoProfile"
                     />
@@ -48,19 +54,29 @@
                     android:id="@+id/profileImageView"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:padding="8dp"
+                    android:layout_margin="16dp"
                     android:src="@drawable/ic_shooting"
                     android:layout_toLeftOf="@id/rightIcon0"
                     android:layout_centerVertical="true"
                     />
         </RelativeLayout>
 
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
+
+        <View
+                android:layout_marginTop="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
+
         <RelativeLayout
                 android:id="@+id/nickNameItem"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:padding="16dp"
                 android:background="@color/colorTransparentGray"
                 >
@@ -94,7 +110,14 @@
                     android:layout_toLeftOf="@id/rightIcon1"
                     android:layout_centerVertical="true"
                     />
+
+
         </RelativeLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
 
         <RelativeLayout
                 android:id="@+id/weiboItem"
@@ -136,13 +159,19 @@
                     />
         </RelativeLayout>
 
+        <View
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
+
         <RelativeLayout
                 android:id="@+id/genderItem"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:background="@color/colorTransparentGray"
+                android:paddingRight="16dp"
                 >
 
 
@@ -150,6 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:padding="16dp"
                     android:textColor="@android:color/white"
                     android:text="@string/identityInfoGender"
                     />
@@ -175,6 +205,11 @@
                     android:layout_centerVertical="true"
                     />
         </RelativeLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
 
         <RelativeLayout
                 android:id="@+id/areaItem"
@@ -216,8 +251,14 @@
                     />
         </RelativeLayout>
 
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/md_divider_white"/>
+
         <Button
                 android:id="@+id/logoutBtn"
+                android:layout_marginTop="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_orange_btn"
