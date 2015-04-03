@@ -14,8 +14,9 @@ import org.androidannotations.annotations.*;
 public class GuidePageFragment extends Fragment {
 
     @FragmentArg
-    private int imageRes;
-    private boolean isLast;
+    int imageRes;
+    @FragmentArg
+    boolean isLast;
 
     @ViewById
     ImageView guideImageView;
