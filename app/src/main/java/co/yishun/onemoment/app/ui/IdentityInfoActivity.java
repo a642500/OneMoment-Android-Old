@@ -43,16 +43,36 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         areaTextView.setText(data.getArea());
     }
 
-    private void setGender(String gender) {
-        if (gender.startsWith("m"))
-            genderTextView.setText(String.valueOf('\u2642'));
-        else if (gender.startsWith("f"))
-            genderTextView.setText(String.valueOf('\u2640'));
-        else
-            genderTextView.setText(getString(R.string.integrateInfoGenderPrivate));
+    public static final int MALE = 0;
+    public static final int FEMALE = 1;
+    public static final int PRIVATE = 2;
+    private final String[] gender = {"m", "f", "n"};
+    private int genderSelected = MALE;
+
+    private void setGender(int gender) {
+        genderSelected = gender;
+        switch (gender) {
+            case MALE:
+                genderTextView.setText(String.valueOf('\u2642'));
+                break;
+            case FEMALE:
+                genderTextView.setText(String.valueOf('\u2640'));
+                break;
+            case PRIVATE:
+                genderTextView.setText(getString(R.string.integrateInfoGenderPrivate));
+            default:
+                LogUtil.e(TAG, "unknown gender!!");
+                break;
+        }
     }
 
-    @Click({R.id.profileItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem})
+    private void setGender(String gender) {
+        int genderInt = gender.indexOf(gender.trim());
+        genderSelected = genderInt;
+        setGender(genderInt);
+    }
+
+    @Click({R.id.profileItem, R.id.weiboItem, R.id.areaItem})
     void infoItem(View view) {
         switch (view.getId()) {
             case R.id.weiboItem:
@@ -100,6 +120,44 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         }).show();
     }
 
+    @Click
+    void genderItemClicked(View view) {
+        new MaterialDialog.Builder(this)
+                .theme(Theme.DARK)
+                .title(R.string.integrateInfoGenderHint)
+                .items(R.array.integrateInfoGenderArray)
+                .itemsCallbackSingleChoice(genderSelected, (dialog, view1, which, text) -> {
+                    updateGender(which);
+                    return true; // allow selection
+                }).positiveText(R.string.integrateInfoChooseBtn)
+                .show();
+    }
+
+    @Background
+    void updateGender(int which) {
+        showProgress();
+        ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
+                .setGender(gender[which]).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification(R.string.identityInfoUpdateFail);
+            } else switch (result.getCode()) {
+                case ErrorCode.SUCCESS:
+                    AccountHelper.updateAccount(this, result.getData());
+                    showNotification(R.string.identityInfoUpdateSuccess);
+                    runOnUiThread(() -> setGender(which));
+                    break;
+                case ErrorCode.GENDER_FORMAT_ERROR:
+                    LogUtil.e(TAG, "GENDER_FORMAT_ERROR");
+                    break;
+                default:
+                    showNotification(R.string.identityInfoUpdateFail);
+                    break;
+            }
+            hideProgress();
+        });
+    }
+
     @Background
     void updateInfo(String key, String value, TextView showValueView) {
         showProgress();
@@ -107,7 +165,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                 .set(key, value).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
-                showNotification("update identity info failed!");
+                showNotification(R.string.identityInfoUpdateFail);
             } else switch (result.getCode()) {
                 case ErrorCode.SUCCESS:
                     AccountHelper.updateAccount(this, result.getData());
@@ -125,7 +183,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                     break;
                 //TODO add more
                 default:
-                    showNotification("update identity info failed!");
+                    showNotification(R.string.identityInfoUpdateFail);
                     break;
             }
             hideProgress();

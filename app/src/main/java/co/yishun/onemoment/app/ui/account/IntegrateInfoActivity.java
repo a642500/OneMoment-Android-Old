@@ -23,14 +23,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     public static final String TAG = LogUtil.makeTag(IntegrateInfoActivity.class);
     public static final int REQUEST_PHONE = 0;
     public static final int REQUEST_WEIBO = 1;
-    public static final int MALE = 0;
 
     //    public static final String EXTRA_SIGN_UP_TYPE = "type";
 //    public static final String EXTRA_PHONE = "phone";
 
     //    public enum SignUpType {phone, weibo}
+    public static final int MALE = 0;
     public static final int FEMALE = 1;
-    public static final int Private = 2;
+    public static final int PRIVATE = 2;
     private final String[] gender = {"m", "f", "n"};
     @ViewById
     EditText nickNameEditText;
@@ -140,7 +140,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
             case FEMALE:
                 genderTextView.setText(String.valueOf('\u2640'));
                 break;
-            case Private:
+            case PRIVATE:
                 genderTextView.setText(getString(R.string.integrateInfoGenderPrivate));
             default:
                 LogUtil.e(TAG, "unknown gender!!");
@@ -176,14 +176,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                     .setNickname(nickname).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    showNotification("update identity info failed!");
+                    showNotification(R.string.integrateInfoUpdateFail);
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     AccountHelper.updateAccount(this, result.getData());
-                    showNotification("success");
+                    showNotification(R.string.integrateInfoUpdateSuccess);
                     setResult(RESULT_OK);
                     this.finish();
                 } else {
-                    showNotification("update identity info failed!");
+                    showNotification(R.string.integrateInfoUpdateFail);
                 }
                 hideProgress();
             });

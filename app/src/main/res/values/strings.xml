@@ -65,6 +65,7 @@
     <string name="identityInfoOk">OK</string>
     <string name="identityInfoCancel">Cancel</string>
     <string name="identityInfoUpdateSuccess">Update Success.</string>
+    <string name="identityInfoUpdateFail">Update Failed!</string>
     <string name="identityInfoNicknameInvalid">nickname length must at 4~30!</string>
     <string name="identityInfoNicknameNetworkInvalid">nickname format error!</string>
     <string name="identityInfoNicknameExist">nickname already exists!</string>
@@ -106,6 +107,8 @@
         <item>private</item>
     </string-array>
     <string name="integrateInfoChooseBtn">CHOOSE</string>
+    <string name="integrateInfoUpdateSuccess">Update Info Success.</string>
+    <string name="integrateInfoUpdateFail">Update Info Failed!</string>
 
     <string name="weiboLoginSuccess">Login Success</string>
     <string name="weiboLoginFail">Login Failed</string>
