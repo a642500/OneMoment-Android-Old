@@ -7,6 +7,7 @@ import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.builder.Builders;
 
 import java.util.concurrent.ExecutionException;
 
@@ -17,9 +18,7 @@ public abstract class IdentityInfo {
     public static class Get extends Request<AccountResult> {
         @Override
         protected String getUrl() {
-            return Config.getUrlIdentityInfoGet()
-                    //TODO add account id
-                    ;
+            return Config.getUrlIdentityInfoGet() + AccountHelper.getIdentityInfo(mContext).get_id();
         }
 
         @Override
@@ -55,9 +54,17 @@ public abstract class IdentityInfo {
         private String gender;
         private String avatarUrl;
         private String location;
+        private String mKey;
+        private String mValue;
 
         public Update setNickname(String nickname) {
             this.nickname = nickname;
+            return this;
+        }
+
+        public Update set(String key, String value) {
+            this.mKey = key;
+            this.mValue = value;
             return this;
         }
 
@@ -83,9 +90,7 @@ public abstract class IdentityInfo {
 
         @Override
         protected String getUrl() {
-            return Config.getUrlIdentityInfoUpdate() + AccountHelper.getIdentityInfo(mContext)
-                    //TODO add account id
-                    ;
+            return Config.getUrlIdentityInfoUpdate() + AccountHelper.getIdentityInfo(mContext).get_id();
         }
 
         @Override
@@ -93,14 +98,14 @@ public abstract class IdentityInfo {
             check();
             if (callback != null && builder != null) {
                 try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key)
-                            .setBodyParameter("nickname", nickname)
-                            .setBodyParameter("introduction", introduction)
-                            .setBodyParameter("gender", gender)
-                            .setBodyParameter("avatar_url", avatarUrl)
-                            .setBodyParameter("location", location)
-                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+                    Builders.Any.U u = builder.load(getUrl()).setBodyParameter("key", key);
+                    if (nickname != null) u.setBodyParameter("nickname", nickname);
+                    if (introduction != null) u.setBodyParameter("introduction", introduction);
+                    if (gender != null) u.setBodyParameter("gender", gender);
+                    if (avatarUrl != null) u.setBodyParameter("avatar_url", avatarUrl);
+                    if (location != null) u.setBodyParameter("location", location);
+                    if (mValue != null && mKey != null) u.setBodyParameter(mKey, mValue);
+                    u.asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
