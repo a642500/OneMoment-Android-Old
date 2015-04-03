@@ -39,7 +39,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     boolean isFirstLaunch() {
-        return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean("is_first_launch", true);
+        return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, true);
     }
 
     @UiThread(delay = 2000)
