@@ -76,14 +76,25 @@ public class SetPasswordActivity extends ToolbarBaseActivity {
                     setPhone(phone).setPassword(password).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    showNotification(R.string.setPasswordNSignUpFail);
-                } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    AccountHelper.createAccount(this, result.getData());
-                    showNotification(R.string.setPasswordNSignUpSuccess);
-                    setResult(Activity.RESULT_OK);
-                    IntegrateInfoActivity_.intent(this)
-                            .startForResult(IntegrateInfoActivity.REQUEST_PHONE);
-                } else showNotification(R.string.setPasswordNSignUpFail);
+                    showNotification(R.string.setPasswordSignUpFail);
+                } else switch (result.getCode()) {
+                    case ErrorCode.SUCCESS:
+                        AccountHelper.createAccount(this, result.getData());
+                        showNotification(R.string.setPasswordSignUpSuccess);
+                        setResult(Activity.RESULT_OK);
+                        IntegrateInfoActivity_.intent(this).startForResult(IntegrateInfoActivity.REQUEST_PHONE);
+                        break;
+                    case ErrorCode.ACCOUNT_EXISTS:
+                        showNotification(R.string.setPasswordSignUpAccountExist);
+                        break;
+                    default:
+                        showNotification(R.string.setPasswordSignUpFail);
+                        break;
+
+                }
+//                if (result.getCode() == ErrorCode.SUCCESS) {
+
+//                } else showNotification(R.string.setPasswordNSignUpFail);
                 hideProgress();
             });
 

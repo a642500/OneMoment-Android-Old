@@ -98,8 +98,9 @@
     <string name="setPasswordNextBtn">Next</string>
     <string name="setPasswordPasswordInvalid">Your password is invalid. </string>
     <string name="setPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
-    <string name="setPasswordNSignUpFail">Register failed! </string>
-    <string name="setPasswordNSignUpSuccess">Register Success. </string>
+    <string name="setPasswordSignUpFail">Register failed! </string>
+    <string name="setPasswordSignUpSuccess">Register Success. </string>
+    <string name="setPasswordSignUpAccountExist">Account already exists! </string>
 
     <string name="integrateInfoTitle">Integrate Information</string>
     <string name="integrateInfoNickNameHint">Your Name</string>
