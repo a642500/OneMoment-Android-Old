@@ -48,10 +48,10 @@ public class AccountResult implements Serializable {
         private String avatar_url;
         private String weibo_uid;
         private String gender;
-        private String area;
+        private String location;
 
         public String getArea() {
-            return area;
+            return location;
         }
 
         public String getGender() {
