@@ -8,6 +8,7 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -191,6 +192,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                     e.printStackTrace();
                     showNotification("update identity info failed!");
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
+                    AccountHelper.updateAccount(this, result.getData());
                     showNotification("success");
                     setResult(RESULT_OK);
                     this.finish();

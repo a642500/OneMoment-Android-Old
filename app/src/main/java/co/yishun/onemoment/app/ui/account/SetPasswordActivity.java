@@ -54,7 +54,7 @@ public class SetPasswordActivity extends ToolbarBaseActivity {
                     e.printStackTrace();
                     showNotification(R.string.setPasswordNSignUpFail);
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    AccountHelper.saveIdentityInfo(result.getData(), this);
+                    AccountHelper.createAccount(this, result.getData());
                     showNotification(R.string.setPasswordNSignUpSuccess);
                     setResult(Activity.RESULT_OK);
                     IntegrateInfoActivity_.intent(this)

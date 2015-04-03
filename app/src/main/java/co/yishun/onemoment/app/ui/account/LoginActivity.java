@@ -69,7 +69,7 @@ public class LoginActivity extends ToolbarBaseActivity {
                     switch (result.getCode()) {
                         case ErrorCode.SUCCESS:
                             Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
-                            AccountHelper.saveIdentityInfo(result.getData(), this);
+                            AccountHelper.createAccount(this, result.getData());
                             setResult(RESULT_OK);
                             this.finish();
                             break;

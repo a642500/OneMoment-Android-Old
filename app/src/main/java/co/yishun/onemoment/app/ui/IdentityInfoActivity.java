@@ -67,7 +67,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     @Click(R.id.logoutBtn)
     void logout(View view) {
         AccountHelper.deleteAccount(this);
-        AccountHelper.deleteIdentityInfo(this);
         this.finish();
     }
 }
