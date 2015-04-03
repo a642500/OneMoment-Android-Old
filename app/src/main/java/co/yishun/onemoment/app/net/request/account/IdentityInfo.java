@@ -3,6 +3,7 @@ package co.yishun.onemoment.app.net.request.account;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
@@ -82,7 +83,7 @@ public abstract class IdentityInfo {
 
         @Override
         protected String getUrl() {
-            return Config.getUrlIdentityInfoUpdate()
+            return Config.getUrlIdentityInfoUpdate() + AccountHelper.getIdentityInfo(mContext)
                     //TODO add account id
                     ;
         }

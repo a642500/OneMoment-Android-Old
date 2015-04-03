@@ -14,6 +14,7 @@ import com.koushikdutta.ion.builder.LoadBuilder;
 public abstract class Request<R> {
     protected LoadBuilder<Builders.Any.B> builder;
     protected final String key = Config.getPrivateKey();
+    protected Context mContext;
 
 
     /**
@@ -23,16 +24,19 @@ public abstract class Request<R> {
 
     public Request<R> with(Context w) {
         builder = Ion.with(w);
+        mContext = w;
         return this;
     }
 
     public Request<R> with(Fragment w) {
         builder = Ion.with(w);
+        mContext = w.getActivity();
         return this;
     }
 
     public Request<R> with(android.support.v4.app.Fragment w) {
         builder = Ion.with(w);
+        mContext = w.getActivity();
         return this;
     }
 
