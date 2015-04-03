@@ -1,10 +1,12 @@
 package co.yishun.onemoment.app.ui.account;
 
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import co.yishun.onemoment.app.R;
-import co.yishun.onemoment.app.net.request.account.SignUp;
+import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -21,11 +23,13 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     public static final int REQUEST_PHONE = 0;
     public static final int REQUEST_WEIBO = 1;
 
-    public static final int RESULT_CANCEL = 0;
-    public static final int RESULT_SUCCESS = 1;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
+    }
 
-
-//    public static final String EXTRA_SIGN_UP_TYPE = "type";
+    //    public static final String EXTRA_SIGN_UP_TYPE = "type";
 //    public static final String EXTRA_PHONE = "phone";
 
 //    public enum SignUpType {phone, weibo}
@@ -133,11 +137,16 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     public static final int MALE = 0;
     public static final int FEMALE = 1;
+    public static final int Private = 2;
 
     @ViewById
     TextView genderTextView;
 
+    private final String[] gender = {"m", "f", "n"};
+    private int genderSelected = MALE;
+
     private void setGender(int gender) {
+        genderSelected = gender;
         switch (gender) {
             case MALE:
                 genderTextView.setText(String.valueOf('\u2642'));
@@ -145,6 +154,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
             case FEMALE:
                 genderTextView.setText(String.valueOf('\u2640'));
                 break;
+            case Private:
+                genderTextView.setText(getString(R.string.integrateInfoGenderPrivate));
             default:
                 LogUtil.e(TAG, "unknown gender!!");
                 break;
@@ -157,7 +168,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 .theme(Theme.DARK)
                 .title(R.string.integrateInfoGenderHint)
                 .items(R.array.integrateInfoGenderArray)
-                .itemsCallbackSingleChoice(MALE, (dialog, view1, which, text) -> {
+                .itemsCallbackSingleChoice(genderSelected, (dialog, view1, which, text) -> {
                     setGender(which);
                     return true; // allow selection
                 })
@@ -167,8 +178,28 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void okBtnClicked(View view) {
-        new SignUp.ByPhone().setPhone(phone).setPassword(password);
-        //TODO 有密码和手机已经可以注册了！！
+        String nickname = String.valueOf(nickNameEditText.getText());
+        if (TextUtils.isEmpty(nickname)) {
+            showNotification(R.string.integrateInfoNameEmpty);
+        } else {
+            showProgress();
+            ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
+                    .setGender(gender[genderSelected])
+                    .setLocation(mProvince + mDistrict)
+                    .setNickname(nickname).setCallback((e, result) -> {
+                if (e != null) {
+                    e.printStackTrace();
+                    showNotification("update identity info failed!");
+                } else if (result.getCode() == ErrorCode.SUCCESS) {
+                    showNotification("success");
+                    setResult(RESULT_OK);
+                    this.finish();
+                } else {
+                    showNotification("update identity info failed!");
+                }
+                hideProgress();
+            });
+        }
     }
 
 

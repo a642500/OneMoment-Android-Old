@@ -1,5 +1,6 @@
 package co.yishun.onemoment.app.ui.account;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
@@ -42,7 +43,10 @@ public class SignUpActivity extends ToolbarBaseActivity {
         if (checkPhoneNum()) {
             showProgress();
             ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(phone).setCallback((e, result) -> {
-                if (result.getCode() == ErrorCode.SUCCESS) {
+                if (e != null) {
+                    e.printStackTrace();
+                    showNotification(R.string.signUpVerificationCodeFailedToast);
+                } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification(R.string.signUpVerificationCodeSuccessToast);
                     //TODO disable btn temporary
                     //TODO add handle sms
@@ -82,7 +86,7 @@ public class SignUpActivity extends ToolbarBaseActivity {
     @OnActivityResult(IntegrateInfoActivity.REQUEST_PHONE)
     void onResult(int resultCode) {
         switch (resultCode) {
-            case IntegrateInfoActivity.RESULT_SUCCESS:
+            case Activity.RESULT_OK:
                 this.finish();
                 break;
             default:

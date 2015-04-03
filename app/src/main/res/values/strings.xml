@@ -84,16 +84,21 @@
     <string name="setPasswordNextBtn">Next</string>
     <string name="setPasswordPasswordInvalid">Your password is invalid. </string>
     <string name="setPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
+    <string name="setPasswordNSignUpFail">Register failed! </string>
+    <string name="setPasswordNSignUpSuccess">Register Success. </string>
 
     <string name="integrateInfoTitle">Integrate Information</string>
     <string name="integrateInfoNickNameHint">Your Name</string>
     <string name="integrateInfoAreaHint">Area</string>
     <string name="integrateInfoGenderHint">Gender</string>
     <string name="integrateInfoFinishBtn">OK</string>
+    <string name="integrateInfoNameEmpty">Please set your nickname.</string>
+    <string name="integrateInfoGenderPrivate">Private</string>
 
     <string-array name="integrateInfoGenderArray">
         <item>male</item>
         <item>female</item>
+        <item>private</item>
     </string-array>
     <string name="integrateInfoChooseBtn">CHOOSE</string>
 
