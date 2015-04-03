@@ -11,6 +11,7 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.ui.account.LoginActivity;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
 import co.yishun.onemoment.app.util.AccountHelper;
@@ -137,8 +138,10 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
                 else mWeiboHelper = showLoginDialog();
                 break;
             case R.id.action_sync_settings:
-//                if (AccountHelper.isLogin())
-//                else LoginActivity.showLoginDialog(this);
+                if (AccountHelper.isLogin(this)) {
+                    Intent intent = new Intent(this, SyncSettingsActivity.class);
+                    startActivity(intent);
+                } else mWeiboHelper = showLoginDialog();
                 break;
             case R.id.action_rate:
 
