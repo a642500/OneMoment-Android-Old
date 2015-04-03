@@ -1,7 +1,6 @@
 package co.yishun.onemoment.app.ui.guide;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.app.Fragment;
 
 import android.view.View;

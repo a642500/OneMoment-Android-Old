@@ -12,7 +12,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
-import co.yishun.onemoment.app.ui.guide.GuideActivity;
+import co.yishun.onemoment.app.ui.guide.GuideActivity_;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
