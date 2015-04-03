@@ -40,12 +40,13 @@
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="5">
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="org.androidannotations.annotations.AfterTextChange" />
       <item index="1" class="java.lang.String" itemvalue="org.androidannotations.annotations.AfterViews" />
       <item index="2" class="java.lang.String" itemvalue="org.androidannotations.annotations.Click" />
-      <item index="3" class="java.lang.String" itemvalue="org.androidannotations.annotations.OnActivityResult" />
-      <item index="4" class="java.lang.String" itemvalue="org.androidannotations.annotations.ViewById" />
+      <item index="3" class="java.lang.String" itemvalue="org.androidannotations.annotations.FragmentArg" />
+      <item index="4" class="java.lang.String" itemvalue="org.androidannotations.annotations.OnActivityResult" />
+      <item index="5" class="java.lang.String" itemvalue="org.androidannotations.annotations.ViewById" />
     </list>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
