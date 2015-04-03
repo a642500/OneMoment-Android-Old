@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.*;
@@ -141,7 +142,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
                 } else mWeiboHelper = showLoginDialog();
                 break;
             case R.id.action_rate:
-
+                rate();
                 break;
             case R.id.action_help:
                 GuideActivity_.intent(this).extra("isFromSuggestion", true).start();
@@ -240,6 +241,12 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         });
         dialog.show();
         return helper;
+    }
+
+    private void rate() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @EBean
