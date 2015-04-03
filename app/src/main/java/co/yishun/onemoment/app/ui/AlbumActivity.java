@@ -11,7 +11,6 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
-import co.yishun.onemoment.app.ui.account.LoginActivity;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
 import co.yishun.onemoment.app.util.AccountHelper;
@@ -191,7 +190,19 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     @Fun
     @Click
     void syncBtn(View view) {
+        if (!justPressed) {
+            AccountHelper.syncAtOnce(this);
+            justPressed = true;
+            delayEnableSyncBtn();
+        }
+        showNotification("syncing...");
+    }
 
+    boolean justPressed = false;
+
+    @UiThread(delay = 10 * 1000)
+    void delayEnableSyncBtn() {
+        justPressed = true;
     }
 
     @ViewById

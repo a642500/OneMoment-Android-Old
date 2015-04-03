@@ -2,10 +2,13 @@ package co.yishun.onemoment.app.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.data.Contract;
 import co.yishun.onemoment.app.net.result.AccountResult;
 
 import java.io.*;
@@ -88,25 +91,38 @@ public class AccountHelper {
         Account newAccount = new Account(data.getPhone(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            mAccount = newAccount;
             enableSync(context);
+            saveIdentityInfo(context, data);
+            return newAccount;
         } else {
             LogUtil.e(TAG, "The account exists or some other error occurred.");
+            return null;
         }
-        saveIdentityInfo(context, data);
-        return newAccount;
     }
 
     public static void deleteAccount(Context context) {
         deleteIdentityInfo(context);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-        Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
-        if (accounts.length > 0) accountManager.removeAccount(accounts[0], null, null, null);
+        accountManager.removeAccount(getAccount(context), null, null, null);
+        mAccount = null;
     }
 
     public static boolean updateAccount(Context context, AccountResult.Data data) {
         deleteIdentityInfo(context);
         saveIdentityInfo(context, data);
         return true;
+    }
+
+    private static Account mAccount;
+
+    public static Account getAccount(Context context) {
+        if (mAccount == null) {
+            AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+            Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
+            if (accounts.length > 0) mAccount = accounts[0];
+        }
+        return mAccount;
     }
 
     private static AccountResult.Data mIdentityInfo = null;
@@ -157,7 +173,11 @@ public class AccountHelper {
 
 
     private static void enableSync(Context context) {
+        ContentResolver.addPeriodicSync(getAccount(context), Contract.AUTHORITY, new Bundle(), 60 * 10);
+    }
 
+    public static void syncAtOnce(Context context) {
+        ContentResolver.requestSync(getAccount(context), Contract.AUTHORITY, new Bundle());
     }
 
 
