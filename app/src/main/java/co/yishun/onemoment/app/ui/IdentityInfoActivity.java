@@ -1,11 +1,11 @@
 package co.yishun.onemoment.app.ui;
 
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Constants;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.result.AccountResult;
@@ -17,6 +17,9 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.res.StringArrayRes;
+
+import java.util.Arrays;
 
 @EActivity(R.layout.activity_identity_info)
 public class IdentityInfoActivity extends ToolbarBaseActivity {
@@ -40,7 +43,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         nickNameTextView.setText(data.getNickname());
         weiboTextView.setText(data.getWeibo_uid());//TODO set text
         setGender(data.getGender());
-        areaTextView.setText(data.getArea());
+        setProvinceAndDistrict(data.getArea());
     }
 
     public static final int MALE = 0;
@@ -72,7 +75,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         setGender(genderInt);
     }
 
-    @Click({R.id.profileItem, R.id.weiboItem, R.id.areaItem})
+    @Click({R.id.profileItem, R.id.weiboItem})
     void infoItem(View view) {
         switch (view.getId()) {
             case R.id.weiboItem:
@@ -149,6 +152,93 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                     break;
                 case ErrorCode.GENDER_FORMAT_ERROR:
                     LogUtil.e(TAG, "GENDER_FORMAT_ERROR");
+                    break;
+                default:
+                    showNotification(R.string.identityInfoUpdateFail);
+                    break;
+            }
+            hideProgress();
+        });
+    }
+
+    @StringArrayRes
+    String[] provinces;
+    private String mProvince;
+    private String mDistrict;
+
+    private void setProvinceAndDistrict(String pro, String dis) {
+        mProvince = pro;
+        mDistrict = dis;
+        areaTextView.setText(pro + dis);
+    }
+
+    private void setProvinceAndDistrict(String provinceAndDistrict) {
+        if (provinceAndDistrict == null || provinceAndDistrict.length() < 2) {
+            areaTextView.setText(provinceAndDistrict);
+            return;
+        }
+        String twoChar = provinceAndDistrict.substring(0, 2);
+        for (String province : provinces) {
+            if (province.startsWith(twoChar)) mProvince = province;
+        }
+        mDistrict = provinceAndDistrict.substring(mProvince.length());
+        areaTextView.setText(provinceAndDistrict);
+    }
+
+
+    @Click
+    void areaItemClicked(View view) {
+        MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
+                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick).build();
+        View dialogView = dialog.getCustomView();
+        Spinner provinceSpinner = (Spinner) dialogView.findViewById(R.id.provinceSpinner);
+        Spinner districtSpinner = (Spinner) dialogView.findViewById(R.id.districtSpinner);
+
+        districtSpinner.setEnabled(false);
+        provinceSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, provinces));
+        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] districts = getResources().getStringArray(Constants.provincesItemsRes[position]);
+                districtSpinner.setEnabled(true);
+                districtSpinner.setAdapter(new ArrayAdapter<>(IdentityInfoActivity.this,
+                        android.R.layout.simple_spinner_dropdown_item, districts));
+                int selected = Arrays.asList(districts).indexOf(mDistrict);
+                districtSpinner.setSelection(selected >= 0 ? selected : 0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                districtSpinner.setEnabled(false);
+            }
+        });
+        int selected = Arrays.asList(provinces).indexOf(mProvince);
+        provinceSpinner.setSelection(selected >= 0 ? selected : 0);
+        dialog.setOnDismissListener(dialog1 -> {
+            String province = (String) provinceSpinner.getSelectedItem();
+            String district = (String) districtSpinner.getSelectedItem();
+            if (!province.equals(mProvince) || !district.equals(mDistrict))
+                updateArea(province, district);
+        });
+        dialog.show();
+    }
+
+    @Background
+    void updateArea(@NonNull String pro, @NonNull String dis) {
+        showProgress();
+        ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
+                .setLocation(pro + dis).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification(R.string.identityInfoUpdateFail);
+            } else switch (result.getCode()) {
+                case ErrorCode.SUCCESS:
+                    AccountHelper.updateAccount(this, result.getData());
+                    showNotification(R.string.identityInfoUpdateSuccess);
+                    runOnUiThread(() -> setProvinceAndDistrict(pro, dis));
+                    break;
+                case ErrorCode.LOCATION_FORMAT_ERROR:
+                    LogUtil.e(TAG, "LOCATION_FORMAT_ERROR");
                     break;
                 default:
                     showNotification(R.string.identityInfoUpdateFail);

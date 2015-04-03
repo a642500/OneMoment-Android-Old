@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Constants;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
@@ -34,50 +35,9 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     private final String[] gender = {"m", "f", "n"};
     @ViewById
     EditText nickNameEditText;
-    @StringArrayRes
-    String[] provinces;
-    int[] provincesItemsRes = {
-            R.array.beijinProvinceItem,
-            R.array.tianjinProvinceItem,
-            R.array.hebeiProvinceItem,
-            R.array.shanxi1ProvinceItem,
-            R.array.neimengguProvinceItem,
-            R.array.liaoningProvinceItem,
-            R.array.jilinProvinceItem,
-            R.array.heilongjiangProvinceItem,
-            R.array.shanghaiProvinceItem,
-            R.array.jiangsuProvinceItem,
-            R.array.zhejiangProvinceItem,
-            R.array.anhuiProvinceItem,
-            R.array.fujianProvinceItem,
-            R.array.jiangxiProvinceItem,
-            R.array.shandongProvinceItem,
-            R.array.henanProvinceItem,
-            R.array.hubeiProvinceItem,
-            R.array.hunanProvinceItem,
-            R.array.guangdongProvinceItem,
-            R.array.guangxiProvinceItem,
-            R.array.hainanProvinceItem,
-            R.array.chongqingProvinceItem,
-            R.array.sichuanProvinceItem,
-            R.array.guizhouProvinceItem,
-            R.array.yunnanProvinceItem,
-            R.array.xizangProvinceItem,
-            R.array.shanxi2ProvinceItem,
-            R.array.gansuProvinceItem,
-            R.array.qinghaiProvinceItem,
-            R.array.ningxiaProvinceItem,
-            R.array.xinjiangProvinceItem,
-            R.array.hongkongProvinceItem,
-            R.array.aomenProvinceItem,
-            R.array.taiwanProvinceItem
-    };
-    @ViewById
-    TextView areaTextView;
+
     @ViewById
     TextView genderTextView;
-    private String mProvince;
-    private String mDistrict;
     private int genderSelected = MALE;
 
     @Override
@@ -85,6 +45,13 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         super.onCreate(savedInstanceState);
         setResult(RESULT_CANCELED);
     }
+
+    @StringArrayRes
+    String[] provinces;
+    private String mProvince;
+    private String mDistrict;
+    @ViewById
+    TextView areaTextView;
 
     @Click
     void areaItemClicked(View view) {
@@ -102,7 +69,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 districtSpinner.setEnabled(true);
                 districtSpinner.setAdapter(new ArrayAdapter<>(IntegrateInfoActivity.this,
                         android.R.layout.simple_spinner_dropdown_item,
-                        getResources().getStringArray(provincesItemsRes[position])));
+                        getResources().getStringArray(Constants.provincesItemsRes[position])));
                 districtSpinner.setSelection(0);
             }
 
@@ -122,7 +89,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @AfterViews
     void initAreaTextView() {
-        areaTextView.setText(provinces[0] + getResources().getStringArray(provincesItemsRes[0])[0]);
+        areaTextView.setText(provinces[0] + getResources().getStringArray(Constants.provincesItemsRes[0])[0]);
     }
 
     private void setProvinceAndDistrict(String pro, String dis) {
