@@ -136,6 +136,7 @@ public class AccountHelper {
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(data);
             oos.close();
+            mIdentityInfo = data;
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -147,6 +148,7 @@ public class AccountHelper {
         String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
         File info = new File(path);
         if (info.exists()) info.delete();
+        mIdentityInfo = null;
     }
 
     public static AccountResult.Data getIdentityInfo(Context con) {
