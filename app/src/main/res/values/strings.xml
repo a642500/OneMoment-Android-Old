@@ -47,6 +47,7 @@
     <string name="aboutRecommend">Recommend to friends</string>
     <string name="aboutUpdated">Has been updated!</string>
     <string name="aboutChecking">Checking…</string>
+    <string name="aboutRecommendContent">"Hi! I'm use One Moment to record my life, have a try? http://www.yishun.co"</string>
 
     <string name="findPasswordTitle">Find Password</string>
     <string name="findPasswordPhoneHint">Phone number</string>
