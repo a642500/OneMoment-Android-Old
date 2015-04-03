@@ -70,10 +70,9 @@ public class SignUpActivity extends ToolbarBaseActivity {
                     showNotification("verify failed!");
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification("verify success");
-                    SetPasswordActivity_.intent(this)
-                            .extra("phone", phone)
-                            .startForResult(IntegrateInfoActivity.REQUEST_PHONE);
-                    this.finish();
+//                    startActivityForResult(new Intent(this, SetPasswordActivity.class).putExtra("phone", phone),IntegrateInfoActivity.REQUEST_PHONE);
+                    SetPasswordActivity_.intent(this).extra("phone", phone).startForResult(IntegrateInfoActivity.REQUEST_PHONE);
+//                    this.finish();
                 } else {
                     showNotification("verify failed!");
                 }
