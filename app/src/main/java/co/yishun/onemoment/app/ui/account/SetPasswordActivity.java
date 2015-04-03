@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import org.androidannotations.annotations.*;
 
 /**
@@ -24,6 +27,23 @@ public class SetPasswordActivity extends ToolbarBaseActivity {
 
     String password = null;
     private String mPasswordAgain = null;
+
+    @ViewById
+    EditText passwordEditText;
+    @ViewById
+    EditText passwordAgainEditText;
+
+    @UiThread
+    void shakePasswordEditText() {
+        YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration))
+                .playOn(passwordEditText);
+    }
+
+    @UiThread
+    void shakePasswordAgainEditText() {
+        YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration))
+                .playOn(passwordAgainEditText);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +64,13 @@ public class SetPasswordActivity extends ToolbarBaseActivity {
     @Click
     @Background
     void nextBtnClicked(View view) {
-        if (!checkPassword()) showNotification(R.string.setPasswordPasswordInvalid);
-        else if (!checkPasswordAgain()) showNotification(R.string.setPasswordPasswordAgainInvalid);
-        else {
+        if (!checkPassword()) {
+            shakePasswordEditText();
+            showNotification(R.string.setPasswordPasswordInvalid);
+        } else if (!checkPasswordAgain()) {
+            shakePasswordAgainEditText();
+            showNotification(R.string.setPasswordPasswordAgainInvalid);
+        } else {
             showProgress();
             (((SignUp.ByPhone) new SignUp.ByPhone().with(this))).
                     setPhone(phone).setPassword(password).setCallback((e, result) -> {
