@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
@@ -12,6 +13,8 @@ import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_sign_up)
@@ -21,6 +24,10 @@ public class SignUpActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
     private String phone;
     private String mVerificationCode;
+    @ViewById
+    EditText phoneEditText;
+    @ViewById
+    EditText verificationCodeEditText;
 
     @AfterTextChange(R.id.phoneEditText)
     void onPhoneChange(Editable text, TextView phone) {
@@ -55,31 +62,58 @@ public class SignUpActivity extends ToolbarBaseActivity {
                 }
                 hideProgress();
             });
-        } else
-            showNotification("Your phone is invalid");
+        } else {
+            shakePhoneEditText();
+            showNotification(R.string.signUpPhoneInvalidToast);
+        }
+
+    }
+
+    @UiThread
+    void shakePhoneEditText() {
+        YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration))
+                .playOn(phoneEditText);
+    }
+
+    @UiThread
+    void shakeVerificationEditText() {
+        YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration))
+                .playOn(verificationCodeEditText);
     }
 
     @Click
     @Background
     void nextBtnClicked(@NonNull View view) {
-        if (checkPhoneNum() && checkVerificationCode()) {
-            showProgress();
-            ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(phone).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
-                if (e != null) {
-                    e.printStackTrace();
-                    showNotification("verify failed!");
-                } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    showNotification("verify success");
-//                    startActivityForResult(new Intent(this, SetPasswordActivity.class).putExtra("phone", phone),IntegrateInfoActivity.REQUEST_PHONE);
-                    SetPasswordActivity_.intent(this).extra("phone", phone).startForResult(IntegrateInfoActivity.REQUEST_PHONE);
-//                    this.finish();
-                } else {
-                    showNotification("verify failed!");
-                }
-                hideProgress();
-            });
-        } else
-            showNotification("Your phone or verification code is wrong");
+        if (checkPhoneNum()) {
+            if (checkVerificationCode()) {
+                showProgress();
+                ((PhoneVerification.Verify) (new PhoneVerification.Verify().with(this))).setPhone(phone).setVerifyCode(mVerificationCode).setCallback((e, result) -> {
+                    if (e != null) {
+                        e.printStackTrace();
+                        showNotification(R.string.signUpVerifyFail);
+                    } else switch (result.getCode()) {
+                        case ErrorCode.SUCCESS:
+                            showNotification(R.string.signUpVerifySuccess);
+                            SetPasswordActivity_.intent(this).extra("phone", phone).startForResult(IntegrateInfoActivity.REQUEST_PHONE);
+                            break;
+                        case ErrorCode.PHONE_FORMAT_ERROR:
+                            showNotification(R.string.signUpPhoneInvalidToast);
+                            shakePhoneEditText();
+                            break;
+                        default:
+                            showNotification(R.string.signUpVerifyFail);
+                            break;
+                    }
+                    hideProgress();
+                });
+            } else {
+                shakeVerificationEditText();
+                showNotification(R.string.signUpVerificationCodeInvalidToast);
+            }
+        } else {
+            shakePhoneEditText();
+            showNotification(R.string.signUpPhoneInvalidToast);
+        }
     }
 
     @OnActivityResult(IntegrateInfoActivity.REQUEST_PHONE)

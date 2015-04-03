@@ -83,11 +83,14 @@
     <string name="signUpGetVerificationCode">Get Verification Code</string>
     <string name="signUpNextBtn">Next</string>
     <string name="signUpLoginEntry">Already has an account? Sign in ></string>
-    <string name="signUpPhoneInValidToast">Your phone number is invalid</string>
-    <string name="signUpVerificationCodeInValidToast">Your phone verification code is invalid</string>
+    <string name="signUpPhoneInvalidToast">Your phone number is invalid</string>
+    <string name="signUpVerificationCodeInvalidToast">Your phone verification code is invalid</string>
     <string name="signUpVerificationCodeSuccessToast">Verification code has been sent, please check</string>
     <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
     <string name="signUpLoading">Please waiting…</string>
+    <string name="signUpVerifySuccess">Verify Success!</string>
+    <string name="signUpVerifyFail">Verify Failed!</string>
+
 
     <string name="setPasswordTitle">Set Password</string>
     <string name="setPasswordPasswordHint">Password</string>
