@@ -1,13 +1,18 @@
 package co.yishun.onemoment.app.ui;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
@@ -45,18 +50,77 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             genderTextView.setText(getString(R.string.integrateInfoGenderPrivate));
     }
 
-    @Click({R.id.profileItem, R.id.nickNameItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem})
+    @Click({R.id.profileItem, R.id.weiboItem, R.id.genderItem, R.id.areaItem})
     void infoItem(View view) {
-        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
         switch (view.getId()) {
             case R.id.weiboItem:
                 //TODO bind weibo
                 break;
+
             default:
                 //TODO put extras to let it preset
-                IdentityInfoActivity_.intent(this).startForResult(REQUEST_UPDATE_INFO);
+
                 break;
         }
+
+    }
+
+    @Click
+    void nickNameItemClicked(View view) {
+        final EditText edit = (EditText) LayoutInflater.from(this).inflate(R.layout.dialog_nickname, null);
+        final String oldName = nickNameTextView.getText().toString().trim();
+        edit.setText(oldName);
+        new MaterialDialog.Builder(this).theme(Theme.DARK).customView(edit, false)
+                .title(R.string.integrateInfoNickNameHint)
+                .positiveText(R.string.identityInfoOk)
+                .negativeText(R.string.identityInfoCancel)
+                .autoDismiss(false).callback(new MaterialDialog.ButtonCallback() {
+            @Override
+            public void onPositive(MaterialDialog dialog) {
+                String newName = edit.getText().toString().trim();
+                if (!AccountHelper.isValidNickname(newName)) {
+                    showNotification(R.string.identityInfoNicknameInvalid);
+
+                } else if (!oldName.equals(newName)) {
+                    updateInfo("nickname", newName, nickNameTextView);
+                    dialog.dismiss();
+                } else {
+                    dialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onNegative(MaterialDialog dialog) {
+                super.onNegative(dialog);
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    @Background
+    void updateInfo(String key, String value, TextView showValueView) {
+        showProgress();
+        ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
+                .set(key, value).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification("update identity info failed!");
+            } else switch (result.getCode()) {
+                case ErrorCode.SUCCESS:
+                    AccountHelper.updateAccount(this, result.getData());
+                    showNotification("success");
+                    runOnUiThread(() -> showValueView.setText(value));
+                    break;
+                case ErrorCode.NICKNAME_EXISTS:
+                    showNotification("nick exist!");
+                    break;
+                //TODO add more
+                default:
+                    showNotification("update identity info failed!");
+                    break;
+            }
+            hideProgress();
+        });
     }
 
     @OnActivityResult(REQUEST_UPDATE_INFO)

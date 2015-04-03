@@ -62,6 +62,9 @@
     <string name="identityInfoGender">Gender</string>
     <string name="identityInfoArea">Area</string>
     <string name="identityInfoLogout">Log Out</string>
+    <string name="identityInfoOk">OK</string>
+    <string name="identityInfoCancel">Cancel</string>
+    <string name="identityInfoNicknameInvalid">Invalid nickname!</string>
 
     <string name="videoSaveTitle">@string/app_name</string>
     <string name="recordEndSave">save</string>
