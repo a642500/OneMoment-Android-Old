@@ -32,22 +32,6 @@ public class AccountHelper {
         return PasswordType.ValidMedium == type || PasswordType.ValidStrong == type;
     }
 
-    public static boolean saveIdentityInfo(AccountResult.Data data, Context context) {
-
-        try {
-            String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-            LogUtil.i(TAG, "identity info path: " + path);
-            FileOutputStream fout = new FileOutputStream(path);
-            ObjectOutputStream oos = new ObjectOutputStream(fout);
-            oos.writeObject(data);
-            oos.close();
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
     public static boolean isValidPhoneNum(@Nullable String phone) {
         try {
             long p = Long.valueOf(phone);
@@ -95,7 +79,12 @@ public class AccountHelper {
         ValidStrong
     }
 
-    public static Account createAccount(Context context) {
+    public static boolean isLogin(Context context) {
+        String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+        return new File(path).exists();
+    }
+
+    public static Account createAccount(Context context, AccountResult.Data data) {
         // Create the account type and default account
         Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -104,7 +93,19 @@ public class AccountHelper {
         } else {
             //TODO error
         }
+        saveIdentityInfo(context, data);
         return newAccount;
+    }
+
+    public static void deleteAccount(Context context) {
+        deleteIdentityInfo(context);
+        //delete from system
+    }
+
+    public static boolean updateAccount(Context context, AccountResult.Data data) {
+        deleteIdentityInfo(context);
+        saveIdentityInfo(context, data);
+        return true;
     }
 
     private static AccountManager getAccountManager(Context context) {
@@ -113,7 +114,7 @@ public class AccountHelper {
 
     private static AccountResult.Data mIdentityInfo = null;
 
-    public static void loadInfo(Context context) {
+    private static void loadInfo(Context context) {
         try {
             String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
             FileInputStream fin = null;
@@ -126,6 +127,28 @@ public class AccountHelper {
         }
     }
 
+    private static boolean saveIdentityInfo(Context context, AccountResult.Data data) {
+
+        try {
+            String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+            LogUtil.i(TAG, "identity info path: " + path);
+            FileOutputStream fout = new FileOutputStream(path);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(data);
+            oos.close();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    private static void deleteIdentityInfo(Context context) {
+        String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+        File info = new File(path);
+        if (info.exists()) info.delete();
+    }
+
     public static AccountResult.Data getIdentityInfo(Context con) {
         if (mIdentityInfo == null) {
             loadInfo(con);
@@ -133,23 +156,9 @@ public class AccountHelper {
         return mIdentityInfo;
     }
 
-    public static boolean updateAccount(Context context, Account account) {
-        return true;
-    }
-
-    public static void deleteAccount(Context context) {
-    }
-
-    public static void deleteIdentityInfo(Context context) {
-
-    }
 
     private static void enableSync(Context context) {
     }
 
-    public static boolean isLogin(Context context) {
-        String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-        return new File(path).exists();
-    }
 
 }
