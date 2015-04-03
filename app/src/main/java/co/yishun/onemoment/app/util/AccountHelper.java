@@ -50,6 +50,10 @@ public class AccountHelper {
         return true;
     }
 
+    public static boolean isValidNickname(String name) {
+        return !TextUtils.isEmpty(name);
+    }
+
     public static boolean isLogin(Context context) {
         String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
         return new File(path).exists();
