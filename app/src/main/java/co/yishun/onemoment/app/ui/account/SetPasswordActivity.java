@@ -58,8 +58,6 @@ public class SetPasswordActivity extends ToolbarBaseActivity {
                     showNotification(R.string.setPasswordNSignUpSuccess);
                     setResult(Activity.RESULT_OK);
                     IntegrateInfoActivity_.intent(this)
-                            .extra("phone", phone)
-                            .extra("password", password)
                             .startForResult(IntegrateInfoActivity.REQUEST_PHONE);
                 } else showNotification(R.string.setPasswordNSignUpFail);
                 hideProgress();

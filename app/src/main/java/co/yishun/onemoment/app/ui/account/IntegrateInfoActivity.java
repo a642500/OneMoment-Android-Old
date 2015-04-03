@@ -35,11 +35,6 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
 //    public enum SignUpType {phone, weibo}
 
-    @Extra
-    String phone;
-    @Extra
-    String password;
-
     @ViewById
     EditText nickNameEditText;
 
