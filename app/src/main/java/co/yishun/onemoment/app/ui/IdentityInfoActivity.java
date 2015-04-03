@@ -13,6 +13,8 @@ import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
@@ -67,10 +69,11 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void nickNameItemClicked(View view) {
-        final EditText edit = (EditText) LayoutInflater.from(this).inflate(R.layout.dialog_nickname, null);
+        final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_nickname, null);
+        final EditText edit = (EditText) customView.findViewById(R.id.nickNameEditText);
         final String oldName = nickNameTextView.getText().toString().trim();
         edit.setText(oldName);
-        new MaterialDialog.Builder(this).theme(Theme.DARK).customView(edit, false)
+        new MaterialDialog.Builder(this).theme(Theme.DARK).customView(customView, false)
                 .title(R.string.integrateInfoNickNameHint)
                 .positiveText(R.string.identityInfoOk)
                 .negativeText(R.string.identityInfoCancel)
@@ -80,7 +83,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                 String newName = edit.getText().toString().trim();
                 if (!AccountHelper.isValidNickname(newName)) {
                     showNotification(R.string.identityInfoNicknameInvalid);
-
+                    YoYo.with(Techniques.Shake).duration(700).playOn(edit);
                 } else if (!oldName.equals(newName)) {
                     updateInfo("nickname", newName, nickNameTextView);
                     dialog.dismiss();
@@ -108,11 +111,17 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             } else switch (result.getCode()) {
                 case ErrorCode.SUCCESS:
                     AccountHelper.updateAccount(this, result.getData());
-                    showNotification("success");
+                    showNotification(R.string.identityInfoUpdateSuccess);
                     runOnUiThread(() -> showValueView.setText(value));
                     break;
                 case ErrorCode.NICKNAME_EXISTS:
-                    showNotification("nick exist!");
+                    showNotification(R.string.identityInfoNicknameExist);
+                    break;
+                case ErrorCode.NICKNAME_FORMAT_ERROR:
+                    showNotification(R.string.identityInfoNicknameNetworkInvalid);
+                    break;
+                case ErrorCode.LOCATION_FORMAT_ERROR:
+                    LogUtil.e(TAG, "LOCATION_FORMAT_ERROR");
                     break;
                 //TODO add more
                 default:

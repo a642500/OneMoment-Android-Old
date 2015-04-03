@@ -51,7 +51,8 @@ public class AccountHelper {
     }
 
     public static boolean isValidNickname(String name) {
-        return !TextUtils.isEmpty(name);
+        int le = name.trim().length();
+        return !TextUtils.isEmpty(name) && le <= 30 && 4 <= le;
     }
 
     public static boolean isLogin(Context context) {

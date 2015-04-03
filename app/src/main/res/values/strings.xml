@@ -64,7 +64,10 @@
     <string name="identityInfoLogout">Log Out</string>
     <string name="identityInfoOk">OK</string>
     <string name="identityInfoCancel">Cancel</string>
-    <string name="identityInfoNicknameInvalid">Invalid nickname!</string>
+    <string name="identityInfoUpdateSuccess">Update Success.</string>
+    <string name="identityInfoNicknameInvalid">nickname length must at 4~30!</string>
+    <string name="identityInfoNicknameNetworkInvalid">nickname format error!</string>
+    <string name="identityInfoNicknameExist">nickname already exists!</string>
 
     <string name="videoSaveTitle">@string/app_name</string>
     <string name="recordEndSave">save</string>
