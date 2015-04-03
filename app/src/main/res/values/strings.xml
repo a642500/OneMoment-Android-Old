@@ -70,6 +70,8 @@
     <string name="identityInfoNicknameNetworkInvalid">nickname format error!</string>
     <string name="identityInfoNicknameExist">nickname already exists!</string>
     <string name="identityInfoLogoutAlert">Are you sure you want to logout?</string>
+    <string name="identityInfoWeiboBound">Bound</string>
+    <string name="identityInfoWeiboUnbound">Unbound</string>
 
 
     <string name="videoSaveTitle">@string/app_name</string>

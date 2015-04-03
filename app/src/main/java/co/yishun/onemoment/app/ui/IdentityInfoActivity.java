@@ -41,7 +41,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         AccountResult.Data data = AccountHelper.getIdentityInfo(this);
         Picasso.with(this).load(data.getAvatar_url()).into(profileImageView);
         nickNameTextView.setText(data.getNickname());
-        weiboTextView.setText(data.getWeibo_uid());//TODO set text
+        weiboTextView.setText(data.getWeibo_uid() == null ? R.string.identityInfoWeiboUnbound : R.string.identityInfoWeiboBound);
         setGender(data.getGender());
         setProvinceAndDistrict(data.getArea());
     }
@@ -75,19 +75,9 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         setGender(genderInt);
     }
 
-    @Click({R.id.profileItem, R.id.weiboItem})
-    void infoItem(View view) {
-        switch (view.getId()) {
-            case R.id.weiboItem:
-                //TODO bind weibo
-                break;
-
-            default:
-                //TODO put extras to let it preset
-
-                break;
-        }
-
+    @Click
+    void profileItemClicked(View view) {
+        //TODO profile
     }
 
     @Click
@@ -280,11 +270,9 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @OnActivityResult(REQUEST_UPDATE_INFO)
-    void onUpdate(int resultCode) {
-        if (resultCode == RESULT_OK) {
-            initViews();
-        }
+    @Click
+    void weiboItemClicked(View view) {
+        //TODO handle weibo
     }
 
     @Click(R.id.logoutBtn)
