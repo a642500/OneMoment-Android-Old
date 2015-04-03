@@ -8,6 +8,7 @@
     <color name="colorTransparentGray">#20000000</color>
     <color name="colorTransparentGrayDark">#63000000</color>
 
+    <color name="underlineIndicatorColor">#02fba1</color>
 
     <color name="bgColorRecordHeader">#151515</color>
     <color name="bgColorRecordBottom">#151515</color>

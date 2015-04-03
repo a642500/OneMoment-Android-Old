@@ -8,10 +8,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.ui.RecordingActivity_;
+import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
+import com.viewpagerindicator.UnderlinePageIndicator;
 import org.androidannotations.annotations.*;
 
 /**
@@ -20,15 +24,18 @@ import org.androidannotations.annotations.*;
  * Created by Carlos on 2/7/15.
  */
 @EActivity(R.layout.guide_activity)
-public class GuideActivity extends FragmentActivity implements GuidePageFragment.OnLastBtnClickedListener {
+public class GuideActivity extends ToolbarBaseActivity implements GuidePageFragment.OnLastBtnClickedListener {
     @Extra
     boolean isFromSuggestion = false;
 
     @ViewById
     ViewPager guideViewPager;
+    @ViewById
+    UnderlinePageIndicator viewpagerIndicator;
 
     @AfterViews
     void initViewPager() {
+        toolbar.setVisibility(isFromSuggestion ? View.VISIBLE : View.GONE);
         guideViewPager.setAdapter(
                 new FragmentPagerAdapter(getSupportFragmentManager()) {
                     @Override
@@ -50,6 +57,8 @@ public class GuideActivity extends FragmentActivity implements GuidePageFragment
                     }
                 }
         );
+        viewpagerIndicator.setViewPager(guideViewPager);
+        viewpagerIndicator.setSelectedColor(getResources().getColor(R.color.underlineIndicatorColor));
     }
 
     @UiThread
