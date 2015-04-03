@@ -139,14 +139,11 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
 //                if (AccountHelper.isLogin())
 //                else LoginActivity.showLoginDialog(this);
                 break;
-            case R.id.action_suggest:
-                GuideActivity_.intent(this).extra("isFromSuggestion", true).start();
-                break;
             case R.id.action_rate:
 
                 break;
             case R.id.action_help:
-
+                GuideActivity_.intent(this).extra("isFromSuggestion", true).start();
                 break;
             case R.id.action_about:
                 AboutActivity_.intent(this).start();
