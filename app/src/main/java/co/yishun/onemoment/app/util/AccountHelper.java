@@ -14,9 +14,9 @@ import java.io.*;
  * Created by Carlos on 2/15/15.
  */
 public class AccountHelper {
-    public static final String ACCOUNT_TYPE = "yishun.com";
+    public static final String ACCOUNT_TYPE = "co.yishun.onemoment.app.data.moment.provider";
     // The account name
-    public static final String ACCOUNT = "sync_account";
+//    public static final String ACCOUNT = "sync_account";
     private static final String TAG = LogUtil.makeTag(AccountHelper.class);
 
     public static PasswordType checkPassword(@Nullable String pass) {
@@ -85,12 +85,12 @@ public class AccountHelper {
 
     public static Account createAccount(Context context, AccountResult.Data data) {
         // Create the account type and default account
-        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+        Account newAccount = new Account(data.getPhone(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            //TODO enable sync
+            enableSync(context);
         } else {
-            //TODO error
+            LogUtil.e(TAG, "The account exists or some other error occurred.");
         }
         saveIdentityInfo(context, data);
         return newAccount;
@@ -98,17 +98,15 @@ public class AccountHelper {
 
     public static void deleteAccount(Context context) {
         deleteIdentityInfo(context);
-        //delete from system
+        AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+        Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
+        if (accounts.length > 0) accountManager.removeAccount(accounts[0], null, null, null);
     }
 
     public static boolean updateAccount(Context context, AccountResult.Data data) {
         deleteIdentityInfo(context);
         saveIdentityInfo(context, data);
         return true;
-    }
-
-    private static AccountManager getAccountManager(Context context) {
-        return (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
     }
 
     private static AccountResult.Data mIdentityInfo = null;
@@ -159,6 +157,7 @@ public class AccountHelper {
 
 
     private static void enableSync(Context context) {
+
     }
 
 

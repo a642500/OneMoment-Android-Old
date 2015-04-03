@@ -6,14 +6,14 @@ import android.provider.BaseColumns;
 
 /**
  * Contract for database and provider.
- * <p/>
+ * <p>
  * Created by Carlos on 3/9/15.
  */
 public class Contract {
 
     public static final String DATABASE_NAME = "OneDataBase.db";
     public static final int DATABASE_VERSION = 1;
-    public static final String AUTHORITY = "co.yishun.onemoment.app.data.moment";
+    public static final String AUTHORITY = "co.yishun.onemoment.app.data.moment.provider";
 
 
     /**

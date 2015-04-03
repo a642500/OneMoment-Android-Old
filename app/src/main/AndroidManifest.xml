@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
 
     <application
             android:name=".MyApplication_"
@@ -65,13 +69,6 @@
                 android:label="@string/loginByPhoneTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service android:name=".sync.SyncService"/>
-
-        <provider
-                android:name=".data.MomentProvider"
-                android:authorities="co.yishun.onemoment.app.data.moment"
-                android:exported="false"
-                android:syncable="false"/>
 
         <activity
                 android:name=".ui.AlbumActivity_"
@@ -115,6 +112,36 @@
                 android:name=".ui.SyncSettingsActivity"
                 android:label="@string/syncSettingsTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
+
+        <service
+                android:name=".sync.AuthenticatorService"
+                android:enabled="true"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.accounts.AccountAuthenticator"
+                    android:resource="@xml/authenticator"/>
+        </service>
+
+        <service
+                android:name=".sync.SyncService"
+                android:exported="true"
+                android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.content.SyncAdapter"
+                    android:resource="@xml/syncadapter"/>
+        </service>
+
+        <provider
+                android:name=".data.MomentProvider"
+                android:authorities="co.yishun.onemoment.app.data.moment.provider"
+                android:exported="false"
+                android:syncable="true"/>
     </application>
 
 </manifest>
