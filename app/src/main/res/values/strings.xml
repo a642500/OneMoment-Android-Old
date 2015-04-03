@@ -105,13 +105,13 @@
     <string name="weiboLoginCancel">Login Cancel</string>
 
 
-    <string name="dayOfWeekSun">Sun</string>
-    <string name="dayOfWeekMon">Mon</string>
-    <string name="dayOfWeekTue">Tue</string>
-    <string name="dayOfWeekWed">Wed</string>
-    <string name="dayOfWeekThu">Thu</string>
-    <string name="dayOfWeekFri">Fri</string>
-    <string name="dayOfWeekSat">Sat</string>
+    <string name="dayOfWeekSun">Sunday</string>
+    <string name="dayOfWeekMon">Monday</string>
+    <string name="dayOfWeekTue">Tuesday</string>
+    <string name="dayOfWeekWed">Wednesday</string>
+    <string name="dayOfWeekThu">Thursday</string>
+    <string name="dayOfWeekFri">Friday</string>
+    <string name="dayOfWeekSat">Saturday</string>
 
     <string name="guideTitle">Help</string>
 </resources>

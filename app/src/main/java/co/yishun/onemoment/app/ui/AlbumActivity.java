@@ -80,7 +80,8 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     @AfterViews
     void initToday() {
         Calendar today = Calendar.getInstance();
-        calendarCurrentDay.setText(String.valueOf(today.get(Calendar.DAY_OF_MONTH)));
+        int day = today.get(Calendar.DAY_OF_MONTH);
+        calendarCurrentDay.setText(day > 9 ? String.valueOf(day) : "0" + day);
         String[] weeks = getResources().getStringArray(R.array.dayOfWeek);
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
