@@ -14,7 +14,7 @@ import java.io.*;
  * Created by Carlos on 2/15/15.
  */
 public class AccountHelper {
-    public static final String ACCOUNT_TYPE = "co.yishun.onemoment.app.data.moment.provider";
+    public static final String ACCOUNT_TYPE = "co.yishun.onemoment.app";
     // The account name
 //    public static final String ACCOUNT = "sync_account";
     private static final String TAG = LogUtil.makeTag(AccountHelper.class);

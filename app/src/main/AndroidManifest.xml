@@ -139,7 +139,7 @@
 
         <provider
                 android:name=".data.MomentProvider"
-                android:authorities="co.yishun.onemoment.app.data.moment.provider"
+                android:authorities="co.yishun.onemoment.app"
                 android:exported="false"
                 android:syncable="true"/>
     </application>

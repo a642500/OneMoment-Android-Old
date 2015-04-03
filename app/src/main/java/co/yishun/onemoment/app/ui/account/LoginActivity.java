@@ -57,30 +57,33 @@ public class LoginActivity extends ToolbarBaseActivity {
     }
 
     @Click(R.id.loginBtn)
+    @Background
     void loginBtn(@NonNull View view) {
-        if (checkPhoneNum() && checkPassword())
+        if (checkPhoneNum() && checkPassword()) {
+            showProgress();
             ((SignIn) (new SignIn().with(this))).setPhone(mPhoneNum).setPassword(mPassword).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Login failed! Please check your network.", Toast.LENGTH_SHORT).show();
+                    showNotification("Login failed! Please check your network.");
                 } else {
                     switch (result.getCode()) {
                         case ErrorCode.SUCCESS:
-                            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+                            showNotification("Login success");
                             AccountHelper.createAccount(this, result.getData());
                             setResult(RESULT_OK);
                             this.finish();
                             break;
                         case ErrorCode.ACCOUNT_DOESNT_EXIST:
-                            Toast.makeText(this, "Your account or password is wrong.", Toast.LENGTH_SHORT).show();
+                            showNotification("Your account or password is wrong.");
                         default:
-                            Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
+                            showNotification("Login failed!");
                             break;
                     }
                 }
+                hideProgress();
             });
-        else
-            Toast.makeText(this, "Your phone or password is invalid.", Toast.LENGTH_SHORT).show();
+        } else
+            showNotification("Your phone or password is invalid.");
     }
 
     private boolean checkPhoneNum() {
