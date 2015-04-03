@@ -22,6 +22,8 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="64dp"
             android:id="@+id/okBtn"
+            android:textColor="@color/textColorGuideOk"
+            android:background="@drawable/bg_square_frame_green"
             />
 
 </RelativeLayout>

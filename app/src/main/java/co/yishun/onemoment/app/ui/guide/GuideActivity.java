@@ -1,16 +1,15 @@
 package co.yishun.onemoment.app.ui.guide;
 
-import android.content.ComponentName;
-import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import co.yishun.onemoment.app.R;
-import co.yishun.onemoment.app.config.Config;
-import co.yishun.onemoment.app.ui.RecordingActivity_;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import com.viewpagerindicator.UnderlinePageIndicator;
-import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.ViewById;
 
 /**
  * This activity is to guide user when first launched.
@@ -18,7 +17,7 @@ import org.androidannotations.annotations.*;
  * Created by Carlos on 2/7/15.
  */
 @EActivity(R.layout.guide_activity)
-public class GuideActivity extends ToolbarBaseActivity implements GuidePageFragment.OnLastBtnClickedListener {
+public class GuideActivity extends ToolbarBaseActivity {
     @Extra
     boolean isFromSuggestion = false;
 
@@ -53,12 +52,5 @@ public class GuideActivity extends ToolbarBaseActivity implements GuidePageFragm
         );
         viewpagerIndicator.setViewPager(guideViewPager);
         viewpagerIndicator.setSelectedColor(getResources().getColor(R.color.underlineIndicatorColor));
-    }
-
-    @Override
-    public void onLastBtnClicked(View view) {
-        getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).edit().putBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, false).apply();
-        this.finish();
-        RecordingActivity_.intent(this).start();
     }
 }

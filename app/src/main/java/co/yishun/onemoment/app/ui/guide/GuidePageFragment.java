@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.ui.RecordingActivity_;
 import org.androidannotations.annotations.*;
 
 @EFragment(R.layout.fragment_guide_page)
@@ -27,47 +29,23 @@ public class GuidePageFragment extends Fragment {
         okBtn.setVisibility(isLast ? View.VISIBLE : View.GONE);
     }
 
-    private OnLastBtnClickedListener mListener;
-
-    // TODO: Rename method, update argument and hook method into UI event
+    private Activity mActivity;
 
     @Click
     public void okBtnClicked(View view) {
-        if (mListener != null) {
-            mListener.onLastBtnClicked(view);
+        if (mActivity != null) {
+            mActivity.getSharedPreferences(Config.PREFERENCE, Activity.MODE_PRIVATE).edit().putBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, false).apply();
+            mActivity.finish();
+            RecordingActivity_.intent(this).start();
         }
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (isLast)
-            try {
-                mListener = (OnLastBtnClickedListener) activity;
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString()
-                        + " must implement OnLastBtnClickedListener");
-            }
+        mActivity = activity;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnLastBtnClickedListener {
-        void onLastBtnClicked(View view);
-    }
 
 }
