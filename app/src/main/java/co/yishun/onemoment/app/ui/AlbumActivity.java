@@ -12,6 +12,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
+import co.yishun.onemoment.app.ui.guide.GuideActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -139,7 +140,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
 //                else LoginActivity.showLoginDialog(this);
                 break;
             case R.id.action_suggest:
-
+                GuideActivity_.intent(this).extra("isFromSuggestion", true).start();
                 break;
             case R.id.action_rate:
 

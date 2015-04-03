@@ -18,6 +18,9 @@ import org.androidannotations.annotations.*;
  */
 @EActivity(R.layout.guide_activity)
 public class GuideActivity extends Activity implements GuidePageFragment.OnLastBtnClickedListener {
+    @Extra
+    boolean isFromSuggestion = false;
+
     @ViewById
     ViewPager guideViewPager;
 
@@ -44,7 +47,7 @@ public class GuideActivity extends Activity implements GuidePageFragment.OnLastB
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                return GuidePageFragment_.builder().imageRes(imageRes[position]).isLast(position == imageRes.length - 1).build();
+                return GuidePageFragment_.builder().imageRes(imageRes[position]).isLast(!isFromSuggestion && (position == imageRes.length - 1)).build();
             }
         });
     }
