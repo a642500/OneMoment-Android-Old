@@ -289,7 +289,19 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Click(R.id.logoutBtn)
     void logout(View view) {
-        AccountHelper.deleteAccount(this);
-        this.finish();
+        new MaterialDialog.Builder(this).theme(Theme.DARK).title(R.string.identityInfoLogout).content(R.string.identityInfoLogoutAlert)
+                .positiveText(R.string.identityInfoLogout).negativeText(R.string.cancel).callback(new MaterialDialog.ButtonCallback() {
+            @Override
+            public void onNegative(MaterialDialog dialog) {
+                super.onNegative(dialog);
+            }
+
+            @Override
+            public void onPositive(MaterialDialog dialog) {
+                super.onPositive(dialog);
+                AccountHelper.deleteAccount(IdentityInfoActivity.this);
+                IdentityInfoActivity.this.finish();
+            }
+        }).show();
     }
 }

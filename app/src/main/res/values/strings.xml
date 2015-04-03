@@ -69,6 +69,8 @@
     <string name="identityInfoNicknameInvalid">nickname length must at 4~30!</string>
     <string name="identityInfoNicknameNetworkInvalid">nickname format error!</string>
     <string name="identityInfoNicknameExist">nickname already exists!</string>
+    <string name="identityInfoLogoutAlert">Are you sure you want to logout?</string>
+
 
     <string name="videoSaveTitle">@string/app_name</string>
     <string name="recordEndSave">save</string>
