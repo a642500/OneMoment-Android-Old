@@ -5,9 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import com.squareup.timessquare.CalendarPickerView;
 
 /**
  * Created by Carlos on 2015/3/23.

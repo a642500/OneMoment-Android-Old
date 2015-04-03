@@ -19,7 +19,6 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
-import co.yishun.onemoment.app.MyApplication;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;

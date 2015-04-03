@@ -1,7 +1,7 @@
 package co.yishun.onemoment.app.net.request.account;
 
-import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.net.request.Request;
+import co.yishun.onemoment.app.net.result.AccountResult;
 import com.koushikdutta.async.future.FutureCallback;
 
 /**

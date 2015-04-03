@@ -35,6 +35,8 @@ public class Config {
 
     public static final String TIME_FORMAT = "yyyyMMdd";
 
+    public static final String PREFERENCE = "preferences";
+
 
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
 

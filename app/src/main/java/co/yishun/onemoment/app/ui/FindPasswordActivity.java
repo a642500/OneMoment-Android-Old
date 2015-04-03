@@ -1,8 +1,6 @@
 package co.yishun.onemoment.app.ui;
 
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
@@ -12,7 +10,9 @@ import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.PhoneVerification;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.AfterTextChange;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
 
 @EActivity(R.layout.activity_find_password)
 public class FindPasswordActivity extends ToolbarBaseActivity {

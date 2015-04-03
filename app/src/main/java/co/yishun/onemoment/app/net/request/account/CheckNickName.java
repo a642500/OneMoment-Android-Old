@@ -2,9 +2,8 @@ package co.yishun.onemoment.app.net.request.account;
 
 import android.text.TextUtils;
 import co.yishun.onemoment.app.config.Config;
-import co.yishun.onemoment.app.net.result.AccountResult;
-import co.yishun.onemoment.app.net.result.NickNameResult;
 import co.yishun.onemoment.app.net.request.Request;
+import co.yishun.onemoment.app.net.result.NickNameResult;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;

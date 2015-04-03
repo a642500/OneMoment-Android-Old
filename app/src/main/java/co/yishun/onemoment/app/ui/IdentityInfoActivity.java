@@ -1,16 +1,10 @@
 package co.yishun.onemoment.app.ui;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
-import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;

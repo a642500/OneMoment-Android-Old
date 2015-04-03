@@ -23,7 +23,6 @@ import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.webkit.DownloadListener;
 import co.yishun.onemoment.app.config.Config;
 
 import java.io.File;

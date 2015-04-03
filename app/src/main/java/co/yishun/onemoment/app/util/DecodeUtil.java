@@ -1,22 +1,11 @@
 package co.yishun.onemoment.app.util;
 
-import android.nfc.Tag;
 import android.util.Base64;
-import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.CharsetEncoder;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 /**
  * Created by Carlos on 2015/3/27.

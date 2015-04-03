@@ -1,7 +1,6 @@
 package co.yishun.onemoment.app.data;
 
 import co.yishun.onemoment.app.config.Config;
-import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

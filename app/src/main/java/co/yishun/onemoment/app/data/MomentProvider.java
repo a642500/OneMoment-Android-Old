@@ -1,8 +1,6 @@
 package co.yishun.onemoment.app.data;
 
 import com.tojc.ormlite.android.OrmLiteSimpleContentProvider;
-import com.tojc.ormlite.android.framework.MatcherController;
-import com.tojc.ormlite.android.framework.MimeTypeVnd.SubType;
 
 /**
  * Content Provider to

@@ -1,7 +1,6 @@
 package co.yishun.onemoment.app.convert;
 
 import android.content.Context;
-import android.util.Log;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;

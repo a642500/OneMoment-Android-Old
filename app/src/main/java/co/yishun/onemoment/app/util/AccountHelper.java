@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.result.AccountResult;
 

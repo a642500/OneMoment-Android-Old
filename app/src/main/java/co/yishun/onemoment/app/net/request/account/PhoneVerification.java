@@ -2,7 +2,6 @@ package co.yishun.onemoment.app.net.request.account;
 
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
-import co.yishun.onemoment.app.net.result.NickNameResult;
 import co.yishun.onemoment.app.net.result.VerificationResult;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;

@@ -1,6 +1,5 @@
 package co.yishun.onemoment.app.net.request.account;
 
-import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.net.result.AccountResult;
@@ -9,7 +8,6 @@ import co.yishun.onemoment.app.util.DecodeUtil;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.gson.GsonObjectParser;
 
 import java.util.concurrent.ExecutionException;
 

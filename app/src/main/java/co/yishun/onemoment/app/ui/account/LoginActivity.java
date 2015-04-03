@@ -1,6 +1,5 @@
 package co.yishun.onemoment.app.ui.account;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.SignIn;
-import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;

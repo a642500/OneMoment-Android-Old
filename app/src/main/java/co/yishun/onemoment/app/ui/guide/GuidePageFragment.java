@@ -1,7 +1,6 @@
 package co.yishun.onemoment.app.ui.guide;
 
 import android.app.Activity;
-
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;

@@ -1,17 +1,10 @@
 package co.yishun.onemoment.app.ui.guide;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.ui.RecordingActivity_;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
