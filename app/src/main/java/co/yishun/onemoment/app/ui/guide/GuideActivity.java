@@ -16,7 +16,7 @@ import org.androidannotations.annotations.ViewById;
  * <p>
  * Created by Carlos on 2/7/15.
  */
-@EActivity(R.layout.guide_activity)
+@EActivity(R.layout.activity_guide)
 public class GuideActivity extends ToolbarBaseActivity {
     @Extra
     boolean isFromSuggestion = false;
@@ -31,11 +31,6 @@ public class GuideActivity extends ToolbarBaseActivity {
         toolbar.setVisibility(isFromSuggestion ? View.VISIBLE : View.GONE);
         guideViewPager.setAdapter(
                 new FragmentPagerAdapter(getSupportFragmentManager()) {
-                    @Override
-                    public android.support.v4.app.Fragment getItem(int position) {
-                        return GuidePageFragment_.builder().imageRes(imageRes[position]).isLast(!isFromSuggestion && (position == imageRes.length - 1)).build();
-                    }
-
                     int[] imageRes = {
                             R.drawable.guide_screen0,
                             R.drawable.guide_screen1,
@@ -43,6 +38,11 @@ public class GuideActivity extends ToolbarBaseActivity {
                             R.drawable.guide_screen3,
                             R.drawable.guide_screen4
                     };
+
+                    @Override
+                    public android.support.v4.app.Fragment getItem(int position) {
+                        return GuidePageFragment_.builder().imageRes(imageRes[position]).isLast(!isFromSuggestion && (position == imageRes.length - 1)).build();
+                    }
 
                     @Override
                     public int getCount() {

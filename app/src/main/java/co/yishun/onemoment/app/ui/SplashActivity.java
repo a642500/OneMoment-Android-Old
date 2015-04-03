@@ -15,14 +15,14 @@ import org.androidannotations.annotations.*;
 @EActivity(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
 
+    @ViewById
+    ImageView splashImageView;
+
     @Override
     protected void onResume() {
         super.onResume();
         startRecording();
     }
-
-    @ViewById
-    ImageView splashImageView;
 
     @AfterViews
     void setResource() {

@@ -42,7 +42,7 @@ import java.sql.SQLException;
  * Created by Carlos on 2/14/15.
  */
 //@Fullscreen
-@EActivity(R.layout.recording_layout)
+@EActivity(R.layout.layout_recording)
 public class RecordingActivity extends Activity {
     public static final int NOT_PREPARED = 0;
     public static final int PREPARED = 1;
@@ -50,6 +50,12 @@ public class RecordingActivity extends Activity {
     private static final String TAG = LogUtil.makeTag(RecordingActivity.class);
     @ViewById(R.id.surfaceView)
     TextureView mPreview;
+    @ViewById
+    ImageSwitcher recordFlashSwitch;
+    @ViewById
+    ImageSwitcher cameraSwitch;
+    @ViewById
+    ImageView welcomeOverlay;
     private Camera mCamera;
     //    @ViewById(R.id.recordVideoBtn)
 //    ImageButton captureButton;
@@ -108,11 +114,6 @@ public class RecordingActivity extends Activity {
         //TODO
         new AlbumActivity_.IntentBuilder_(this).start();
     }
-
-    @ViewById
-    ImageSwitcher recordFlashSwitch;
-    @ViewById
-    ImageSwitcher cameraSwitch;
 
     @AfterViews
     void initViews() {
@@ -242,7 +243,6 @@ public class RecordingActivity extends Activity {
 
     }
 
-
     //    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background
@@ -291,10 +291,6 @@ public class RecordingActivity extends Activity {
         mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
         mCamera.startPreview();
     }
-
-
-    @ViewById
-    ImageView welcomeOverlay;
 
     @UiThread
     void hideSplash() {

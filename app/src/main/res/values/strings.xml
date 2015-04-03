@@ -115,4 +115,6 @@
     <string name="dayOfWeekSat">Saturday</string>
 
     <string name="guideTitle">Help</string>
+
+    <string name="syncSettingsTitle">Sync Settings</string>
 </resources>

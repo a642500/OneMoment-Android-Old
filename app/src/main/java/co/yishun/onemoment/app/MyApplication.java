@@ -9,12 +9,12 @@ import quickutils.core.QuickUtils;
  */
 @EApplication
 public class MyApplication extends Application {
+    public boolean isRelease = true;
+
     @Override
     public void onCreate() {
         super.onCreate();
         QuickUtils.init(this);
 
     }
-
-    public boolean isRelease = true;
 }

@@ -8,14 +8,6 @@ public class NickNameResult {
     private String msg;
     private Data data;
 
-    public static class Data {
-        private String nickname;
-
-        public String getNickname() {
-            return nickname;
-        }
-    }
-
     public int getCode() {
         return code;
     }
@@ -26,5 +18,13 @@ public class NickNameResult {
 
     public Data getData() {
         return data;
+    }
+
+    public static class Data {
+        private String nickname;
+
+        public String getNickname() {
+            return nickname;
+        }
     }
 }

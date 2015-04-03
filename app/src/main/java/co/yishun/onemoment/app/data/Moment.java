@@ -18,15 +18,12 @@ import java.util.Date;
 @AdditionalAnnotation.DefaultContentMimeTypeVnd(name = Contract.Moment.MIMETYPE_NAME, type = Contract.Moment.MIMETYPE_TYPE)
 @DatabaseTable(tableName = Contract.DATABASE_NAME)
 public class Moment {
-    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true)
-    private int id;
-
     @DatabaseField
     String path;
-
     @DatabaseField
     String thumbPath;
-
+    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true)
+    private int id;
     //auto set when created
     @DatabaseField
     private long timeStamp;
@@ -36,6 +33,13 @@ public class Moment {
 
     public Moment() {
         //keep for ormlite
+    }
+
+    private static Moment newInstance() {
+        Moment m = new Moment();
+        m.timeStamp = System.currentTimeMillis();
+        m.time = new SimpleDateFormat(Config.TIME_FORMAT).format(new Date());
+        return m;
     }
 
     public String getPath() {
@@ -48,13 +52,6 @@ public class Moment {
 
     public String getTime() {
         return time;
-    }
-
-    private static Moment newInstance() {
-        Moment m = new Moment();
-        m.timeStamp = System.currentTimeMillis();
-        m.time = new SimpleDateFormat(Config.TIME_FORMAT).format(new Date());
-        return m;
     }
 
     public String getThumbPath() {

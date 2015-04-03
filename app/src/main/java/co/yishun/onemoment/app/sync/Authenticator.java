@@ -7,7 +7,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 
 /**
  * Created by Carlos on 2015/4/3.

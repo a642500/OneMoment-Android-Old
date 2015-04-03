@@ -13,9 +13,8 @@ import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_identity_info)
 public class IdentityInfoActivity extends ToolbarBaseActivity {
-    private static final String TAG = LogUtil.makeTag(IdentityInfoActivity.class);
     public static final int REQUEST_UPDATE_INFO = 0;
-
+    private static final String TAG = LogUtil.makeTag(IdentityInfoActivity.class);
     @ViewById
     ImageView profileImageView;
     @ViewById

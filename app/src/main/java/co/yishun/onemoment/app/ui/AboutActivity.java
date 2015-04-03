@@ -11,18 +11,18 @@ import org.androidannotations.annotations.EActivity;
 @EActivity(R.layout.activity_about)
 public class AboutActivity extends ToolbarBaseActivity {
 
-    @Click(R.id.checkNewBtn)
-    void checkNew() {
-        showCheckUpdateDialog(this);
-        //TODO check
-    }
-
     public static MaterialDialog showUpdateDialog(Context context) {
-        return new MaterialDialog.Builder(context).backgroundColorRes(R.color.bgUpdatedDialogColor).customView(R.layout.updated_dialog, false).show();
+        return new MaterialDialog.Builder(context).backgroundColorRes(R.color.bgUpdatedDialogColor).customView(R.layout.dialog_updated, false).show();
     }
 
     public static MaterialDialog showCheckUpdateDialog(Context context) {
         return new MaterialDialog.Builder(context).customView(R.layout.dialog_check, false).backgroundColorRes(R.color.bgUpdatedDialogColor).show();
+    }
+
+    @Click(R.id.checkNewBtn)
+    void checkNew() {
+        showCheckUpdateDialog(this);
+        //TODO check
     }
 
     @Click

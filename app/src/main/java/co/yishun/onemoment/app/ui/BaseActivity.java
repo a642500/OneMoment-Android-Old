@@ -15,6 +15,8 @@ import org.androidannotations.annotations.UiThread;
 @EActivity
 public class BaseActivity extends ActionBarActivity {
 
+    private MaterialDialog mProgressDialog;
+
     @UiThread
     public void showNotification(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
@@ -24,9 +26,6 @@ public class BaseActivity extends ActionBarActivity {
     public void showNotification(int textRes) {
         showNotification(getString(textRes));
     }
-
-
-    private MaterialDialog mProgressDialog;
 
     @UiThread
     public void showProgress() {

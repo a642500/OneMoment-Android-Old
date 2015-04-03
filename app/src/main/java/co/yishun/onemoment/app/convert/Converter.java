@@ -91,7 +91,8 @@ public abstract class Converter {
         run();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return getCommand();
     }
 

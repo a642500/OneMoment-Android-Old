@@ -40,6 +40,22 @@ interface OnMonthChangeListener {
 public class AlbumActivity extends BaseActivity implements OnMonthChangeListener {
 
     private static final String TAG = LogUtil.makeTag(AlbumActivity.class);
+    private final Calendar displayedMonth = Calendar.getInstance();
+    @ViewById
+    Toolbar toolbar;
+    @ViewById
+    TextView calendarCurrentDay;
+    @ViewById
+    TextView calendarDayOfWeek;
+    @ViewById
+    GridView calenderGrid;
+    @ViewById
+    TextView monthTextView;
+    boolean justPressed = false;
+    @ViewById
+    TextView titleOfCalender;
+    private CalenderAdapter mAdapter;
+    private WeiboHelper mWeiboHelper = null;
 
     @Fun
     @Click
@@ -59,8 +75,11 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         mAdapter.showPreviewMonthCalender();
     }
 
-    @ViewById
-    Toolbar toolbar;
+
+//        @Fun
+//        private void updateMonthTextView() {
+//            mUpdateMonthTextView.setText(mCalender.get(Calendar.MONTH) + 1 + mInflater.getContext().getString(R.string.albumMonthTitle));
+//        }
 
     @AfterViews
     void initToolbar() {
@@ -72,11 +91,6 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
     }
 
-    @ViewById
-    TextView calendarCurrentDay;
-    @ViewById
-    TextView calendarDayOfWeek;
-
     @AfterViews
     void initToday() {
         Calendar today = Calendar.getInstance();
@@ -85,14 +99,6 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         String[] weeks = getResources().getStringArray(R.array.dayOfWeek);
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
-
-    @ViewById
-    GridView calenderGrid;
-
-    @ViewById
-    TextView monthTextView;
-
-    private CalenderAdapter mAdapter;
 
     @AfterViews
     void initCalenderGrid() {
@@ -107,20 +113,12 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         monthTextView.setText(calendar.get(Calendar.MONTH) + 1 + getString(R.string.albumMonthTitle));
     }
 
-
-//        @Fun
-//        private void updateMonthTextView() {
-//            mUpdateMonthTextView.setText(mCalender.get(Calendar.MONTH) + 1 + mInflater.getContext().getString(R.string.albumMonthTitle));
-//        }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_album, menu);
         return true;
     }
-
-    private WeiboHelper mWeiboHelper = null;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -159,8 +157,6 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         return super.onOptionsItemSelected(item);
     }
 
-    private final Calendar displayedMonth = Calendar.getInstance();
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -198,15 +194,10 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         showNotification("syncing...");
     }
 
-    boolean justPressed = false;
-
     @UiThread(delay = 10 * 1000)
     void delayEnableSyncBtn() {
         justPressed = true;
     }
-
-    @ViewById
-    TextView titleOfCalender;
 
     @AfterViews
     void setOneMomentCount() {
@@ -218,7 +209,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     }
 
     public WeiboHelper showLoginDialog() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.login_dialog, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
+        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
         View view = dialog.getCustomView();
         view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
             SignUpActivity_.intent(this).start();
@@ -253,21 +244,29 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
 
     @EBean
     static class CalenderAdapter extends BaseAdapter {
+        public static final int[] WEEK_TITLE_RES = new int[]{
+                R.string.albumWeekTitleSun,
+                R.string.albumWeekTitleMon,
+                R.string.albumWeekTitleTue,
+                R.string.albumWeekTitleWed,
+                R.string.albumWeekTitleThu,
+                R.string.albumWeekTitleFri,
+                R.string.albumWeekTitleSat
+        };
         private static final String TAG = LogUtil.makeTag(CalenderAdapter.class);
         private final Calendar mCalender;
         private final Context mContext;
         private OnMonthChangeListener onMonthChangeListener;
+
 
         public CalenderAdapter(Context context) {
             this.mContext = context;
             mCalender = Calendar.getInstance();
         }
 
-
         public void setOnMonthChangeListener(OnMonthChangeListener listener) {
             onMonthChangeListener = listener;
         }
-
 
         private void onChange(Calendar calendar) {
             if (onMonthChangeListener != null) {
@@ -297,7 +296,6 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
             onChange(mCalender);
             super.notifyDataSetChanged();
         }
-
 
         @Override
         public void notifyDataSetInvalidated() {
@@ -336,16 +334,6 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         public long getItemId(int position) {
             return position - getOffsetOfDay() + 1;
         }
-
-        public static final int[] WEEK_TITLE_RES = new int[]{
-                R.string.albumWeekTitleSun,
-                R.string.albumWeekTitleMon,
-                R.string.albumWeekTitleTue,
-                R.string.albumWeekTitleWed,
-                R.string.albumWeekTitleThu,
-                R.string.albumWeekTitleFri,
-                R.string.albumWeekTitleSat
-        };
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

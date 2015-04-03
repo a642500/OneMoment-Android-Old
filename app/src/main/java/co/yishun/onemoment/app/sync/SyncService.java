@@ -7,15 +7,16 @@ import android.support.annotation.NonNull;
 
 /**
  * This service is to listen the network status and sync in the background.
- * <p/>
+ * <p>
  * Created by Carlos on 2/7/15.
  */
 public class SyncService extends Service {
-    private static SyncAdapter mSyncAdapter = null;
     // Object to use as a thread-safe lock
     public static final Object mSyncAdapterLock = new Object();
+    private static SyncAdapter mSyncAdapter = null;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         /*
          * Create the sync adapter as a singleton.
          * Set the sync adapter as syncable
@@ -28,7 +29,8 @@ public class SyncService extends Service {
         }
     }
 
-    @Override public IBinder onBind(@NonNull Intent intent) {
+    @Override
+    public IBinder onBind(@NonNull Intent intent) {
         return mSyncAdapter.getSyncAdapterBinder();
     }
 

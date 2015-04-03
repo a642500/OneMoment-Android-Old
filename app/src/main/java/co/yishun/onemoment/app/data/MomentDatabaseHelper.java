@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 /**
  * SQLite opener helper for Moment.
- * <p/>
+ * <p>
  * Created by Carlos on 3/9/15.
  */
 public class MomentDatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -19,7 +19,8 @@ public class MomentDatabaseHelper extends OrmLiteSqliteOpenHelper {
         super(context, Contract.DATABASE_NAME, null, Contract.DATABASE_VERSION);
     }
 
-    @Override public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
+    @Override
+    public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, Moment.class);
         } catch (SQLException e) {

@@ -12,8 +12,8 @@ import com.koushikdutta.ion.builder.LoadBuilder;
  * Created by Carlos on 2/9/15.
  */
 public abstract class Request<R> {
-    protected LoadBuilder<Builders.Any.B> builder;
     protected final String key = Config.getPrivateKey();
+    protected LoadBuilder<Builders.Any.B> builder;
     protected Context mContext;
 
 

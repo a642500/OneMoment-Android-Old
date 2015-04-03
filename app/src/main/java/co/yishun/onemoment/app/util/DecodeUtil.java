@@ -36,7 +36,7 @@ public class DecodeUtil {
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivT));
             byte[] re = cipher.doFinal(etextT);
             String s = new String(re);
-            String json = s.substring(0, s.lastIndexOf('}')+1);
+            String json = s.substring(0, s.lastIndexOf('}') + 1);
             LogUtil.v(TAG, "json: " + json);
             return json;
         } catch (Exception e) {

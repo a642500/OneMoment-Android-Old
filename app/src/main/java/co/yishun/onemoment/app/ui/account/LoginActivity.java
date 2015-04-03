@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.SignIn;
@@ -18,17 +17,15 @@ import org.androidannotations.annotations.*;
 /**
  * Created by Carlos on 2/15/15.
  */
-@EActivity(R.layout.login_layout)
+@EActivity(R.layout.activity_login)
 public class LoginActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(LoginActivity.class);
-
-    private String mPhoneNum;
-    private String mPassword;
     @Extra
     String phone = "";
-
     @ViewById
     EditText phoneEditText;
+    private String mPhoneNum;
+    private String mPassword;
 
     @AfterViews
     void initPhone() {

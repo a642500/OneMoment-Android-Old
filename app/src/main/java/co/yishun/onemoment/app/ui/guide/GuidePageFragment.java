@@ -22,14 +22,13 @@ public class GuidePageFragment extends Fragment {
     ImageView guideImageView;
     @ViewById
     Button okBtn;
+    private Activity mActivity;
 
     @AfterViews
     void initViews() {
         guideImageView.setImageResource(imageRes);
         okBtn.setVisibility(isLast ? View.VISIBLE : View.GONE);
     }
-
-    private Activity mActivity;
 
     @Click
     public void okBtnClicked(View view) {

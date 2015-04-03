@@ -21,19 +21,23 @@ class Converter2 extends Converter {
         mFFmpeg = FFmpeg.getInstance(context);
         try {
             mFFmpeg.loadBinary(new FFmpegLoadBinaryResponseHandler() {
-                @Override public void onFailure() {
+                @Override
+                public void onFailure() {
                     LogUtil.e(TAG, "load error");
                 }
 
-                @Override public void onSuccess() {
+                @Override
+                public void onSuccess() {
                     LogUtil.i(TAG, "load success");
                 }
 
-                @Override public void onStart() {
+                @Override
+                public void onStart() {
                     LogUtil.i(TAG, "load start");
                 }
 
-                @Override public void onFinish() {
+                @Override
+                public void onFinish() {
                     LogUtil.i(TAG, "load finish");
                 }
             });
@@ -43,12 +47,14 @@ class Converter2 extends Converter {
     }
 
 
-    @Override public Converter setHandler(FFmpegExecuteResponseHandler handler) {
+    @Override
+    public Converter setHandler(FFmpegExecuteResponseHandler handler) {
         mHandler = handler;
         return this;
     }
 
-    @Override void run() {
+    @Override
+    void run() {
         try {
             String cmd = mCommand.toString();
             LogUtil.i(TAG, "cmd: " + cmd);

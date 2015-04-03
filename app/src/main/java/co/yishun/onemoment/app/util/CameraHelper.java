@@ -36,11 +36,11 @@ import java.util.List;
  * Camera related utilities.
  */
 public class CameraHelper {
-    static final Object lock = new Object();
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-    private static boolean isFrontCamera = false;
+    static final Object lock = new Object();
     private static final String TAG = LogUtil.makeTag(CameraHelper.class);
+    private static boolean isFrontCamera = false;
 
     /**
      * Iterate over supported camera preview sizes to see which one best fits the
@@ -94,12 +94,12 @@ public class CameraHelper {
         }
     }
 
-    public static void setFrontCamera(boolean isFront) {
-        isFrontCamera = isFront;
-    }
-
     public static boolean isFrontCamera() {
         return isFrontCamera;
+    }
+
+    public static void setFrontCamera(boolean isFront) {
+        isFrontCamera = isFront;
     }
 
     public static void releaseCamera(Camera camera) {

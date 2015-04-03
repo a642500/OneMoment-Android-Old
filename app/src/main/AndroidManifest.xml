@@ -109,7 +109,7 @@
                 android:label="@string/setPasswordTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-                android:name=".ui.SyncSettingsActivity"
+                android:name=".ui.SyncSettingsActivity_"
                 android:label="@string/syncSettingsTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
 

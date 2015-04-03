@@ -4,7 +4,7 @@ import android.util.Log;
 
 /**
  * This util is used to generate custom Log.You can write log to some file on sdcard.
- * <p/>
+ * <p>
  * Created by Carlos on 2/7/15.
  */
 public class LogUtil {

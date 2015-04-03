@@ -10,11 +10,11 @@ import java.io.*;
 
 /**
  * Video Converter tool implemented by Ffmpeg.
- * <p/>
+ * <p>
  * You can {@link ConverterA#with(Context)} to get instance.
- * <p/>
+ * <p>
  * {@code Converter.with(Context).from(Input).cropToStandard().to(Output).get()}
- * <p/>
+ * <p>
  * Created by Carlos on 3/6/15.
  */
 @Deprecated
@@ -36,7 +36,8 @@ class ConverterA extends Converter {
     }
 
 
-    @Override public Converter setHandler(FFmpegExecuteResponseHandler handler) {
+    @Override
+    public Converter setHandler(FFmpegExecuteResponseHandler handler) {
         //Don't support.
         return this;
     }

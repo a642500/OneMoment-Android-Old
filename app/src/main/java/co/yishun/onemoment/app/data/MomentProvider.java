@@ -8,11 +8,13 @@ import com.tojc.ormlite.android.OrmLiteSimpleContentProvider;
  */
 public class MomentProvider extends OrmLiteSimpleContentProvider<MomentDatabaseHelper> {
 
-    @Override protected Class<MomentDatabaseHelper> getHelperClass() {
+    @Override
+    protected Class<MomentDatabaseHelper> getHelperClass() {
         return MomentDatabaseHelper.class;
     }
 
-    @Override public boolean onCreate() {
+    @Override
+    public boolean onCreate() {
 //        setMatcherController(new MatcherController()
 //                        .add(Contract.Moment.class, SubType.DIRECTORY, "", Contract.Moment.CONTENT_URI_PATTERN_MANY)
 //                        .add(Contract.Moment.class, SubType.ITEM, "#", Contract.Moment.CONTENT_URI_PATTERN_ONE)

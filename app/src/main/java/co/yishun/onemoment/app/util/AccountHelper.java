@@ -21,6 +21,8 @@ public class AccountHelper {
     // The account name
 //    public static final String ACCOUNT = "sync_account";
     private static final String TAG = LogUtil.makeTag(AccountHelper.class);
+    private static Account mAccount;
+    private static AccountResult.Data mIdentityInfo = null;
 
     public static PasswordType checkPassword(@Nullable String pass) {
         if (TextUtils.isEmpty(pass)) return PasswordType.InvalidEmpty;
@@ -46,39 +48,6 @@ public class AccountHelper {
     public static boolean isValidVerificationCode(String code) {
         if (TextUtils.isEmpty(code)) return false;
         return true;
-    }
-
-    public enum PasswordType {
-        /**
-         * invalid password because it is empty
-         */
-        InvalidEmpty,
-        /**
-         * invalid password because of too short length
-         */
-        InvalidTooShort,
-        /**
-         * invalid password because of too long length
-         */
-        InvalidTooLong,
-        /**
-         * invalid password because of weak strength
-         */
-        InvalidTooWeak,
-        /**
-         * invalid password because of containing invalid character
-         */
-        InvalidCharacter,
-
-        //valid:
-        /**
-         * valid password, which has enough strength
-         */
-        ValidMedium,
-        /**
-         * valid password, which has very good strength
-         */
-        ValidStrong
     }
 
     public static boolean isLogin(Context context) {
@@ -114,8 +83,6 @@ public class AccountHelper {
         return true;
     }
 
-    private static Account mAccount;
-
     public static Account getAccount(Context context) {
         if (mAccount == null) {
             AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -124,8 +91,6 @@ public class AccountHelper {
         }
         return mAccount;
     }
-
-    private static AccountResult.Data mIdentityInfo = null;
 
     private static void loadInfo(Context context) {
         try {
@@ -171,13 +136,45 @@ public class AccountHelper {
         return mIdentityInfo;
     }
 
-
     private static void enableSync(Context context) {
         ContentResolver.addPeriodicSync(getAccount(context), Contract.AUTHORITY, new Bundle(), 60 * 10);
     }
 
     public static void syncAtOnce(Context context) {
         ContentResolver.requestSync(getAccount(context), Contract.AUTHORITY, new Bundle());
+    }
+
+    public enum PasswordType {
+        /**
+         * invalid password because it is empty
+         */
+        InvalidEmpty,
+        /**
+         * invalid password because of too short length
+         */
+        InvalidTooShort,
+        /**
+         * invalid password because of too long length
+         */
+        InvalidTooLong,
+        /**
+         * invalid password because of weak strength
+         */
+        InvalidTooWeak,
+        /**
+         * invalid password because of containing invalid character
+         */
+        InvalidCharacter,
+
+        //valid:
+        /**
+         * valid password, which has enough strength
+         */
+        ValidMedium,
+        /**
+         * valid password, which has very good strength
+         */
+        ValidStrong
     }
 
 

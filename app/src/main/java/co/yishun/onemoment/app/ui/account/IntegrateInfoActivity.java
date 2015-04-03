@@ -26,24 +26,19 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     public static final String TAG = LogUtil.makeTag(IntegrateInfoActivity.class);
     public static final int REQUEST_PHONE = 0;
     public static final int REQUEST_WEIBO = 1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setResult(RESULT_CANCELED);
-    }
+    public static final int MALE = 0;
 
     //    public static final String EXTRA_SIGN_UP_TYPE = "type";
 //    public static final String EXTRA_PHONE = "phone";
 
 //    public enum SignUpType {phone, weibo}
-
+    public static final int FEMALE = 1;
+    public static final int Private = 2;
+    private final String[] gender = {"m", "f", "n"};
     @ViewById
     EditText nickNameEditText;
-
     @StringArrayRes
     String[] provinces;
-
     int[] provincesItemsRes = {
             R.array.beijinProvinceItem,
             R.array.tianjinProvinceItem,
@@ -80,7 +75,19 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
             R.array.aomenProvinceItem,
             R.array.taiwanProvinceItem
     };
+    @ViewById
+    TextView areaTextView;
+    @ViewById
+    TextView genderTextView;
+    private String mProvince;
+    private String mDistrict;
+    private int genderSelected = MALE;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
+    }
 
     @Click
     void areaItemClicked(View view) {
@@ -116,12 +123,6 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         dialog.show();
     }
 
-    @ViewById
-    TextView areaTextView;
-
-    private String mProvince;
-    private String mDistrict;
-
     @AfterViews
     void initAreaTextView() {
         areaTextView.setText(provinces[0] + getResources().getStringArray(provincesItemsRes[0])[0]);
@@ -132,17 +133,6 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         mDistrict = dis;
         areaTextView.setText(pro + dis);
     }
-
-
-    public static final int MALE = 0;
-    public static final int FEMALE = 1;
-    public static final int Private = 2;
-
-    @ViewById
-    TextView genderTextView;
-
-    private final String[] gender = {"m", "f", "n"};
-    private int genderSelected = MALE;
 
     private void setGender(int gender) {
         genderSelected = gender;

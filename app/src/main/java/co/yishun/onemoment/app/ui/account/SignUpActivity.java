@@ -17,9 +17,8 @@ import org.androidannotations.annotations.*;
 @EActivity(R.layout.activity_sign_up)
 public class SignUpActivity extends ToolbarBaseActivity {
 
-    private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
     public static final int REQUEST_LOGIN = 2;
-
+    private static final String TAG = LogUtil.makeTag(SignUpActivity.class);
     private String phone;
     private String mVerificationCode;
 
