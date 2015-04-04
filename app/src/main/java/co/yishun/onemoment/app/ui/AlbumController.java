@@ -14,4 +14,6 @@ public interface AlbumController {
     interface OnMonthChangeListener {
         void onMonthChange(Calendar calendar);
     }
+
+    int getTodayIndex();
 }

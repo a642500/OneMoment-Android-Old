@@ -3,9 +3,12 @@ package co.yishun.onemoment.app.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
@@ -50,10 +53,17 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     private AlbumController mController;
     private WeiboHelper mWeiboHelper = null;
 
+    @ViewById
+    FrameLayout viewPagerContainer;
+
     @Fun
     @Click
     void backToToday(View view) {
-        mController.showTodayMonthCalendar();
+        viewPagerContainer.removeAllViews();
+        viewPager = new JazzyViewPager(this);
+        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
+        viewPagerContainer.addView(viewPager, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mController = new ViewPagerController(this, viewPager);
     }
 
     @Fun
@@ -87,14 +97,16 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
 
-    @ViewById
     JazzyViewPager viewPager;
+
+    SparseArray storedPager = new SparseArray<>();
 
     @AfterViews
     void initViewPager() {
-        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
-        mController = new ViewPagerController(this, viewPager);
-        viewPager.setPageMargin(30);
+        backToToday(null);
+//        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
+//        mController = new ViewPagerController(this, viewPager);
+//        viewPager.setPageMargin(30);
     }
     //    @AfterViews
 //    void initCalenderGrid() {

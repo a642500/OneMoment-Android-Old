@@ -26,6 +26,10 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
     private JazzyViewPager viewPager;
     private Context context;
 
+    public int getTodayIndex() {
+        return middleInt;
+    }
+
     public ViewPagerController(Context context, JazzyViewPager viewPager) {
         this.context = context;
         this.viewPager = viewPager;
@@ -73,17 +77,16 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
 
     @Override
     public void showTodayMonthCalendar() {
-
     }
 
     @Override
     public void showNextMonthCalendar() {
-
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 
     @Override
     public void showPreviousMonthCalendar() {
-
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
     }
 
     @Override

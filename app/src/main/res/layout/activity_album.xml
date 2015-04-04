@@ -213,11 +213,17 @@
                     />
 
         </LinearLayout>
-
-        <co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager
+        <FrameLayout
+                android:id="@+id/viewPagerContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/viewPager"/>
+                android:layout_height="match_parent">
+
+        </FrameLayout>
+
+        <!--<co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:id="@+id/viewPager"/>-->
 
         <!--<GridView-->
         !  <!--android:visibility="gone"-->

@@ -32,6 +32,7 @@ import java.util.List;
  * Created by Carlos on 2015/4/4.
  */
 @EBean
+@Deprecated
 public class CalendarAdapter extends BaseAdapter implements AlbumController {
     public static final int[] WEEK_TITLE_RES = new int[]{
 //                R.string.albumWeekTitleSun,
@@ -61,6 +62,11 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
 
     public void setOnMonthChangeListener(OnMonthChangeListener listener) {
         onMonthChangeListener = listener;
+    }
+
+    @Override
+    public int getTodayIndex() {
+        return 0;
     }
 
     private void onChange(Calendar calendar) {
