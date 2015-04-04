@@ -6,6 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 @AdditionalAnnotation.DefaultContentUri(authority = Contract.AUTHORITY, path = Contract.Moment.CONTENT_URI_PATH)
 @AdditionalAnnotation.DefaultContentMimeTypeVnd(name = Contract.Moment.MIMETYPE_NAME, type = Contract.Moment.MIMETYPE_TYPE)
 @DatabaseTable(tableName = Contract.DATABASE_NAME)
-public class Moment {
+public class Moment implements Serializable {
     @DatabaseField
     String path;
     @DatabaseField

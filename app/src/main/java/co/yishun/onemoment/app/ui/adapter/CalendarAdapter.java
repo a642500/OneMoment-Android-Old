@@ -14,6 +14,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.AlbumController;
+import co.yishun.onemoment.app.ui.PlayActivity_;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -190,6 +191,12 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
                 Picasso.with(mContext).load(new File(thumbPath)).into(imageView);
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setTag(result.get(0));//TODO add onclick
+                imageView.setOnClickListener(v -> {
+                    Moment moment = (Moment) v.getTag();
+                    if (moment != null) {
+                        PlayActivity_.intent(v.getContext()).extra("moment", moment).start();
+                    }
+                });
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
