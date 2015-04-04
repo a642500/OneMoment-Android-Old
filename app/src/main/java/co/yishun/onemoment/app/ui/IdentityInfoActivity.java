@@ -1,9 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +17,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.res.StringArrayRes;
 
+import java.io.File;
 import java.util.Arrays;
 
 @EActivity(R.layout.activity_identity_info)
@@ -83,27 +83,19 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void profileItemClicked(View view) {
-        //TODO profile
-        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), REQUEST_IMAGE_SELECT);
+        Crop.pickImage(this);
     }
 
-    @OnActivityResult(REQUEST_IMAGE_SELECT)
+    Uri croppedProfileUri;
+
+    @OnActivityResult(Crop.REQUEST_PICK)
     @Background
     void onPictureSelected(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-
-                setProfileImage(selectedImage);
-
-//                Intent gallery_Intent = new Intent(this, GalleryUtil.class);
-//                startActivityForResult(gallery_Intent, REQUEST_IMAGE_CROP);
+                croppedProfileUri = Uri.fromFile(new File(getCacheDir(), "croppedProfile"));
+                new Crop(selectedImage).output(croppedProfileUri).asSquare().start(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 showNotification(R.string.identityInfoSelectProfileFail);
@@ -113,6 +105,17 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         }
     }
 
+    @OnActivityResult(Crop.REQUEST_CROP)
+    @Background
+    void onPictureCropped(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            
+
+            setProfileImage(croppedProfileUri);
+        } else showNotification(R.string.identityInfoSelectProfileFail);
+    }
+
+    @UiThread
     void setProfileImage(Uri uri) {
         Picasso.with(this).load(uri).into(profileImageView);
     }
