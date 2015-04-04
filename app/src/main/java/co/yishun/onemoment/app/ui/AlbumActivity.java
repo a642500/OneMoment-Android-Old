@@ -187,6 +187,10 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     @Fun
     @Click
     void syncBtn(View view) {
+        if (!AccountHelper.isLogin(this)) {
+            showLoginDialog();
+            return;
+        }
         if (!justPressed) {
             AccountHelper.syncAtOnce(this);
             justPressed = true;
