@@ -259,6 +259,7 @@ public class RecordingActivity extends Activity {
 //        }
         //TODO cause crash when quick resume activity.
         mCamera = CameraHelper.getCameraInstance();
+        if (mCamera == null) return;
         LogUtil.d(TAG, "unlock at getInstance");
 //        ((MyApplication) getApplication()).isRelease = false;
         final Camera.Parameters parameters = mCamera.getParameters();
