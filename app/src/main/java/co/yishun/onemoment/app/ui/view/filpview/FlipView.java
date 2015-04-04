@@ -760,12 +760,12 @@ public class FlipView extends FrameLayout {
      * @param canvas
      */
     private void drawPreviousShadow(Canvas canvas) {
-        final float degreesFlipped = getDegreesFlipped();
-        if (degreesFlipped > 90) {
-            final int alpha = (int) (((degreesFlipped - 90) / 90f) * MAX_SHADOW_ALPHA);
-            mShadowPaint.setAlpha(alpha);
-            canvas.drawPaint(mShadowPaint);
-        }
+//        final float degreesFlipped = getDegreesFlipped();
+//        if (degreesFlipped > 90) {
+//            final int alpha = (int) (((degreesFlipped - 90) / 90f) * MAX_SHADOW_ALPHA);
+//            mShadowPaint.setAlpha(alpha);
+//            canvas.drawPaint(mShadowPaint);
+//        }
     }
 
     /**
@@ -796,12 +796,12 @@ public class FlipView extends FrameLayout {
      * @param canvas
      */
     private void drawNextShadow(Canvas canvas) {
-        final float degreesFlipped = getDegreesFlipped();
-        if (degreesFlipped < 90) {
-            final int alpha = (int) ((Math.abs(degreesFlipped - 90) / 90f) * MAX_SHADOW_ALPHA);
-            mShadowPaint.setAlpha(alpha);
-            canvas.drawPaint(mShadowPaint);
-        }
+//        final float degreesFlipped = getDegreesFlipped();
+//        if (degreesFlipped < 90) {
+//            final int alpha = (int) ((Math.abs(degreesFlipped - 90) / 90f) * MAX_SHADOW_ALPHA);
+//            mShadowPaint.setAlpha(alpha);
+//            canvas.drawPaint(mShadowPaint);
+//        }
     }
 
     private void drawFlippingHalf(Canvas canvas) {
@@ -847,18 +847,18 @@ public class FlipView extends FrameLayout {
      * @param canvas
      */
     private void drawFlippingShadeShine(Canvas canvas) {
-        final float degreesFlipped = getDegreesFlipped();
-        if (degreesFlipped < 90) {
-            final int alpha = (int) ((degreesFlipped / 90f) * MAX_SHINE_ALPHA);
-            mShinePaint.setAlpha(alpha);
-            canvas.drawRect(isFlippingVertically() ? mBottomRect : mRightRect,
-                    mShinePaint);
-        } else {
-            final int alpha = (int) ((Math.abs(degreesFlipped - 180) / 90f) * MAX_SHADE_ALPHA);
-            mShadePaint.setAlpha(alpha);
-            canvas.drawRect(isFlippingVertically() ? mTopRect : mLeftRect,
-                    mShadePaint);
-        }
+//        final float degreesFlipped = getDegreesFlipped();
+//        if (degreesFlipped < 90) {
+//            final int alpha = (int) ((degreesFlipped / 90f) * MAX_SHINE_ALPHA);
+//            mShinePaint.setAlpha(alpha);
+//            canvas.drawRect(isFlippingVertically() ? mBottomRect : mRightRect,
+//                    mShinePaint);
+//        } else {
+//            final int alpha = (int) ((Math.abs(degreesFlipped - 180) / 90f) * MAX_SHADE_ALPHA);
+//            mShadePaint.setAlpha(alpha);
+//            canvas.drawRect(isFlippingVertically() ? mTopRect : mLeftRect,
+//                    mShadePaint);
+//        }
     }
 
     /**

@@ -4,7 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context="co.yishun.onemoment.app.ui.AlbumActivity"
-              android:background="@null"
               android:baselineAligned="true">
 
     <android.support.v7.widget.Toolbar
@@ -215,16 +214,13 @@
 
         </LinearLayout>
 
-        <co.yishun.onemoment.app.ui.view.filpview.FlipView
-                xmlns:flipview="http://schemas.android.com/apk/res-auto"
+        <co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/flipView"
-                flipview:orientation="horizontal"
-                flipview:overFlipMode="rubber_band"/>
+                android:id="@+id/viewPager"/>
 
         <!--<GridView-->
-        <!--android:visibility="gone"-->
+        !  <!--android:visibility="gone"-->
         <!--android:id="@+id/calenderGrid"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->

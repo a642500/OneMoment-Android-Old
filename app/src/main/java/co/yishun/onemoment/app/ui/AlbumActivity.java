@@ -3,6 +3,7 @@ package co.yishun.onemoment.app.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.*;
@@ -14,7 +15,7 @@ import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
-import co.yishun.onemoment.app.ui.view.filpview.FlipView;
+import co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -103,15 +104,88 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     }
 
     @ViewById
-    FlipView flipView;
+    JazzyViewPager viewPager;
 
     @AfterViews
-    void initFlipView() {
-        FlipAdapter adapter = new FlipAdapter(this);
-        flipView.setAdapter(adapter);
-        flipView.flipTo(adapter.getTodayIndex());
+    void initViewPager() {
+        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
+        CalendarPagerAdapter adapter = new CalendarPagerAdapter();
+        viewPager.setAdapter(adapter);
+        viewPager.setPageMargin(30);
     }
 
+    private class CalendarPagerAdapter extends PagerAdapter {
+        private int middleInt = Integer.MAX_VALUE / 2;
+
+        public int getTodayIndex() {
+            return middleInt;
+        }
+
+        @Override
+        public int getCount() {
+            return Integer.MAX_VALUE;
+        }
+
+        private Calendar getCalender(int position) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, getRelativePosition(position));
+            return calendar;
+        }
+
+        private int getRelativePosition(int position) {
+            return position - middleInt;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup parent, final int position) {
+            View convertView = LayoutInflater.from(AlbumActivity.this).inflate(R.layout.calendar, parent, false);
+            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+            if (viewHolder == null) {
+                viewHolder = new ViewHolder(convertView);
+            }
+            viewHolder.adapter.setCalender(getCalender(position));
+            parent.addView(convertView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            viewPager.setObjectForPosition(viewHolder, position);
+            return viewHolder;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object obj) {
+            container.removeView(viewPager.findViewFromObject(position));
+        }
+
+
+        @Override
+        public boolean isViewFromObject(View view, Object obj) {
+            return view.getTag() == obj;
+        }
+
+        public class ViewHolder {
+            View view;
+            GridView calendarGridView;
+            CalenderAdapter adapter;
+
+            public ViewHolder(View view) {
+                this.view = view;
+                calendarGridView = (GridView) view.findViewById(R.id.calenderGrid);
+                adapter = new CalenderAdapter(view.getContext());
+                calendarGridView.setAdapter(adapter);
+                view.setTag(this);
+            }
+        }
+    }
+
+//    @ViewById
+//    FlipView flipView;
+//
+//    @AfterViews
+//    void initFlipView() {
+//        FlipAdapter adapter = new FlipAdapter(this);
+//        flipView.setAdapter(adapter);
+//        flipView.flipTo(adapter.getTodayIndex());
+//    }
+
+    @Deprecated
     public static class FlipAdapter extends BaseAdapter {
         private final Context mContext;
         private int middleInt = 0
