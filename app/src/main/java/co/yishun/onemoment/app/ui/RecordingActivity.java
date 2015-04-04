@@ -498,8 +498,9 @@ public class RecordingActivity extends Activity {
         if (resultCode == RESULT_OK) {
             //register at database
             try {
-                File useless = new File(data.getStringExtra("largeThumbPath"));
-                if (useless.exists()) useless.delete();
+                //don't delete because it will be used at PlayAct
+//                File useless = new File(data.getStringExtra("largeThumbPath"));
+//                if (useless.exists()) useless.delete();
 
                 //delete other today's moment
                 String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());

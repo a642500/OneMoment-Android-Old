@@ -22,6 +22,8 @@ public class Moment {
     String path;
     @DatabaseField
     String thumbPath;
+    @DatabaseField
+    String largeThumbPath;
     @DatabaseField(columnName = Contract.Moment._ID, generatedId = true)
     private int id;
     //auto set when created
@@ -58,10 +60,15 @@ public class Moment {
         return thumbPath;
     }
 
+    public String getLargeThumbPath() {
+        return largeThumbPath;
+    }
+
     public static class MomentBuilder {
         private static final String TAG = LogUtil.makeTag(MomentBuilder.class);
         private String mPath;
         private String mThumbPath = null;
+        private String mLargeThumbPath = null;
 
         public MomentBuilder setPath(String path) {
             mPath = path;
@@ -73,17 +80,25 @@ public class Moment {
             return this;
         }
 
+        public MomentBuilder setLargeThumbPath(String path) {
+            mLargeThumbPath = path;
+            return this;
+        }
+
         public Moment build() {
             check();
             Moment m = Moment.newInstance();
             m.path = mPath;
             m.thumbPath = mThumbPath;
+            m.largeThumbPath = mLargeThumbPath;
             return m;
         }
 
         private void check() {
             if (mPath == null)
                 throw new IllegalStateException("field value is error");
+            if (mThumbPath == null) LogUtil.w(TAG, "null thumb path");
+            if (mLargeThumbPath == null) LogUtil.w(TAG, "null large thumb path");
         }
     }
 }
