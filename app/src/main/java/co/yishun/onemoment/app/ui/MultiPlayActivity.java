@@ -10,10 +10,12 @@ import co.yishun.onemoment.app.data.Moment;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
+import java.util.List;
+
 /**
  * Created by Carlos on 2015/4/5.
  */
-@EActivity(R.layout.activity_play)
+@EActivity(R.layout.activity_multi_play)
 public class MultiPlayActivity extends ToolbarBaseActivity {
     @ViewById
     VideoView videoView;
@@ -30,18 +32,18 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
 //    String largeThumbPath;
 
     @Extra
-    Moment moments[];
+    List<Moment> moments;
 
     int point = 0;
     boolean pendingEnd = false;
 
     @AfterViews
     void initVideo() {
-        if (BuildConfig.DEBUG && !(moments.length >= 2))
+        if (BuildConfig.DEBUG && !(moments.size() >= 2))
             throw new RuntimeException("moment's length is 1 or 0, use PlayActivity");
 
-        Picasso.with(this).load("file://" + moments[0].getLargeThumbPath()).into(thumbImageView);
-        videoView.setVideoPath(moments[point].getPath());
+        Picasso.with(this).load("file://" + moments.get(0).getLargeThumbPath()).into(thumbImageView);
+        videoView.setVideoPath(moments.get(point).getPath());
         point++;
 
         videoView.setOnCompletionListener(mp -> {
@@ -50,11 +52,12 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
                 end();
                 return;
             }
+
+            videoViewAnother.start();
             videoViewAnother.setVisibility(View.VISIBLE);
             videoView.setVisibility(View.INVISIBLE);
-            videoViewAnother.start();
-            if (point < moments.length) {
-                videoView.setVideoPath(moments[point].getPath());
+            if (point < moments.size()) {
+                videoView.setVideoPath(moments.get(point).getPath());
                 point++;
             } else pendingEnd = true;
         });
@@ -64,11 +67,12 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
                 end();
                 return;
             }
+
+            videoView.start();
             videoViewAnother.setVisibility(View.INVISIBLE);
             videoView.setVisibility(View.VISIBLE);
-            videoView.start();
-            if (point < moments.length) {
-                videoViewAnother.setVideoPath(moments[point].getPath());
+            if (point < moments.size()) {
+                videoViewAnother.setVideoPath(moments.get(point).getPath());
                 point++;
             } else pendingEnd = true;
         });
@@ -94,7 +98,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         videoViewAnother.setVisibility(View.INVISIBLE);
         videoView.setVisibility(View.VISIBLE);
         videoView.start();
-        videoViewAnother.setVideoPath(moments[point].getPath());
+        videoViewAnother.setVideoPath(moments.get(point).getPath());
         point++;
     }
 
