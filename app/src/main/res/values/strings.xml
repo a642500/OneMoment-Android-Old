@@ -72,6 +72,7 @@
     <string name="identityInfoLogoutAlert">Are you sure you want to logout?</string>
     <string name="identityInfoWeiboBound">Bound</string>
     <string name="identityInfoWeiboUnbound">Unbound</string>
+    <string name="identityInfoSelectProfileFail">read image file failed.</string>
 
 
     <string name="videoSaveTitle">@string/app_name</string>

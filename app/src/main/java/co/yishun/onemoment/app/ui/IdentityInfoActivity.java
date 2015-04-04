@@ -1,5 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +27,9 @@ import java.util.Arrays;
 
 @EActivity(R.layout.activity_identity_info)
 public class IdentityInfoActivity extends ToolbarBaseActivity {
-    public static final int REQUEST_UPDATE_INFO = 0;
+    public static final int REQUEST_UPDATE_INFO = 100;
+    public static final int REQUEST_IMAGE_SELECT = 101;
+    public static final int REQUEST_IMAGE_CROP = 102;
     private static final String TAG = LogUtil.makeTag(IdentityInfoActivity.class);
     @ViewById
     ImageView profileImageView;
@@ -78,6 +84,37 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     @Click
     void profileItemClicked(View view) {
         //TODO profile
+        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), REQUEST_IMAGE_SELECT);
+    }
+
+    @OnActivityResult(REQUEST_IMAGE_SELECT)
+    @Background
+    void onPictureSelected(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            try {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+
+                setProfileImage(selectedImage);
+
+//                Intent gallery_Intent = new Intent(this, GalleryUtil.class);
+//                startActivityForResult(gallery_Intent, REQUEST_IMAGE_CROP);
+            } catch (Exception e) {
+                e.printStackTrace();
+                showNotification(R.string.identityInfoSelectProfileFail);
+            }
+        } else {
+            LogUtil.i(TAG, "RESULT_CANCELED");
+        }
+    }
+
+    void setProfileImage(Uri uri) {
+        Picasso.with(this).load(uri).into(profileImageView);
     }
 
     @Click
