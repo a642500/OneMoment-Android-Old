@@ -41,13 +41,11 @@
         </activity>
         <activity
                 android:name=".ui.guide.GuideActivity_"
-                android:enabled="true"
                 android:label="@string/guideTitle">
         </activity>
         <activity
                 android:name=".ui.RecordingActivity_"
                 android:configChanges="orientation|keyboardHidden"
-                android:enabled="false"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             >
@@ -143,7 +141,7 @@
                 android:exported="false"
                 android:syncable="true"/>
 
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
     </application>
 
 </manifest>
