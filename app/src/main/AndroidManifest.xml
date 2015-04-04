@@ -116,6 +116,11 @@
                 android:label="@string/playTitle"
                 android:theme="@style/AppTheme.NoActionBar"
                 />
+        <activity
+                android:name=".ui.MultiPlayActivity"
+                android:label="@string/playTitle"
+                android:theme="@style/AppTheme.NoActionBar"
+                />
 
         <service
                 android:name=".sync.AuthenticatorService"
