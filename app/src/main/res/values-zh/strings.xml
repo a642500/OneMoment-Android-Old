@@ -88,7 +88,7 @@
     <string name="setPasswordNextBtn">下一步</string>
     <string name="setPasswordPasswordAgainHint">请再次输入密码</string>
     <string name="setPasswordPasswordAgainInvalid">两次输入的密码不一致</string>
-    <string name="setPasswordPasswordHint">清输入密码</string>
+    <string name="setPasswordPasswordHint">请输入密码</string>
     <string name="setPasswordPasswordInvalid">您输入的密码无效</string>
     <string name="setPasswordSignUpAccountExist">注册失败，账户已存在！</string>
     <string name="setPasswordSignUpFail">注册失败！</string>
