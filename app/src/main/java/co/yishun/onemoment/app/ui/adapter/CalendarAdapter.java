@@ -167,6 +167,13 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
             holder.foregroundTextView.setVisibility(View.VISIBLE);
             holder.foregroundTextView.setText(String.valueOf(num));
 
+            Calendar today = Calendar.getInstance();
+            if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                    && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+                    && today.get(Calendar.DAY_OF_MONTH) == num)
+                holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango);
+            else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
+
             fillBackground(holder, num);
         }
         return holder.view;
@@ -176,9 +183,9 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
     void fillBackground(CellView holder, int day) {
 //            return;
         ImageView imageView = holder.backgroundImageView;
-        Calendar today = ((Calendar) (mCalender.clone()));
-        today.set(Calendar.DAY_OF_MONTH, day);
-        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(today.getTime());
+        Calendar todayOfMonth = ((Calendar) (mCalender.clone()));
+        todayOfMonth.set(Calendar.DAY_OF_MONTH, day);
+        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(todayOfMonth.getTime());
         try {
             List<Moment> result = OpenHelperManager.getHelper(mContext, MomentDatabaseHelper.class).getDao(Moment.class)
                     .queryBuilder().where()

@@ -23,7 +23,7 @@
     <color name="textColorCalenderSubtitle">#fff</color>
     <color name="textColorCalenderTileNum">#02fba1</color>
 
-    <color name="calenderCellSelectedMaskColor">#80864322</color>
+    <color name="calenderCellSelectedMaskColor">#80FF853F</color>
     <color name="calenderCellDefaultMaskColor">#80000000</color>
 
     <color name="bgColorLoginBtn">#17d79e</color>
