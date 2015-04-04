@@ -144,8 +144,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
                 break;
             case R.id.action_sync_settings:
                 if (AccountHelper.isLogin(this)) {
-                    Intent intent = new Intent(this, SyncSettingsActivity.class);
-                    startActivity(intent);
+                    SyncSettingsActivity_.intent(this).start();
                 } else mWeiboHelper = showLoginDialog();
                 break;
             case R.id.action_rate:
