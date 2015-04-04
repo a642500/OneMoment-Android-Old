@@ -191,8 +191,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         try {
             ArrayList<Moment> momentList = new ArrayList<>(15);
             momentList.addAll(momentDao.queryBuilder().limit(15).orderBy("timeStamp", true).query());
-            if (momentList.size() > 2) {
-                PlayActivity_.intent(this).extra("moments", momentList).start();
+            if (momentList.size() >= 2) {
+                MultiPlayActivity_.intent(this).extra("moments", momentList).start();
             } else if (momentList.size() == 1) {
                 PlayActivity_.intent(this).extra("moment", momentList.get(0)).start();
             } else showNotification(R.string.albumReplayNoMoment);
