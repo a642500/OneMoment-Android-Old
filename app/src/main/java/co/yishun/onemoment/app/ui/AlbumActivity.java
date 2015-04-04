@@ -169,7 +169,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     @Fun
     @Click
     void shootingBtn(View view) {
-        RecordingActivity_.intent(this).flags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT).start();
+        onBackPressed();
     }
 
     @Fun
@@ -253,6 +253,29 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
+    //    @Override
+//    public void startActivity(Intent intent) {
+//        super.startActivity(intent);
+//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+//    }
+//
+//    @Override
+//    public void startActivityForResult(Intent intent, int requestCode) {
+//        super.startActivityForResult(intent, requestCode);
+//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+//    }
     @EBean
     static class CalenderAdapter extends BaseAdapter {
         public static final int[] WEEK_TITLE_RES = new int[]{
