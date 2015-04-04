@@ -139,14 +139,16 @@ public class CameraHelper {
 
         // Find the ID of the back-facing ("default") camera
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        for (int i = 0; i < mNumberOfCameras; i++) {
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == position) {
-                return Camera.open(i);
-
+        try {
+            for (int i = 0; i < mNumberOfCameras; i++) {
+                Camera.getCameraInfo(i, cameraInfo);
+                if (cameraInfo.facing == position) {
+                    return Camera.open(i);
+                }
             }
+        } catch (RuntimeException e) {
+            LogUtil.e(TAG, "Fail to connect to camera service", e);
         }
-
         return null;
     }
 
@@ -188,27 +190,35 @@ public class CameraHelper {
         return s;
     }
 
-    @Deprecated
-    public static String getThumbFilePath(String convertedFilePath) {
-        File file = new File(convertedFilePath);
-        String parent = file.getParentFile().getParent();
-        String re = parent + Config.VIDEO_THUMB_STORE_DIR + getThumbFileName(convertedFilePath);
-        return re;
-    }
+//    @Deprecated
+//    public static String getThumbFilePath(String convertedFilePath) {
+//        File file = new File(convertedFilePath);
+//        String parent = file.getParentFile().getParent();
+//        String re = parent + Config.VIDEO_THUMB_STORE_DIR + getThumbFileName(convertedFilePath,);
+//        return re;
+//    }
 
-    public static String getThumbFileName(String videoPathOrThumbPath) {
+    public static String getThumbFileName(String videoPathOrThumbPath, int kind) {
         File file = new File(videoPathOrThumbPath);
         String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-        return fileName + ".png";
+        return fileName + ((kind == MediaStore.Images.Thumbnails.FULL_SCREEN_KIND) ? "_full" : "") + ".png";
+    }
+
+    public static String createLargeThumbImage(Context context, String videoPath) throws IOException {
+        return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
     }
 
     public static String createThumbImage(Context context, String videoPath) throws IOException {
+        return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
+    }
+
+    private static String createThumbImage(Context context, String videoPath, int kind) throws IOException {
         File thumbStorageDir = context.getDir(Config.VIDEO_THUMB_STORE_DIR, Context.MODE_PRIVATE);
-        File thumbFile = new File(thumbStorageDir.getPath() + File.separator + getThumbFileName(videoPath));
+        File thumbFile = new File(thumbStorageDir.getPath() + File.separator + getThumbFileName(videoPath, kind));
 
         if (thumbFile.exists()) thumbFile.delete();
         FileOutputStream fOut = new FileOutputStream(thumbFile);
-        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
         bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
         fOut.flush();
         fOut.close();

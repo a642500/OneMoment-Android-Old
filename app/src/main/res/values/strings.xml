@@ -18,9 +18,10 @@
     </string-array>
 
 
-
     <string name="fragmentRecordShootBtnString">Shoot</string>
     <string name="recordConvertingHint">Converting video…</string>
+    <string name="recordLoadCameraError">Loading camera failed, cannot record.</string>
+    <string name="recordConvertError">Convert failed!</string>
 
     <string name="loginDialogTitle">Login</string>
     <string name="loginDialogByWeibo">Login By Sina Weibo</string>

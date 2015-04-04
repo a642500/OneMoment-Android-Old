@@ -27,6 +27,12 @@
             >
 
         <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <ImageView
+                android:id="@+id/thumbImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
     </co.yishun.onemoment.app.ui.view.SquareFrameLayout>

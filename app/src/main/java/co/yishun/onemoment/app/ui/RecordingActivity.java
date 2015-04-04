@@ -28,11 +28,14 @@ import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 
 //TODO stop record by MediaRecorder.setMaxDuration()
 
@@ -304,6 +307,7 @@ public class RecordingActivity extends Activity {
      */
     @SupposeBackground
     void prepare() {
+        if (mCamera == null) return;
         Camera.Parameters parameters = mCamera.getParameters();
         Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
         CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
@@ -354,6 +358,9 @@ public class RecordingActivity extends Activity {
 
     @Background
     void record() {
+        if (mCamera == null) {
+            showNotification(R.string.recordLoadCameraError);
+        }
         prepare();
         if (prepareStatus == PREPARED) {
             mMediaRecorder.start();
@@ -362,6 +369,16 @@ public class RecordingActivity extends Activity {
         } else {
             releaseMediaRecorder();
         }
+    }
+
+    @UiThread
+    public void showNotification(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    @UiThread
+    public void showNotification(int textRes) {
+        showNotification(getString(textRes));
     }
 
     @UiThread(delay = 1200L)
@@ -376,7 +393,6 @@ public class RecordingActivity extends Activity {
             // inform the user that recording has stopped
             isRecording = false;
             releaseCamera();
-            Toast.makeText(RecordingActivity.this, "ok!!", Toast.LENGTH_LONG).show();
             startConvert();
         }
     }
@@ -454,10 +470,60 @@ public class RecordingActivity extends Activity {
     @UiThread
     void onConvert(int exitCode, String origin, String converted) {
         if (0 == exitCode) {
-            Toast.makeText(this, "Convert success", Toast.LENGTH_LONG).show();
             saveData(origin, converted);
-        } else Toast.makeText(this, "Convert Failed: ErrorCode " + exitCode, Toast.LENGTH_LONG).show();
-        mConvertDialog.dismiss();
+        } else {
+            showNotification(R.string.recordConvertError);
+            LogUtil.e(TAG, "Convert Failed: ErrorCode " + exitCode);
+            mConvertDialog.dismiss();
+        }
+    }
+
+    public static final int REQUEST_SAVE = 100;
+
+    @UiThread
+    void askSave(String path, String thumbPath, String largeThumbPath) {
+        VideoSaveActivity_.intent(this)
+                .extra("videoPath", path)
+                .extra("thumbPath", thumbPath)
+                .extra("largeThumbPath", largeThumbPath)
+                .startForResult(REQUEST_SAVE);
+    }
+
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
+    Dao<Moment, Integer> momentDao;
+
+
+    @OnActivityResult(REQUEST_SAVE)
+    void onResult(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            //register at database
+            try {
+                File useless = new File(data.getStringExtra("largeThumbPath"));
+                if (useless.exists()) useless.delete();
+
+                //delete other today's moment
+                String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());
+                List<Moment> result = momentDao.queryBuilder().where()
+                        .eq("time", time).query();
+                momentDao.delete(result);
+
+                Moment moment = new Moment.MomentBuilder()
+                        .setPath(data.getStringExtra("videoPath"))
+                        .setThumbPath(data.getStringExtra("thumbPath")).build();
+                momentDao.create(moment);
+
+                albumBtnClicked(null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            File useless = new File(data.getStringExtra("largeThumbPath"));
+            if (useless.exists()) useless.delete();
+            useless = new File(data.getStringExtra("videoPath"));
+            if (useless.exists()) useless.delete();
+            useless = new File(data.getStringExtra("thumbPath"));
+            if (useless.exists()) useless.delete();
+        }
     }
 
     @Background
@@ -471,14 +537,15 @@ public class RecordingActivity extends Activity {
         try {
             //create and save thumb image
             String thumbPath = CameraHelper.createThumbImage(this, converted);
+            String largeThumbPath = CameraHelper.createLargeThumbImage(this, converted);
 
-            //register at database
-            Moment moment = new Moment.MomentBuilder().setPath(converted).setThumbPath(thumbPath).build();
-            OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).create(moment);
+            askSave(converted, thumbPath, largeThumbPath);
 
-        } catch (IOException | SQLException e) {
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        runOnUiThread(mConvertDialog::dismiss);
     }
 
     /**
