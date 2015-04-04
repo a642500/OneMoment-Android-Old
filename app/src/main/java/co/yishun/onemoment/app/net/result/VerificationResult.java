@@ -7,6 +7,11 @@ public class VerificationResult {
     private int code;
     private String msg;
     private Data data;
+    private int error_code;
+
+    public int getErrorCode() {
+        return error_code;
+    }
 
     public int getCode() {
         return code;

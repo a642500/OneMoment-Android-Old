@@ -27,10 +27,16 @@ public class AccountResult implements Serializable {
     private int code;
     private String msg;
     private Data data;
+    private int error_code;
 
+    public int getErrorCode() {
+        return error_code;
+    }
     public int getCode() {
         return code;
     }
+
+
 
     public String getMsg() {
         return msg;
@@ -58,6 +64,7 @@ public class AccountResult implements Serializable {
         private String weibo_uid;
         private String gender;
         private String location;
+
         public Data() {
         }
 
