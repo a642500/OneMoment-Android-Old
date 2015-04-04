@@ -113,7 +113,7 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.PlayActivity_"
-                android:label="@string/syncSettingsTitle"
+                android:label="@string/playTitle"
                 android:theme="@style/AppTheme.NoActionBar"
                 />
 
