@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">One Moment</string>
-    <string name="appVersion">1.0</string>
+    <string name="appVersion" translatable="false">1.0</string>
 
     <string-array name="jazzy_effects">
         <item>Standard</item>
@@ -92,7 +92,7 @@
     <string name="identityInfoSelectProfileFail">read image file failed.</string>
 
 
-    <string name="videoSaveTitle">@string/app_name</string>
+    <string name="videoSaveTitle" translatable="false">@string/app_name</string>
     <string name="recordEndSave">save</string>
 
     <string name="signUpTitle">Sign Up</string>
