@@ -111,6 +111,11 @@
                 android:name=".ui.SyncSettingsActivity_"
                 android:label="@string/syncSettingsTitle"
                 android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+                android:name=".ui.PlayActivity_"
+                android:label="@string/syncSettingsTitle"
+                android:theme="@style/AppTheme.NoActionBar"
+                />
 
         <service
                 android:name=".sync.AuthenticatorService"
