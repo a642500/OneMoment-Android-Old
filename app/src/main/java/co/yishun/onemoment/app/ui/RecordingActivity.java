@@ -510,7 +510,9 @@ public class RecordingActivity extends Activity {
 
                 Moment moment = new Moment.MomentBuilder()
                         .setPath(data.getStringExtra("videoPath"))
-                        .setThumbPath(data.getStringExtra("thumbPath")).build();
+                        .setThumbPath(data.getStringExtra("thumbPath"))
+                        .setLargeThumbPath(data.getStringExtra("largeThumbPath"))
+                        .build();
                 momentDao.create(moment);
 
                 albumBtnClicked(null);
