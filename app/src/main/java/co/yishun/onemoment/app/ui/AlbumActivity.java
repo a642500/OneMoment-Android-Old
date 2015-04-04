@@ -64,6 +64,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
         viewPagerContainer.addView(viewPager, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mController = new ViewPagerController(this, viewPager);
+        mController.setOnMonthChangeListener(this);
     }
 
     @Fun

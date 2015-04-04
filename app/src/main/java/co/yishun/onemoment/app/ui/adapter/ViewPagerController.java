@@ -77,6 +77,7 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
 
     @Override
     public void showTodayMonthCalendar() {
+        //TODO handle better
     }
 
     @Override
@@ -89,10 +90,19 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
     }
 
+    private OnMonthChangeListener mListener;
+
     @Override
     public void setOnMonthChangeListener(OnMonthChangeListener listener) {
-
+        mListener = listener;
     }
+
+    public void onMonthChange(Calendar calendar) {
+        if (mListener != null) {
+            mListener.onMonthChange(calendar);
+        }
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -110,6 +120,10 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
             int old = centerPagePosition;
             centerPagePosition = viewPager.getCurrentItem();
             centerPageHolderIndex = (centerPagePosition - old + centerPageHolderIndex) % 3;
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, centerPagePosition - middleInt);
+            onMonthChange(calendar);
         }
     }
 
