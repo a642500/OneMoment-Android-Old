@@ -167,14 +167,15 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
             holder.foregroundTextView.setVisibility(View.VISIBLE);
             holder.foregroundTextView.setText(String.valueOf(num));
 
-            fillBackground(holder.backgroundImageView, num);
+            fillBackground(holder, num);
         }
         return holder.view;
     }
 
     @Background
-    void fillBackground(ImageView imageView, int day) {
+    void fillBackground(CellView holder, int day) {
 //            return;
+        ImageView imageView = holder.backgroundImageView;
         Calendar today = ((Calendar) (mCalender.clone()));
         today.set(Calendar.DAY_OF_MONTH, day);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(today.getTime());
@@ -190,9 +191,10 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
                 assert thumbPath != null;
                 Picasso.with(mContext).load(new File(thumbPath)).into(imageView);
                 imageView.setVisibility(View.VISIBLE);
-                imageView.setTag(result.get(0));//TODO add onclick
-                imageView.setOnClickListener(v -> {
-                    Moment moment = (Moment) v.getTag();
+                imageView.setTag(result.get(0));
+
+                holder.view.setOnClickListener(v -> {
+                    Moment moment = (Moment) ((CellView) v.getTag()).backgroundImageView.getTag();
                     if (moment != null) {
                         PlayActivity_.intent(v.getContext()).extra("moment", moment).start();
                     }
