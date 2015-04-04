@@ -48,6 +48,7 @@
     <string name="albumTitle">Today</string>
     <string name="albumShotBtnText">Shoot</string>
     <string name="albumReplayBtnText">Replay</string>
+    <string name="albumReplayNoMoment">No moment at all!</string>
     <string name="albumSyncBtnText">Sync</string>
     <string name="albumWeekTitleSun">Sun</string>
     <string name="albumWeekTitleMon">Mon</string>

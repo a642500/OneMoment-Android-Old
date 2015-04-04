@@ -24,11 +24,13 @@ import co.yishun.onemoment.app.util.LogUtil;
 import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -180,10 +182,23 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         onBackPressed();
     }
 
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
+    Dao<Moment, Integer> momentDao;
+
     @Fun
     @Click
     void replayBtn(View view) {
-
+        try {
+            ArrayList<Moment> momentList = new ArrayList<>(15);
+            momentList.addAll(momentDao.queryBuilder().limit(15).orderBy("timeStamp", true).query());
+            if (momentList.size() > 2) {
+                PlayActivity_.intent(this).extra("moments", momentList).start();
+            } else if (momentList.size() == 1) {
+                PlayActivity_.intent(this).extra("moment", momentList.get(0)).start();
+            } else showNotification(R.string.albumReplayNoMoment);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

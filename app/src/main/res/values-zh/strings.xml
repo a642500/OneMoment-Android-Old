@@ -114,4 +114,5 @@
     <string name="playTitle">@string/app_name</string>
     <string name="multiPlayTitle">@string/app_name</string>
     <string name="multiPlayShareBtn">分享</string>
+    <string name="albumReplayNoMoment">现在还没有一瞬，赶快去拍摄吧</string>
 </resources>

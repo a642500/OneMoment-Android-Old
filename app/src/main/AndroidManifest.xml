@@ -117,7 +117,7 @@
                 android:theme="@style/AppTheme.NoActionBar"
                 />
         <activity
-                android:name=".ui.MultiPlayActivity"
+                android:name=".ui.MultiPlayActivity_"
                 android:label="@string/multiPlayTitle"
                 android:theme="@style/AppTheme.NoActionBar"
                 />

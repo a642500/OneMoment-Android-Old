@@ -30,18 +30,18 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
 //    String largeThumbPath;
 
     @Extra
-    Moment moment[];
+    Moment moments[];
 
     int point = 0;
     boolean pendingEnd = false;
 
     @AfterViews
     void initVideo() {
-        if (BuildConfig.DEBUG && !(moment.length >= 2))
+        if (BuildConfig.DEBUG && !(moments.length >= 2))
             throw new RuntimeException("moment's length is 1 or 0, use PlayActivity");
 
-        Picasso.with(this).load("file://" + moment[0].getLargeThumbPath()).into(thumbImageView);
-        videoView.setVideoPath(moment[point].getPath());
+        Picasso.with(this).load("file://" + moments[0].getLargeThumbPath()).into(thumbImageView);
+        videoView.setVideoPath(moments[point].getPath());
         point++;
 
         videoView.setOnCompletionListener(mp -> {
@@ -53,8 +53,8 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
             videoViewAnother.setVisibility(View.VISIBLE);
             videoView.setVisibility(View.INVISIBLE);
             videoViewAnother.start();
-            if (point < moment.length) {
-                videoView.setVideoPath(moment[point].getPath());
+            if (point < moments.length) {
+                videoView.setVideoPath(moments[point].getPath());
                 point++;
             } else pendingEnd = true;
         });
@@ -67,8 +67,8 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
             videoViewAnother.setVisibility(View.INVISIBLE);
             videoView.setVisibility(View.VISIBLE);
             videoView.start();
-            if (point < moment.length) {
-                videoViewAnother.setVideoPath(moment[point].getPath());
+            if (point < moments.length) {
+                videoViewAnother.setVideoPath(moments[point].getPath());
                 point++;
             } else pendingEnd = true;
         });
@@ -94,12 +94,12 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         videoViewAnother.setVisibility(View.INVISIBLE);
         videoView.setVisibility(View.VISIBLE);
         videoView.start();
-        videoViewAnother.setVideoPath(moment[point].getPath());
+        videoViewAnother.setVideoPath(moments[point].getPath());
         point++;
     }
 
     @Click
-    void shareVideoBtnClick(View view) {
+    void shareVideoBtnClicked(View view) {
         //TODO
     }
 }
