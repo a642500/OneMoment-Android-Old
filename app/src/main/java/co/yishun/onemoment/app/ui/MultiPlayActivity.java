@@ -97,4 +97,9 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         videoViewAnother.setVideoPath(moment[point].getPath());
         point++;
     }
+
+    @Click
+    void shareVideoBtnClick(View view) {
+        //TODO
+    }
 }

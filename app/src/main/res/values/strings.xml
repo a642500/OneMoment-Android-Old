@@ -154,4 +154,6 @@
     <string name="syncSettingsTitle">Sync Settings</string>
 
     <string name="playTitle">@string/app_name</string>
+    <string name="multiPlayTitle">@string/app_name</string>
+    <string name="multiPlayShareBtn">Share</string>
 </resources>

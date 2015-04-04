@@ -70,19 +70,19 @@
             android:gravity="center|top"
             >
 
-        <!--<Button-->
-        <!--android:id="@+id/shareVideoBtn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:minHeight="64dp"-->
-        <!--android:minWidth="64dp"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:background="@drawable/abc_item_background_holo_light"-->
-        <!--android:drawableTop="@drawable/ic_save"-->
-        <!--android:text="@string/recordEndSave"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--/>-->
+        <Button
+                android:id="@+id/shareVideoBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="64dp"
+                android:minWidth="64dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/abc_item_background_holo_light"
+                android:drawableTop="@drawable/ic_share"
+                android:text="@string/multiPlayShareBtn"
+                android:textColor="@android:color/white"
+                />
 
     </LinearLayout>
 

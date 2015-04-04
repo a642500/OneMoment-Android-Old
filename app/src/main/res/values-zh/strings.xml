@@ -112,4 +112,6 @@
     <string name="weiboLoginFail">登录失败</string>
     <string name="weiboLoginSuccess">登录成功</string>
     <string name="playTitle">@string/app_name</string>
+    <string name="multiPlayTitle">@string/app_name</string>
+    <string name="multiPlayShareBtn">分享</string>
 </resources>
