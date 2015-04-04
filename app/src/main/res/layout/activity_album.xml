@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleSun"
                     />
 
             <TextView
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleTue"
                     />
 
             <TextView
@@ -185,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleWed"
                     />
 
             <TextView
@@ -193,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleThu"
                     />
 
             <TextView
@@ -201,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleFri"
                     />
 
             <TextView
@@ -209,10 +209,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/albumWeekTitleMon"
+                    android:text="@string/albumWeekTitleSat"
                     />
+
 
         </LinearLayout>
+
         <FrameLayout
                 android:id="@+id/viewPagerContainer"
                 android:layout_width="match_parent"
@@ -221,9 +223,9 @@
         </FrameLayout>
 
         <!--<co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:id="@+id/viewPager"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/viewPager"/>-->
 
         <!--<GridView-->
         !  <!--android:visibility="gone"-->
