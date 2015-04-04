@@ -4,7 +4,7 @@
     <string name="aboutCheckNew">检查新版本</string>
     <string name="aboutChecking">正在检查…</string>
     <string name="aboutRecommend">推荐给好友</string>
-    <string name="aboutRecommendContent"></string>
+    <string name="aboutRecommendContent">程序员太懒了，居然连推荐语都没写！</string>
     <string name="aboutTitle">关于我们</string>
     <string name="aboutUpdated">已经是最新版本了！</string>
     <string name="aboutVersion">版本&#160;</string>
@@ -26,7 +26,6 @@
     <string name="albumWeekTitleThu">周四</string>
     <string name="albumWeekTitleTue">周二</string>
     <string name="albumWeekTitleWed">周三</string>
-    <string name="appVersion"></string>
     <string name="calenderTextCalenderTileNum1">第&#160;</string>
     <string name="calenderTextCalenderTileNum2">&#160;个一瞬</string>
     <string name="dayOfWeekFri">星期五</string>
@@ -108,7 +107,7 @@
     <string name="signUpVerifyFail">验证错误</string>
     <string name="signUpVerifySuccess">验证成功</string>
     <string name="syncSettingsTitle">同步</string>
-    <string name="videoSaveTitle"></string>
+    <string name="videoSaveTitle">@string/app_name</string>
     <string name="weiboLoginCancel">登录取消</string>
     <string name="weiboLoginFail">登录失败</string>
     <string name="weiboLoginSuccess">登录成功</string>

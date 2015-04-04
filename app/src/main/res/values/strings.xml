@@ -92,7 +92,7 @@
     <string name="identityInfoSelectProfileFail">read image file failed.</string>
 
 
-    <string name="videoSaveTitle" translatable="false">@string/app_name</string>
+    <string name="videoSaveTitle">@string/app_name</string>
     <string name="recordEndSave">save</string>
 
     <string name="signUpTitle">Sign Up</string>
