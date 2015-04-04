@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_play"
+                android:background="@null"
                 />
     </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
 
