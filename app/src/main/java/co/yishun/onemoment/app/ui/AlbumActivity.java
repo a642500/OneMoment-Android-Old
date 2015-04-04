@@ -14,6 +14,7 @@ import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
+import co.yishun.onemoment.app.ui.view.filpview.FlipView;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -48,8 +49,8 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     TextView calendarCurrentDay;
     @ViewById
     TextView calendarDayOfWeek;
-    @ViewById
-    GridView calenderGrid;
+    //    @ViewById
+//    GridView calenderGrid;
     @ViewById
     TextView monthTextView;
     boolean justPressed = false;
@@ -101,13 +102,89 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
 
+    @ViewById
+    FlipView flipView;
+
     @AfterViews
-    void initCalenderGrid() {
-        mAdapter = new CalenderAdapter(this);
-        calenderGrid.setAdapter(mAdapter);
-        mAdapter.setOnMonthChangeListener(this);
-        mAdapter.showTodayMonthCalender();
+    void initFlipView() {
+        FlipAdapter adapter = new FlipAdapter(this);
+        flipView.setAdapter(adapter);
+        flipView.flipTo(adapter.getTodayIndex());
     }
+
+    public static class FlipAdapter extends BaseAdapter {
+        private final Context mContext;
+        private int middleInt = 0
+//                Integer.MAX_VALUE / 2
+                ;
+
+        public int getTodayIndex() {
+            return middleInt;
+        }
+
+        public FlipAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return 10
+//                    Integer.MAX_VALUE
+                    ;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, getRelativePosition(position));
+            return calendar;
+        }
+
+        public int getRelativePosition(int position) {
+            return position - middleInt;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position - middleInt;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.calendar, parent, false);
+            }
+            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+            if (viewHolder == null) {
+                viewHolder = new ViewHolder(convertView);
+            }
+            viewHolder.adapter.setCalender((Calendar) getItem(position));
+            return convertView;
+        }
+
+        public static class ViewHolder {
+            View view;
+            GridView calendarGridView;
+            CalenderAdapter adapter;
+
+            public ViewHolder(View view) {
+                this.view = view;
+                calendarGridView = (GridView) view.findViewById(R.id.calenderGrid);
+                adapter = new CalenderAdapter(view.getContext());
+                calendarGridView.setAdapter(adapter);
+                view.setTag(this);
+            }
+        }
+    }
+
+
+    //    @AfterViews
+//    void initCalenderGrid() {
+//        mAdapter = new CalenderAdapter(this);
+//        calenderGrid.setAdapter(mAdapter);
+//        mAdapter.setOnMonthChangeListener(this);
+//        mAdapter.showTodayMonthCalender();
+//    }
 
     @Override
     public void onMonthChange(Calendar calendar) {
@@ -279,13 +356,13 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
     @EBean
     static class CalenderAdapter extends BaseAdapter {
         public static final int[] WEEK_TITLE_RES = new int[]{
-                R.string.albumWeekTitleSun,
-                R.string.albumWeekTitleMon,
-                R.string.albumWeekTitleTue,
-                R.string.albumWeekTitleWed,
-                R.string.albumWeekTitleThu,
-                R.string.albumWeekTitleFri,
-                R.string.albumWeekTitleSat
+//                R.string.albumWeekTitleSun,
+//                R.string.albumWeekTitleMon,
+//                R.string.albumWeekTitleTue,
+//                R.string.albumWeekTitleWed,
+//                R.string.albumWeekTitleThu,
+//                R.string.albumWeekTitleFri,
+//                R.string.albumWeekTitleSat
         };
         private static final String TAG = LogUtil.makeTag(CalenderAdapter.class);
         private final Calendar mCalender;
@@ -296,6 +373,12 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         public CalenderAdapter(Context context) {
             this.mContext = context;
             mCalender = Calendar.getInstance();
+        }
+
+        public void setCalender(Calendar calendar) {
+            mCalender.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+            mCalender.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+            notifyDataSetInvalidated();
         }
 
         public void setOnMonthChangeListener(OnMonthChangeListener listener) {
@@ -361,7 +444,9 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
         }
 
         private int getOffsetOfDay() {
-            return getDayOfWeekOfFirstDayOf(mCalender) - 1 + WEEK_TITLE_RES.length;
+            return getDayOfWeekOfFirstDayOf(mCalender) - 1
+//                    + WEEK_TITLE_RES.length
+                    ;
         }
 
         @Override
@@ -389,7 +474,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
                 holder.view.setOnClickListener(null);
             } else {
                 int num = position - getOffsetOfDay() + 1;
-                holder.recoverViewHeight();
+//                holder.recoverViewHeight();
                 holder.view.setVisibility(View.VISIBLE);
                 holder.view.setEnabled(true);
                 holder.backgroundImageView.setVisibility(View.INVISIBLE);
@@ -434,7 +519,7 @@ public class AlbumActivity extends BaseActivity implements OnMonthChangeListener
             TextView foregroundTextView;
 
             public CellView(ViewGroup parent) {
-                this.view = LayoutInflater.from(mContext).inflate(R.layout.calender_cell, parent, false);
+                this.view = LayoutInflater.from(mContext).inflate(R.layout.calendar_cell, parent, false);
                 backgroundImageView = (ImageView) view.findViewById(R.id.backgroundImageView);
                 foregroundImageView = (ImageView) view.findViewById(R.id.foregroundImageView);
                 foregroundTextView = (TextView) view.findViewById(R.id.foregroundTextView);

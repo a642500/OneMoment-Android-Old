@@ -151,17 +151,89 @@
                     />
         </LinearLayout>
 
-
-        <GridView
-                android:id="@+id/calenderGrid"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+        <LinearLayout
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingBottom="16dp"
-                android:numColumns="7">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </GridView>
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/albumWeekTitleMon"
+                    />
+
+        </LinearLayout>
+
+        <co.yishun.onemoment.app.ui.view.filpview.FlipView
+                xmlns:flipview="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/flipView"
+                flipview:orientation="horizontal"
+                flipview:overFlipMode="rubber_band"/>
+
+        <!--<GridView-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/calenderGrid"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:paddingBottom="16dp"-->
+        <!--android:numColumns="7">-->
+
+        <!--</GridView>-->
     </LinearLayout>
 
     <View

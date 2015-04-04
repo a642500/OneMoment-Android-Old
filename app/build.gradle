@@ -85,7 +85,6 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.1.1'
     compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
     compile 'com.squareup:android-times-square:1.5.0@aar'
-    compile 'se.emilsjolander:android-flipview:1.1.0'
     compile 'com.cesarferreira.quickutils:library:2.4.3'
     compile 'com.afollestad:material-dialogs:0.6.5.2'
     compile 'nl.codesoup.cubicbezier:cubicbezier:1.0.0'
