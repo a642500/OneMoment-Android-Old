@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.VideoView;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.data.Moment;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
@@ -20,18 +21,23 @@ public class PlayActivity extends ToolbarBaseActivity {
     @ViewById
     ImageButton playBtn;
 
+//    @Extra
+//    String videoPath;
+//    @Extra
+//    String largeThumbPath;
+
     @Extra
-    String videoPath;
-    @Extra
-    String largeThumbPath;
+    Moment moment;
 
     @AfterViews
     void initVideo() {
-        Picasso.with(this).load("file://" + largeThumbPath).into(thumbImageView);
-        videoView.setVideoPath(videoPath);
+        Picasso.with(this).load("file://" + moment.getLargeThumbPath()).into(thumbImageView);
+        videoView.setVideoPath(moment.getPath());
         videoView.setOnCompletionListener(mp -> {
-            videoView.setVideoPath(videoPath);
-            videoView.setOnClickListener(v -> videoView.start());
+            mp.reset();
+            videoView.setVideoPath(moment.getPath());
+
+            thumbImageView.setVisibility(View.VISIBLE);
             playBtn.setVisibility(View.VISIBLE);
         });
     }
@@ -45,6 +51,7 @@ public class PlayActivity extends ToolbarBaseActivity {
     @Click
     void playBtnClicked(View view) {
         view.setVisibility(View.GONE);
+        thumbImageView.setVisibility(View.GONE);
         videoView.start();
     }
 }
