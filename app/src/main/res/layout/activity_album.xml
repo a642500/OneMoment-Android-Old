@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="8dp"
+                android:gravity="center_horizontal"
                 android:background="@drawable/abc_item_background_holo_light"
                 >
 
@@ -55,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:text="星期日"
                     android:textStyle="bold"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:textColor="@color/textColorCalenderDayOfWeek"
                     />
         </LinearLayout>
