@@ -135,7 +135,7 @@
         </service>
 
         <service
-                android:name=".sync.SyncService_"
+                android:name=".sync.SyncService"
                 android:exported="true"
                 android:process=":sync">
             <intent-filter>
