@@ -191,10 +191,10 @@ public class CameraHelper {
             public String getPrefix(Context context) {
                 return "VID";
             }
-        }, CONVERTED {
+        }, LOCAL {
             @Override
             public String getPrefix(Context context) {
-                return "CON";
+                return "LOC";
             }
         }, LARGE_THUMB {
             @Override
@@ -211,6 +211,10 @@ public class CameraHelper {
         public abstract String getPrefix(Context context);
     }
 
+    public static String getOutputMediaPath(Context context, Type type, @Nullable Long timestamp) {
+        return getOutputMediaFile(context, type, timestamp).getPath();
+    }
+
     public static File getOutputMediaFile(Context context, Type type, @Nullable Long timestamp) {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
@@ -219,6 +223,14 @@ public class CameraHelper {
 
     public static File getOutputMediaFile(Context context, Data syncedVideo) {
         return getOutputMediaFile(context, Type.SYNCED, syncedVideo.getTimeStamp());
+    }
+
+    public static long parseTimeStamp(File file) {
+        return parseTimeStamp(file.getPath());
+    }
+
+    public static long parseTimeStamp(String pathOrFileName) {
+        return Long.parseLong(pathOrFileName.substring(pathOrFileName.lastIndexOf(Config.URL_HYPHEN), pathOrFileName.lastIndexOf(".")));
     }
 
     /**
