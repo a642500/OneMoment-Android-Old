@@ -101,7 +101,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @AfterViews
     void initAreaTextView() {
-        areaTextView.setText(provinces[0] + getResources().getStringArray(Constants.provincesItemsRes[0])[0]);
+        setProvinceAndDistrict(provinces[0], getResources().getStringArray(Constants.provincesItemsRes[0])[0]);
     }
 
     private void setProvinceAndDistrict(String pro, String dis) {
