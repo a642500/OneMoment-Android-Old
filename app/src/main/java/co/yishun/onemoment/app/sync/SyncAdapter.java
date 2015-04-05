@@ -3,6 +3,7 @@ package co.yishun.onemoment.app.sync;
 import android.accounts.Account;
 import android.content.*;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
@@ -108,7 +109,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                         result.getData().getToken(),
                         (s, responseInfo, jsonObject) -> {
                             LogUtil.i(TAG, responseInfo.toString());
-                            deleteVideo(videoToDelete);
+                            if (videoToDelete != null) deleteVideo(videoToDelete);
                             LogUtil.i(TAG, "a moment upload ok: " + moment.getPath());
                         },
                         new UploadOptions(null, Config.MIME_TYPE, true, null, null)
@@ -117,7 +118,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Background
-    void deleteVideo(Data videoOnServer) {
+    void deleteVideo(@NonNull Data videoOnServer) {
         LogUtil.i(TAG, "delete a video: " + videoOnServer.getQiuniuKey());
         new DeleteVideo().setFileName(videoOnServer.getQiuniuKey()).setCallback((e, result) -> {
             if (e != null) {
@@ -128,7 +129,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    private boolean deleteMoment(Moment moment) {
+    private boolean deleteMoment(@NonNull Moment moment) {
         LogUtil.i(TAG, "delete a moment: " + moment.getPath());
         File momentFile = moment.getFile();
         File thumb = new File(moment.getThumbPath());
