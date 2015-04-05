@@ -15,7 +15,7 @@
             android:id="@+id/profileImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_shooting"
+            android:src="@drawable/default_avatar"
             android:layout_gravity="center"
             android:layout_margin="16dp"
             />
