@@ -43,6 +43,7 @@ public class GetDomain extends Request<GetDomain.DomainResult> {
 
     @Override
     protected void check() {
+        if (builder==null) throw new IllegalStateException("you need call with() method first");
         //do nothing
     }
 
