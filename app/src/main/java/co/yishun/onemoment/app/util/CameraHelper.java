@@ -23,6 +23,7 @@ import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import co.yishun.onemoment.app.config.Config;
 
 import java.io.File;
@@ -159,6 +160,7 @@ public class CameraHelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
+    @Deprecated
     public static File getOutputMediaFile(int type, Context context) {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
 
@@ -177,12 +179,50 @@ public class CameraHelper {
         return mediaFile;
     }
 
+    public enum Type {
+        SYNCED {
+            @Override
+            public String getPrefix(Context context) {
+                return AccountHelper.getIdentityInfo(context).get_id();
+            }
+        }, RECORDED {
+            @Override
+            public String getPrefix(Context context) {
+                return "VID";
+            }
+        }, CONVERTED {
+            @Override
+            public String getPrefix(Context context) {
+                return "CON";
+            }
+        }, LARGE_THUMB {
+            @Override
+            public String getPrefix(Context context) {
+                return "LAT";
+            }
+        }, MICRO_THUMB {
+            @Override
+            public String getPrefix(Context context) {
+                return "MIT";
+            }
+        };
+
+        public abstract String getPrefix(Context context);
+    }
+
+    public static File getOutputMediaFile(Context context, Type type, @Nullable Long timestamp) {
+        File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
+        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
+        return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + time + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX);
+    }
+
     /**
      * Get Converted path from origin media file path.
      *
      * @param path to the media file
      * @return path to the converted file.
      */
+    @Deprecated
     public static String getConvertedMediaFile(String path) {
         File file = new File(path);
         String s = file.getParentFile().toString() + "/CON_" + file.getName();
@@ -190,14 +230,7 @@ public class CameraHelper {
         return s;
     }
 
-//    @Deprecated
-//    public static String getThumbFilePath(String convertedFilePath) {
-//        File file = new File(convertedFilePath);
-//        String parent = file.getParentFile().getParent();
-//        String re = parent + Config.VIDEO_THUMB_STORE_DIR + getThumbFileName(convertedFilePath,);
-//        return re;
-//    }
-
+    @Deprecated
     public static String getThumbFileName(String videoPathOrThumbPath, int kind) {
         File file = new File(videoPathOrThumbPath);
         String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
@@ -212,6 +245,7 @@ public class CameraHelper {
         return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
     }
 
+    @Deprecated
     private static String createThumbImage(Context context, String videoPath, int kind) throws IOException {
         File thumbStorageDir = context.getDir(Config.VIDEO_THUMB_STORE_DIR, Context.MODE_PRIVATE);
         File thumbFile = new File(thumbStorageDir.getPath() + File.separator + getThumbFileName(videoPath, kind));
