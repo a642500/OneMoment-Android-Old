@@ -45,11 +45,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         mContentResolver = context.getContentResolver();
     }
 
-    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs, ContentResolver mContentResolver) {
-        super(context, autoInitialize, allowParallelSyncs);
-        this.mContentResolver = mContentResolver;
-    }
-
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         LogUtil.i(TAG, "onPerformSync, account: " + account.name);
@@ -122,7 +117,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Background
-    private void deleteVideo(Data videoOnServer) {
+    void deleteVideo(Data videoOnServer) {
         LogUtil.i(TAG, "delete a video: " + videoOnServer.getQiuniuKey());
         new DeleteVideo().setFileName(videoOnServer.getQiuniuKey()).setCallback((e, result) -> {
             if (e != null) {
