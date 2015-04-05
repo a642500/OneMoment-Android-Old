@@ -1,11 +1,15 @@
 package co.yishun.onemoment.app.data;
 
+import android.content.Context;
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.net.request.sync.Data;
+import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +51,10 @@ public class Moment implements Serializable {
 
     public String getPath() {
         return path;
+    }
+
+    public File getFile() {
+        return new File(path);
     }
 
     public long getTimeStamp() {
@@ -101,5 +109,23 @@ public class Moment implements Serializable {
             if (mThumbPath == null) LogUtil.w(TAG, "null thumb path");
             if (mLargeThumbPath == null) LogUtil.w(TAG, "null large thumb path");
         }
+    }
+
+    public static Moment from(Data video, String path, String thumbPath, String largeThumbPath) {
+        Moment m = new Moment();
+        m.path = path;
+        m.thumbPath = thumbPath;
+        m.largeThumbPath = largeThumbPath;
+        m.timeStamp = video.getTimeStamp();
+        m.time = video.getTime();
+        return m;
+    }
+
+    public static Moment parseOf(Context context, long timeStamp) {
+        return new MomentBuilder()
+                .setPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LOCAL, timeStamp))
+                .setThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.MICRO_THUMB, timeStamp))
+                .setLargeThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LARGE_THUMB, timeStamp))
+                .build();
     }
 }
