@@ -60,6 +60,11 @@
     <string name="identityInfoWeibo">新浪微博</string>
     <string name="identityInfoWeiboBound">已绑定</string>
     <string name="identityInfoWeiboUnbound">未绑定</string>
+    <string-array name="integrateInfoGenderArray">
+        <item>男</item>
+        <item>女</item>
+        <item>保密</item>
+    </string-array>
     <string name="integrateInfoAreaHint">地区</string>
     <string name="integrateInfoChooseBtn">选择</string>
     <string name="integrateInfoFinishBtn">确定</string>

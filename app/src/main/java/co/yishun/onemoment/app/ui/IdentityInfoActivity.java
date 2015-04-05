@@ -318,7 +318,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     @Click(R.id.logoutBtn)
     void logout(View view) {
         new MaterialDialog.Builder(this).theme(Theme.DARK).title(R.string.identityInfoLogout).content(R.string.identityInfoLogoutAlert)
-                .positiveText(R.string.identityInfoLogout).negativeText(R.string.cancel).callback(new MaterialDialog.ButtonCallback() {
+                .positiveText(R.string.identityInfoLogout).negativeText(R.string.identityInfoCancel).callback(new MaterialDialog.ButtonCallback() {
             @Override
             public void onNegative(MaterialDialog dialog) {
                 super.onNegative(dialog);
