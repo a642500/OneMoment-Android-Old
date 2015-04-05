@@ -109,6 +109,8 @@
     <string name="signUpLoading">Please waiting…</string>
     <string name="signUpVerifySuccess">Verify Success!</string>
     <string name="signUpVerifyFail">Verify Failed!</string>
+    <string name="signUpVerificationRemainTimePrefix">Resend&#160;</string>
+    <string name="signUpVerificationRemainTimeSuffix">&#160;seconds later</string>
 
 
     <string name="setPasswordTitle">Set Password</string>

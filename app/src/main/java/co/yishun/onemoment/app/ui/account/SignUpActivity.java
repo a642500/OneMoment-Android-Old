@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import co.yishun.onemoment.app.R;
@@ -29,6 +30,9 @@ public class SignUpActivity extends ToolbarBaseActivity {
     @ViewById
     EditText verificationCodeEditText;
 
+    @ViewById
+    Button getVerificationCodeBtn;
+
     @AfterTextChange(R.id.phoneEditText)
     void onPhoneChange(Editable text, TextView phone) {
         this.phone = text.toString();
@@ -48,25 +52,39 @@ public class SignUpActivity extends ToolbarBaseActivity {
     @Background
     void getVerificationCodeBtnClicked(@NonNull View view) {
         if (checkPhoneNum()) {
-            showProgress();
+            countDown();
             ((PhoneVerification.SendSms) (new PhoneVerification.SendSms().with(this))).setPhone(phone).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
                     showNotification(R.string.signUpVerificationCodeFailedToast);
+                    if (leftSeconds > 0) leftSeconds = 0;
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification(R.string.signUpVerificationCodeSuccessToast);
-                    //TODO disable btn temporary
-                    //TODO add handle sms
                 } else {
                     showNotification(R.string.signUpVerificationCodeFailedToast);
+                    if (leftSeconds > 0) leftSeconds = 0;
                 }
-                hideProgress();
             });
         } else {
             shakePhoneEditText();
             showNotification(R.string.signUpPhoneInvalidToast);
         }
 
+    }
+
+    int leftSeconds = 60;
+
+    @UiThread(delay = 1000L)
+    void countDown() {
+        getVerificationCodeBtn.setEnabled(false);
+        leftSeconds--;
+        getVerificationCodeBtn.setText(getString(R.string.signUpVerificationRemainTimePrefix) + leftSeconds + getString(R.string.signUpVerificationRemainTimeSuffix));
+        if (leftSeconds > 0) countDown();
+        else {
+            getVerificationCodeBtn.setEnabled(true);
+            getVerificationCodeBtn.setText(R.string.signUpGetVerificationCode);
+            leftSeconds = 60;
+        }
     }
 
     @UiThread

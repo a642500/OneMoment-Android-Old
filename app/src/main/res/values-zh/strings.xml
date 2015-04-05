@@ -120,4 +120,6 @@
     <string name="multiPlayTitle">@string/app_name</string>
     <string name="multiPlayShareBtn">分享</string>
     <string name="albumReplayNoMoment">现在还没有一瞬，赶快去拍摄吧</string>
+    <string name="signUpVerificationRemainTimePrefix"></string>
+    <string name="signUpVerificationRemainTimeSuffix">&#160;秒后重新发送</string>
 </resources>
