@@ -23,7 +23,9 @@ import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.sync.Data;
 
@@ -186,29 +188,60 @@ public class CameraHelper {
             public String getPrefix(Context context) {
                 return AccountHelper.getIdentityInfo(context).get_id();
             }
-        }, RECORDED {
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        RECORDED {
             @Override
             public String getPrefix(Context context) {
                 return "VID";
             }
-        }, LOCAL {
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        LOCAL {
             @Override
             public String getPrefix(Context context) {
                 return "LOC";
             }
-        }, LARGE_THUMB {
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        LARGE_THUMB {
             @Override
             public String getPrefix(Context context) {
                 return "LAT";
             }
-        }, MICRO_THUMB {
+
+            @Override
+            public String getSuffix() {
+                return Config.THUMB_FILE_SUFFIX;
+            }
+        },
+        MICRO_THUMB {
             @Override
             public String getPrefix(Context context) {
                 return "MIT";
             }
+
+            @Override
+            public String getSuffix() {
+                return Config.THUMB_FILE_SUFFIX;
+            }
         };
 
         public abstract String getPrefix(Context context);
+
+        public abstract String getSuffix();
     }
 
     public static String getOutputMediaPath(Context context, Type type, @Nullable Long timestamp) {
@@ -218,7 +251,11 @@ public class CameraHelper {
     public static File getOutputMediaFile(Context context, Type type, @Nullable Long timestamp) {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
-        return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + time + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX);
+        return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + Config.URL_HYPHEN + time + Config.URL_HYPHEN + timestamp + type.getSuffix());
+    }
+
+    public static File getOutputMediaFile(Context context, Type type, @NonNull File file) {
+        return getOutputMediaFile(context, type, parseTimeStamp(file));
     }
 
     public static File getOutputMediaFile(Context context, Data syncedVideo) {
@@ -262,11 +299,9 @@ public class CameraHelper {
         return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
     }
 
-    @Deprecated
     private static String createThumbImage(Context context, String videoPath, int kind) throws IOException {
-        File thumbStorageDir = context.getDir(Config.VIDEO_THUMB_STORE_DIR, Context.MODE_PRIVATE);
-        File thumbFile = new File(thumbStorageDir.getPath() + File.separator + getThumbFileName(videoPath, kind));
-
+        File thumbFile = getOutputMediaFile(context, kind == MediaStore.Images.Thumbnails.FULL_SCREEN_KIND ? Type.LARGE_THUMB : Type.MICRO_THUMB, new File(videoPath));
+        Log.i(TAG, "create thumb image: " + thumbFile.getPath());
         if (thumbFile.exists()) thumbFile.delete();
         FileOutputStream fOut = new FileOutputStream(thumbFile);
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);

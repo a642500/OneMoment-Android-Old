@@ -12,6 +12,7 @@ public class Config {
 
     public static final String MIME_TYPE = "video/mp4";
     public static final String VIDEO_FILE_SUFFIX = ".mp4";
+    public static final String THUMB_FILE_SUFFIX = ".png";
     public static final String URL_HYPHEN = "-";
     public static final String LONG_VIDEO_PREFIX = "long";
     public static final String AES_KEY = "QJBBNfrwp2oN4ZBwT9qZ4MGObN8y56bEydJj48L8xVs=";
@@ -118,7 +119,7 @@ public class Config {
      */
     private static String getResourceDomain(Context context) {
         if (mResourceDomain == null) {
-            new GetDomain().setCallback((e, result) -> {
+            new GetDomain().with(context).setCallback((e, result) -> {
                 if (e != null) e.printStackTrace();
                 else mResourceDomain = result.getData().getDomain();
             });
