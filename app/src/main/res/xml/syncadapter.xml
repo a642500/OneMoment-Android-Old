@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:contentAuthority="co.yishun.onemoment.app"
         android:accountType="co.yishun.onemoment.app"
-        android:userVisible="true"
+        android:userVisible="false"
         android:supportsUploading="true"
         android:allowParallelSyncs="false"
         android:isAlwaysSyncable="true"/>
+        <!--set userVisible to avoid crash when user turn sync off-->

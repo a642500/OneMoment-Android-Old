@@ -5,7 +5,10 @@ import co.yishun.onemoment.app.net.request.Request;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -26,13 +29,14 @@ public class GetDomain extends Request<GetDomain.DomainResult> {
         check();
         if (builder != null && callback != null) {
             try {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .asString()
-                        .setCallback((e, result) ->
-                                callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), DomainResult.class))).wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                OkHttpClient client = new OkHttpClient();
+                com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(getUrl() + "?key=" + key)
+                        .get().build();
+                Response response = client.newCall(request).execute();
+
+                callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), DomainResult.class));
+            } catch (IOException e) {
+                callback.onCompleted(e, null);
             }
         }
     }
