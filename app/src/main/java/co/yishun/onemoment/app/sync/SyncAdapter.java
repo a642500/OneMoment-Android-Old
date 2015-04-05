@@ -169,7 +169,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private String getQiniuVideoFileName(Moment moment) {
-        String re = AccountHelper.getIdentityInfo(getContext()).get_id() + Config.URL_HYPHEN + moment.getTime() + moment.getTimeStamp();
+        String re = AccountHelper.getIdentityInfo(getContext()).get_id() + Config.URL_HYPHEN + moment.getTime() + Config.URL_HYPHEN + moment.getTimeStamp() + Config.VIDEO_FILE_SUFFIX;
         LogUtil.i(TAG, "qiniu filename: " + re);
         return re;
     }
