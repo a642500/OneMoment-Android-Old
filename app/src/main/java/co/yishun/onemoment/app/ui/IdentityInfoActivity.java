@@ -115,7 +115,8 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             showProgress();
             String uriString = croppedProfileUri.toString();
             uploadProfile(uriString.substring(uriString.indexOf(":") + 1));
-        } else showNotification(R.string.identityInfoSelectProfileFail);
+        }
+//        else showNotification(R.string.identityInfoSelectProfileFail);
     }
 
     @Background
