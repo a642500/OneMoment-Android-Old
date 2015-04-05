@@ -25,7 +25,6 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,24 +147,36 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void downloadVideo(Data aVideoOnServer, @Nullable Moment momentOld) {
-        LogUtil.i(TAG, "down a video: " + aVideoOnServer.getQiuniuKey());
-        try {
-            File fileTemp = CameraHelper.getOutputMediaFile(getContext(), aVideoOnServer);
-            Ion.with(getContext()).load(Config.getResourceUrl(getContext()))
-                    .write(fileTemp).wait();
-            File file = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.LOCAL, aVideoOnServer.getTimeStamp());
-            if (momentOld != null && deleteMoment(momentOld))
-                LogUtil.e(TAG, "delete old local moment failed: " + momentOld.getPath());
-            if (!fileTemp.renameTo(file)) LogUtil.e(TAG, "rename synced to local failed: " + fileTemp.getPath());
-            else {
-                String pathToThumb = CameraHelper.createThumbImage(getContext(), file.getPath());
-                String pathToLargeThumb = CameraHelper.createThumbImage(getContext(), file.getPath());
-                dao.create(Moment.from(aVideoOnServer, file.getPath(), pathToThumb, pathToLargeThumb));
-                LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
+        LogUtil.i(TAG, "download a video: " + aVideoOnServer.getQiuniuKey());
+        File fileTemp = CameraHelper.getOutputMediaFile(getContext(), aVideoOnServer);
+//            OkHttpClient client = new OkHttpClient();
+//            Request request = new Request.Builder().url(Config.getResourceUrl(getContext()) + aVideoOnServer.getQiuniuKey()).get().build();
+//            Response response = client.newCall(request).execute();
+//            response.body().
+
+        Ion.with(getContext()).load(Config.getResourceUrl(getContext()) + aVideoOnServer.getQiuniuKey())
+                .write(fileTemp).setCallback((e, result) -> {
+            try {
+                if (e != null) {
+                    throw e;
+                }
+                File file = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.LOCAL, aVideoOnServer.getTimeStamp());
+                if (momentOld != null && !deleteMoment(momentOld)) {
+                    LogUtil.e(TAG, "delete old local moment failed: " + momentOld.getPath());
+                }
+                if (!fileTemp.renameTo(file)) {
+                    LogUtil.e(TAG, "rename synced to local failed: " + fileTemp.getPath());
+                } else {
+                    String pathToThumb = CameraHelper.createThumbImage(getContext(), file.getPath());
+                    String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), file.getPath());
+                    dao.create(Moment.from(aVideoOnServer, file.getPath(), pathToThumb, pathToLargeThumb));
+                    LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
-        } catch (InterruptedException | IOException | SQLException e) {
-            e.printStackTrace();
-        }
+        });
+
     }
 
     private String getQiniuVideoFileName(Moment moment) {

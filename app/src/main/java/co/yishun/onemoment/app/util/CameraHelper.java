@@ -250,7 +250,9 @@ public class CameraHelper {
 
     public static File getOutputMediaFile(Context context, Type type, @Nullable Long timestamp) {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
+        LogUtil.i(TAG, "timestamp: " + timestamp);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
+        LogUtil.i(TAG, "formatted time: " + time);
         return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + Config.URL_HYPHEN + time + Config.URL_HYPHEN + timestamp + type.getSuffix());
     }
 
@@ -267,7 +269,7 @@ public class CameraHelper {
     }
 
     public static long parseTimeStamp(String pathOrFileName) {
-        return Long.parseLong(pathOrFileName.substring(pathOrFileName.lastIndexOf(Config.URL_HYPHEN), pathOrFileName.lastIndexOf(".")));
+        return Long.parseLong(pathOrFileName.substring(pathOrFileName.lastIndexOf(Config.URL_HYPHEN) + 1, pathOrFileName.lastIndexOf(".")));
     }
 
     /**

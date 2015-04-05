@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.net.request.sync;
 
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.util.LogUtil;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
  * Created by Carlos on 2015/4/5.
  */
 public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, Data> {
+    private static final String TAG = LogUtil.makeTag(Data.class);
     private String mimeType;
     private String fsize;
     private String hash;
@@ -28,6 +30,7 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
     }
 
     public String getQiuniuKey() {
+        LogUtil.i(TAG, "qiniu key: " + key);
         return key;
     }
 
@@ -37,7 +40,7 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
     }
 
     public String getTime() {
-        return this.key.substring(key.indexOf(Config.URL_HYPHEN), key.lastIndexOf(Config.URL_HYPHEN));
+        return this.key.substring(key.indexOf(Config.URL_HYPHEN) + 1, key.lastIndexOf(Config.URL_HYPHEN));
     }
 
     @Override
@@ -59,7 +62,7 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
     }
 
     public long getTimeStamp() {
-        return Long.parseLong(key.substring(key.lastIndexOf(Config.URL_HYPHEN), key.lastIndexOf(".")));
+        return Long.parseLong(key.substring(key.lastIndexOf(Config.URL_HYPHEN) + 1, key.lastIndexOf(".")));
     }
 
     @Override
