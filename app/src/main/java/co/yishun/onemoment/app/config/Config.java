@@ -15,6 +15,8 @@ public class Config {
     public static final String THUMB_FILE_SUFFIX = ".png";
     public static final String URL_HYPHEN = "-";
     public static final String LONG_VIDEO_PREFIX = "long";
+    public static final String PROFILE_PREFIX = "avatar-";
+    public static final String PROFILE_SUFFIX = ".png";
     public static final String AES_KEY = "QJBBNfrwp2oN4ZBwT9qZ4MGObN8y56bEydJj48L8xVs=";
     public static final String URL_VERIFICATION_SEND_SMS = "/api/v2/send_verify_sms";
     public static final String URL_VERIFICATION_VERIFY = "/api/v2/verify_phone";

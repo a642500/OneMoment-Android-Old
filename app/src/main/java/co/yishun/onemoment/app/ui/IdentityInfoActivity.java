@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.Constants;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
+import co.yishun.onemoment.app.net.request.sync.GetToken;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -17,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.qiniu.android.storage.UploadManager;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
@@ -109,10 +112,57 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     @Background
     void onPictureCropped(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            
-
-            setProfileImage(croppedProfileUri);
+            showProgress();
+            String uriString = croppedProfileUri.toString();
+            uploadProfile(uriString.substring(uriString.indexOf(":") + 1));
         } else showNotification(R.string.identityInfoSelectProfileFail);
+    }
+
+    @Background
+    void uploadProfile(String path) {
+        UploadManager uploadManager = new UploadManager();
+        String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + System.currentTimeMillis() + Config.PROFILE_SUFFIX;
+        new GetToken().setFileName(qiNiuKey).with(this).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification(R.string.identityInfoUpdateFail);
+            } else if (result.getCode() != ErrorCode.SUCCESS) {
+                showNotification(R.string.identityInfoUpdateFail);
+                LogUtil.e(TAG, "get token failed: " + result.getCode());
+            } else {
+                uploadManager.put(path, qiNiuKey, result.getData().getToken(),
+                        (s, responseInfo, jsonObject) -> {
+                            LogUtil.i(TAG, responseInfo.toString());
+                            if (responseInfo.isOK()) {
+                                LogUtil.i(TAG, "profile upload ok");
+                                updateProfile(qiNiuKey);
+                            } else {
+                                LogUtil.e(TAG, "profile upload error");
+                                showNotification(R.string.identityInfoUpdateFail);
+                            }
+                            hideProgress();
+                        },
+                        null
+                );
+            }
+        });
+    }
+
+    @Background
+    void updateProfile(String qiNiuKey) {
+        new IdentityInfo.Update().setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey)
+                .with(this).setCallback((e1, result1) -> {
+            if (e1 != null) {
+                e1.printStackTrace();
+            } else if (result1.getCode() != ErrorCode.SUCCESS) {
+                LogUtil.e(TAG, "profile upload success bu update failed");
+                showNotification(R.string.identityInfoUpdateFail);
+            } else {
+                AccountHelper.updateAccount(this, result1.getData());
+                setProfileImage(croppedProfileUri);
+                showNotification(R.string.identityInfoUpdateSuccess);
+            }
+        });
     }
 
     @UiThread
