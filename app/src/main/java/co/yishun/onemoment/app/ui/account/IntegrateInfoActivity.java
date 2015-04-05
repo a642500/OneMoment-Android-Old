@@ -13,6 +13,8 @@ import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.res.StringArrayRes;
 
@@ -129,11 +131,17 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 .show();
     }
 
+    @UiThread
+    void shakeNickNameEditText() {
+        YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration)).playOn(nickNameEditText);
+    }
+
     @Click
     @Background
     void okBtnClicked(View view) {
         String nickname = String.valueOf(nickNameEditText.getText());
         if (TextUtils.isEmpty(nickname)) {
+            shakeNickNameEditText();
             showNotification(R.string.integrateInfoNameEmpty);
         } else {
             showProgress();
