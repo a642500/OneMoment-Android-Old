@@ -25,6 +25,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.net.request.sync.Data;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -214,6 +215,10 @@ public class CameraHelper {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
         return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + time + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX);
+    }
+
+    public static File getOutputMediaFile(Context context, Data syncedVideo) {
+        return getOutputMediaFile(context, Type.SYNCED, syncedVideo.getTimeStamp());
     }
 
     /**
