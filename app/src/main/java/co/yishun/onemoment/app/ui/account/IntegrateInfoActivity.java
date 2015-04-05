@@ -185,6 +185,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     }
 
+    @Background
     void updateInfo(@Nullable String qiNiuKey) {
         String nickname = String.valueOf(nickNameEditText.getText());
         if (TextUtils.isEmpty(nickname)) {
