@@ -149,6 +149,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     @Click
     @Background
     void okBtnClicked(View view) {
+        String nickname = String.valueOf(nickNameEditText.getText());
+        if (TextUtils.isEmpty(nickname)) {
+            shakeNickNameEditText();
+            showNotification(R.string.integrateInfoNameEmpty);
+            return;
+        }
+
+        showProgress();
         if (croppedProfileUri != null) {
             String uriString = croppedProfileUri.toString();
             String path = uriString.substring(uriString.indexOf(":") + 1);
@@ -159,58 +167,51 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 if (e != null) {
                     e.printStackTrace();
                     showNotification(R.string.identityInfoUpdateFail);
+                    hideProgress();
                 } else if (result.getCode() != ErrorCode.SUCCESS) {
                     showNotification(R.string.identityInfoUpdateFail);
                     LogUtil.e(TAG, "get token failed: " + result.getCode());
+                    hideProgress();
                 } else {
-
-                    uploadManager.put(path, qiNiuKey, result.getData().getToken(),
-                            (s, responseInfo, jsonObject) -> {
+                    uploadManager.put(path, qiNiuKey, result.getData().getToken(), (s, responseInfo, jsonObject) -> {
                                 LogUtil.i(TAG, responseInfo.toString());
                                 if (responseInfo.isOK()) {
                                     LogUtil.i(TAG, "profile upload ok");
-                                    updateInfo(qiNiuKey);
+                                    updateInfo(qiNiuKey, nickname);
                                 } else {
                                     LogUtil.e(TAG, "profile upload error");
                                     showNotification(R.string.identityInfoUpdateFail);
+                                    hideProgress();
                                 }
-                                hideProgress();
-                            },
-                            null
+                            }, null
                     );
                 }
             });
-        } else updateInfo(null);
+        } else updateInfo(null, nickname);
 
 
     }
 
     @Background
-    void updateInfo(@Nullable String qiNiuKey) {
-        String nickname = String.valueOf(nickNameEditText.getText());
-        if (TextUtils.isEmpty(nickname)) {
-            shakeNickNameEditText();
-            showNotification(R.string.integrateInfoNameEmpty);
-        } else {
-            showProgress();
-            IdentityInfo.Update bu = ((IdentityInfo.Update) (new IdentityInfo.Update().with(this))).setGender(gender[genderSelected]);
-            if (qiNiuKey != null) bu = bu.setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey);
-            bu.setLocation(mProvince + mDistrict).setNickname(nickname).setCallback(
-                    (e, result) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            showNotification(R.string.integrateInfoUpdateFail);
-                        } else if (result.getCode() == ErrorCode.SUCCESS) {
-                            AccountHelper.updateAccount(this, result.getData());
-                            showNotification(R.string.integrateInfoUpdateSuccess);
-                            setResult(RESULT_OK);
-                            this.finish();
-                        } else {
-                            showNotification(R.string.integrateInfoUpdateFail);
-                        }
-                        hideProgress();
-                    });
-        }
+    void updateInfo(@Nullable String qiNiuKey, String nickname) {
+        IdentityInfo.Update bu = ((IdentityInfo.Update) (new IdentityInfo.Update().with(this))).setGender(gender[genderSelected]);
+        if (qiNiuKey != null) bu = bu.setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey);
+        bu.setLocation(mProvince + mDistrict).setNickname(nickname).setCallback(
+                (e, result) -> {
+                    if (e != null) {
+                        e.printStackTrace();
+                        showNotification(R.string.integrateInfoUpdateFail);
+                    } else if (result.getCode() == ErrorCode.SUCCESS) {
+                        AccountHelper.updateAccount(this, result.getData());
+                        showNotification(R.string.integrateInfoUpdateSuccess);
+                        setResult(RESULT_OK);
+                        this.finish();
+                    } else {
+                        showNotification(R.string.integrateInfoUpdateFail);
+                    }
+                    hideProgress();
+                });
+
     }
 
     @ViewById
