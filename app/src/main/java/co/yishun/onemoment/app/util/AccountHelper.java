@@ -142,10 +142,12 @@ public class AccountHelper {
     }
 
     private static void enableSync(Context context) {
-        ContentResolver.addPeriodicSync(getAccount(context), Contract.AUTHORITY, new Bundle(), 60 * 10);
+//        ContentResolver.addPeriodicSync(getAccount(context), Contract.AUTHORITY, new Bundle(), 60 * 10);
+        ContentResolver.setSyncAutomatically(getAccount(context), Contract.AUTHORITY, true);
     }
 
     public static void syncAtOnce(Context context) {
+        LogUtil.i(TAG, "sync at once");
         ContentResolver.requestSync(getAccount(context), Contract.AUTHORITY, new Bundle());
     }
 
