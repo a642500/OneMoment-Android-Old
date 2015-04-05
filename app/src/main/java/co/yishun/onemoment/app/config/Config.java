@@ -36,6 +36,9 @@ public class Config {
     private final static String URL_TOKEN = "/api/v2/upload_token";
     private final static String URL_VIDEO_LIST = "/api/v2/videos/";
     private final static String URL_RESOURCE_DOMAIN = "/api/v2/resource_domain";
+    private final static String URL_VIDEO_DELETE = "/api/v2/delete_video";
+
+
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
     private static final int FFMPEG_RAW_ID = R.raw.ffmpeg;
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
@@ -126,5 +129,9 @@ public class Config {
     public static String getResourceUrl(Context context) {
         String main = getResourceDomain(context);
         return (main.endsWith("/") ? main : main + "/");
+    }
+
+    public static String getUrlVideoDelete() {
+        return URL_MAIN + URL_VIDEO_DELETE;
     }
 }
