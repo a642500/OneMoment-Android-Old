@@ -40,8 +40,6 @@ import java.util.List;
  * Camera related utilities.
  */
 public class CameraHelper {
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
     static final Object lock = new Object();
     private static final String TAG = LogUtil.makeTag(CameraHelper.class);
     private static boolean isFrontCamera = false;
@@ -156,32 +154,6 @@ public class CameraHelper {
         return null;
     }
 
-    /**
-     * Creates a media file in the {@code Environment.DIRECTORY_PICTURES} directory. The directory
-     * is persistent and available to other applications like gallery.
-     *
-     * @param type Media type. Can be video or image.
-     * @return A file object pointing to the newly created file.
-     */
-    @Deprecated
-    public static File getOutputMediaFile(int type, Context context) {
-        File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_" + timeStamp + ".jpg");
-        } else if (type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_" + timeStamp + ".mp4");
-        } else {
-            throw new IllegalStateException("unsupported type");
-        }
-        return mediaFile;
-    }
-
     public enum Type {
         SYNCED {
             @Override
@@ -270,27 +242,6 @@ public class CameraHelper {
 
     public static long parseTimeStamp(String pathOrFileName) {
         return Long.parseLong(pathOrFileName.substring(pathOrFileName.lastIndexOf(Config.URL_HYPHEN) + 1, pathOrFileName.lastIndexOf(".")));
-    }
-
-    /**
-     * Get Converted path from origin media file path.
-     *
-     * @param path to the media file
-     * @return path to the converted file.
-     */
-    @Deprecated
-    public static String getConvertedMediaFile(String path) {
-        File file = new File(path);
-        String s = file.getParentFile().toString() + "/CON_" + file.getName();
-        LogUtil.i(TAG, s);
-        return s;
-    }
-
-    @Deprecated
-    public static String getThumbFileName(String videoPathOrThumbPath, int kind) {
-        File file = new File(videoPathOrThumbPath);
-        String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-        return fileName + ((kind == MediaStore.Images.Thumbnails.FULL_SCREEN_KIND) ? "_full" : "") + ".png";
     }
 
     public static String createLargeThumbImage(Context context, String videoPath) throws IOException {
