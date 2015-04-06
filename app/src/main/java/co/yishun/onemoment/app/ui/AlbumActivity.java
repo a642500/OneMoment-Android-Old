@@ -211,7 +211,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     @Click
     void syncBtn(View view) {
         if (!AccountHelper.isLogin(this)) {
-            showLoginDialog();
+            mWeiboHelper = showLoginDialog();
             return;
         }
         if (!justPressed) {
@@ -236,8 +236,9 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         }
     }
 
+
     public WeiboHelper showLoginDialog() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
+        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).autoDismiss(false).build();
         View view = dialog.getCustomView();
         view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
             SignUpActivity_.intent(this).start();
