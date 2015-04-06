@@ -132,4 +132,15 @@
     <string name="resetPasswordTitle">重设密码</string>
     <string name="resetPasswordSaveSuccess">保存密码成功</string>
     <string name="weiboLoginAuthSuccess">授权成功，正在登录</string>
+    <string name="identityInfoWeiboBoundFail">绑定失败</string>
+    <string name="identityInfoWeiboBoundSuccess">绑定成功</string>
+    <string name="identityInfoWeiboUnboundDialogContent">确定要解除绑定新浪微博吗？</string>
+    <string name="identityInfoWeiboUnboundDialogTitle">解除绑定</string>
+    <string name="identityInfoWeiboUnboundFail">绑定失败</string>
+    <string name="identityInfoWeiboUnboundImpossible">您的账号是微博账号，无法解绑</string>
+    <string name="identityInfoWeiboUnboundSuccess">解绑成功</string>
+    <string name="weiboBindAuthSuccess">授权成功，正在绑定…</string>
+    <string name="weiboBindCancel">取消绑定</string>
+    <string name="weiboBindFail">绑定失败</string>
+    <string name="weiboBindSuccess">绑定成功</string>
 </resources>
