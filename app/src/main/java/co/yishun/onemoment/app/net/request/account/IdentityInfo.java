@@ -8,7 +8,11 @@ import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.builder.Builders;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -16,21 +20,37 @@ import java.util.concurrent.ExecutionException;
  */
 public abstract class IdentityInfo {
     public static class Get extends Request<AccountResult> {
+        private String uid = null;
+
         @Override
         protected String getUrl() {
-            return Config.getUrlIdentityInfoGet() + AccountHelper.getIdentityInfo(mContext).get_id();
+            return Config.getUrlIdentityInfoGet() + (uid == null ? AccountHelper.getIdentityInfo(mContext).get_id() : uid);
         }
+
+        public IdentityInfo.Get overrideUrlUID(String uid) {
+            this.uid = uid;
+            return this;
+        }
+//    GET /api/v2/account/<account_id>?key=<key>
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
             if (builder != null && callback != null) {
-                try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key).asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                OkHttpClient client = new OkHttpClient();
+                com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                        .url(getUrl() + "?key=" + key).get().build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(com.squareup.okhttp.Request request, IOException e) {
+                        callback.onCompleted(e, null);
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), AccountResult.class));
+                    }
+                });
             }
         }
 

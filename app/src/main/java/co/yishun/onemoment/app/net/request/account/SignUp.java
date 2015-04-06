@@ -90,14 +90,14 @@ public abstract class SignUp {
     }
 
     public static class ByWeiBo extends Request<AccountResult> {
-        private String uid;
+        private long uid;
         private String nickname;
         private String introduction;
         private String gender;
         private String avatarUrl;
         private String location;
 
-        public ByWeiBo setUid(String uid) {
+        public ByWeiBo setUid(long uid) {
             this.uid = uid;
             return this;
         }
@@ -135,21 +135,19 @@ public abstract class SignUp {
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
             check();
-            if (callback != null && builder != null) {
-                try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key)
-                            .setBodyParameter("uid", uid)
-                            .setBodyParameter("nickname", nickname)
-                            .setBodyParameter("introduction", introduction)
-                            .setBodyParameter("gender", gender)
-                            .setBodyParameter("avatar_url", avatarUrl)
-                            .setBodyParameter("location", location)
-                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-
+            if (callback == null) throw new IllegalStateException("A request with null callback");
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("uid", String.valueOf(uid))
+                        .setBodyParameter("nickname", nickname)
+                        .setBodyParameter("introduction", introduction)
+                        .setBodyParameter("gender", gender)
+                        .setBodyParameter("avatar_url", avatarUrl)
+                        .setBodyParameter("location", location)
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
         }
 
@@ -168,10 +166,10 @@ public abstract class SignUp {
         @Override
         protected void check() {
             LogUtil.privateLog(TAG, "Check(): " + this.toString());
-            if (uid == null) {
-                throw new IllegalStateException("A request with error data");
-            }
+//            if (uid == null) {
+            if (builder == null) throw new IllegalStateException("A request with no context");
         }
+    }
 
         /*
 
@@ -187,7 +185,6 @@ public abstract class SignUp {
 
          */
 
-    }
 
     public static class ByWeChat extends Request<AccountResult> {
         private long uid;
