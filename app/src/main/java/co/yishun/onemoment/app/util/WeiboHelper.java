@@ -41,7 +41,7 @@ public class WeiboHelper {
             public void onComplete(Bundle values) {
                 Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
                 if (accessToken.isSessionValid()) {
-//                    AccessTokenKeeper.writeAccessToken(mActivity.getApplicationContext(), accessToken);
+                    AccessTokenKeeper.writeAccessToken(mActivity.getApplicationContext(), accessToken);
                     listener.onSuccess(accessToken);
                 } else {
                     String code = values.getString("code");
@@ -73,7 +73,6 @@ public class WeiboHelper {
     }
 
 
-    @Deprecated
     public static class AccessTokenKeeper {
         private static final String PREFERENCES_NAME = "com_onemoment_weibo";
         private static final String KEY_UID = "uid";
