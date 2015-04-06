@@ -4,10 +4,10 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="8dp"
+        android:padding="16dp"
         android:layout_gravity="center"
         >
 
@@ -19,11 +19,12 @@
             android:text="@string/loginDialogTitle"
             android:textAppearance="@android:style/TextAppearance.DialogWindowTitle"
             android:padding="16dp"
+            android:layout_marginBottom="8dp"
             />
 
     <Button
             android:id="@+id/loginByWeiboBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/loginDialogByWeibo"
             android:drawableLeft="@drawable/ic_weibo"
