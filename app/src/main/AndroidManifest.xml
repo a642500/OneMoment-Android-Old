@@ -85,6 +85,11 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+                android:name=".ui.ResetPasswordActivity_"
+                android:label="@string/resetPasswordTitle"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
                 android:name=".ui.IdentityInfoActivity_"
                 android:label="@string/identityInfoTitle"
                 android:theme="@style/AppTheme.NoActionBar">

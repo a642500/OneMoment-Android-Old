@@ -74,6 +74,16 @@
     <string name="findPasswordNextBtn">Next</string>
     <string name="findPasswordSetPasswordSuccess">Set password success!</string>
 
+    <string name="resetPasswordTitle">Reset Password</string>
+    <string name="resetPasswordPasswordHint">Password</string>
+    <string name="resetPasswordPasswordAgainHint">Again</string>
+    <string name="resetPasswordOkBtn">OK</string>
+    <string name="resetPasswordPasswordInvalid">Your password is invalid. </string>
+    <string name="resetPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
+    <string name="resetPasswordSaveFail">Save password failed! </string>
+    <string name="resetPasswordSaveFailFormat">Password Format Invalid!</string>
+    <string name="resetPasswordSaveSuccess">Save password Success. </string>
+
     <string name="identityInfoTitle">Identity Info</string>
     <string name="identityInfoProfile">Profile</string>
     <string name="identityInfoName">Nickname</string>
