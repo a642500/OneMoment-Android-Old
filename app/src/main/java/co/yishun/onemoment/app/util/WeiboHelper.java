@@ -15,8 +15,9 @@ import com.sina.weibo.sdk.exception.WeiboException;
  * Created by Carlos on 2015/4/1.
  */
 public class WeiboHelper {
-    public static final String APP_KEY = "2045436852";
-    public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+    public static final String APP_KEY = "4070980764";
+    public static final String APP_SECRET = "b264b30b5cae0497af3f7cb16aabe2c9";
+    public static final String AUTH_REDIRECT_URL = "http://sns.whalecloud.com/sina2/callback";
 
     public static final String SCOPE =
             "email,direct_messages_read,direct_messages_write,"
@@ -30,11 +31,11 @@ public class WeiboHelper {
 
     public WeiboHelper(Activity activity) {
         mActivity = activity;
-        mAuthInfo = new AuthInfo(mActivity, APP_KEY, REDIRECT_URL, SCOPE);
+        mAuthInfo = new AuthInfo(mActivity, APP_KEY, AUTH_REDIRECT_URL, SCOPE);
         ssoHandler = new SsoHandler(mActivity, mAuthInfo);
     }
 
-    public void login(WeiboLoginListener listener) {
+    public void login(@NonNull WeiboLoginListener listener) {
         ssoHandler.authorize(new WeiboAuthListener() {
             @Override
             public void onComplete(Bundle values) {
