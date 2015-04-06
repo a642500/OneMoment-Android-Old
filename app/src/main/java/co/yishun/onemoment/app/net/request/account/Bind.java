@@ -51,7 +51,7 @@ public class Bind {
         @Override
         protected void check() {
             if (builder == null) throw new IllegalStateException("null builder!");
-            if (uid == null) throw new IllegalStateException("null builder");
+            if (uid == null) throw new IllegalStateException("null uid");
         }
     }
 }

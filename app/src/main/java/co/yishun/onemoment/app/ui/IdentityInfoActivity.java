@@ -368,12 +368,12 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void weiboItemClicked(View view) {
-        if (AccountHelper.getAccount(this).name.equals(uid)) {
+        if (AccountHelper.getIdentityInfo(this).getPhone() == null) {
             showNotification(R.string.identityInfoWeiboUnboundImpossible);
             return;
         }
         if (uid != null) {
-            new MaterialDialog.Builder(this).title(R.string.identityInfoWeiboUnboundDialogTitle).content(R.string.identityInfoWeiboUnboundDialogContent).negativeText(R.string.identityInfoOk).positiveText(R.string.identityInfoCancel).theme(Theme.DARK).callback(new MaterialDialog.ButtonCallback() {
+            new MaterialDialog.Builder(this).title(R.string.identityInfoWeiboUnboundDialogTitle).content(R.string.identityInfoWeiboUnboundDialogContent).negativeText(R.string.identityInfoCancel).positiveText(R.string.identityInfoOk).theme(Theme.DARK).callback(new MaterialDialog.ButtonCallback() {
                 @Override
                 public void onPositive(MaterialDialog dialog) {
                     super.onPositive(dialog);
@@ -406,10 +406,11 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     void bind(Oauth2AccessToken token) {
         //weibo user won't run this code, don't need take in account
         showProgress();
-        new Bind.Weibo().setUid(uid).with(this).setCallback((e, result) -> {
+        new Bind.Weibo().setUid(token.getUid()).with(this).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
             } else if (result.getCode() == ErrorCode.SUCCESS) {
+                AccountHelper.updateAccount(this, result.getData());
                 setWeiboUid(token.getUid());
                 showNotification(R.string.identityInfoWeiboBoundSuccess);
             } else {
@@ -428,6 +429,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             if (e != null) {
                 e.printStackTrace();
             } else if (result.getCode() == ErrorCode.SUCCESS) {
+                AccountHelper.updateAccount(this, result.getData());
                 setWeiboUid(null);
                 showNotification(R.string.identityInfoWeiboUnboundSuccess);
             } else {
