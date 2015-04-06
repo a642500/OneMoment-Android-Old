@@ -307,7 +307,6 @@ public class RecordingActivity extends Activity {
      */
     @SupposeBackground
     void prepare() {
-        if (mCamera == null) return;
         Camera.Parameters parameters = mCamera.getParameters();
         Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
         CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
@@ -336,7 +335,7 @@ public class RecordingActivity extends Activity {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        mCurrentVideoPath = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO, this).toString();
+        mCurrentVideoPath = CameraHelper.getOutputMediaFile(this, CameraHelper.Type.RECORDED, System.currentTimeMillis()).toString();
         mMediaRecorder.setOutputFile(mCurrentVideoPath);
         mMediaRecorder.setOrientationHint(90);
         // END_INCLUDE (configure_media_recorder)
@@ -360,6 +359,7 @@ public class RecordingActivity extends Activity {
     void record() {
         if (mCamera == null) {
             showNotification(R.string.recordLoadCameraError);
+            return;
         }
         prepare();
         if (prepareStatus == PREPARED) {
@@ -401,7 +401,7 @@ public class RecordingActivity extends Activity {
     void startConvert() {
         //TODO alert convert
         mConvertDialog.show();
-        convert(mCurrentVideoPath, CameraHelper.getConvertedMediaFile(mCurrentVideoPath));
+        convert(mCurrentVideoPath, CameraHelper.getOutputMediaFile(this, CameraHelper.Type.LOCAL, new File(mCurrentVideoPath)).getPath());
     }
 
     @Background
