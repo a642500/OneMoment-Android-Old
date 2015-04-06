@@ -75,7 +75,6 @@ public class ResetPasswordActivity extends ToolbarBaseActivity {
                     e.printStackTrace();
                     showNotification(R.string.resetPasswordSaveFail);
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    AccountHelper.createAccount(this, result.getData());
                     showNotification(R.string.resetPasswordSaveSuccess);
                     setResult(Activity.RESULT_OK);
                     this.finish();
