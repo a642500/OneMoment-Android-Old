@@ -21,7 +21,7 @@ import org.androidannotations.annotations.*;
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(LoginActivity.class);
-    public static final int REQUEST_FIND_PASSWORD = 100;
+    //    public static final int REQUEST_FIND_PASSWORD = 100;
     @Extra
     String phone = "";
     @ViewById
@@ -52,7 +52,7 @@ public class LoginActivity extends ToolbarBaseActivity {
 
     @Click
     void findPasswordBtnClicked(@NonNull View view) {
-        FindPasswordActivity_.intent(this).extra("phone", mPhoneNum).startForResult(REQUEST_FIND_PASSWORD);
+        FindPasswordActivity_.intent(this).extra("phone", mPhoneNum).start();
     }
 
     @Click(R.id.loginBtn)
