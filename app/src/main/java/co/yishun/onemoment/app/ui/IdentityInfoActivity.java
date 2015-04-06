@@ -3,6 +3,7 @@ package co.yishun.onemoment.app.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -10,16 +11,20 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.Constants;
 import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.net.request.account.Bind;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
+import co.yishun.onemoment.app.net.request.account.UnBind;
 import co.yishun.onemoment.app.net.request.sync.GetToken;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.qiniu.android.storage.UploadManager;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
@@ -50,7 +55,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         AccountResult.Data data = AccountHelper.getIdentityInfo(this);
         Picasso.with(this).load(data.getAvatar_url()).into(profileImageView);
         nickNameTextView.setText(data.getNickname());
-        weiboTextView.setText(data.getWeibo_uid() == null ? R.string.identityInfoWeiboUnbound : R.string.identityInfoWeiboBound);
+        setWeiboUid(data.getWeibo_uid());
         setGender(data.getGender());
         setProvinceAndDistrict(data.getArea());
     }
@@ -363,8 +368,87 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Click
     void weiboItemClicked(View view) {
-        //TODO handle weibo
+        if (AccountHelper.getAccount(this).name.equals(uid)) {
+            showNotification(R.string.identityInfoWeiboUnboundImpossible);
+            return;
+        }
+        if (uid != null) {
+            new MaterialDialog.Builder(this).title(R.string.identityInfoWeiboUnboundDialogTitle).content(R.string.identityInfoWeiboUnboundDialogContent).negativeText(R.string.identityInfoOk).positiveText(R.string.identityInfoCancel).theme(Theme.DARK).callback(new MaterialDialog.ButtonCallback() {
+                @Override
+                public void onPositive(MaterialDialog dialog) {
+                    super.onPositive(dialog);
+                    unbind();
+                }
+            }).show();
+        } else {
+            final WeiboHelper helper = new WeiboHelper(this);
+            helper.login(new WeiboHelper.WeiboLoginListener() {
+                @Override
+                public void onSuccess(Oauth2AccessToken token) {
+                    bind(token);
+                    showNotification(R.string.weiboBindAuthSuccess);
+                }
+
+                @Override
+                public void onFail() {
+                    showNotification(R.string.weiboBindFail);
+                }
+
+                @Override
+                public void onCancel() {
+                    showNotification(R.string.weiboBindCancel);
+                }
+            });
+        }
     }
+
+    @Background
+    void bind(Oauth2AccessToken token) {
+        //weibo user won't run this code, don't need take in account
+        showProgress();
+        new Bind.Weibo().setUid(uid).with(this).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+            } else if (result.getCode() == ErrorCode.SUCCESS) {
+                setWeiboUid(token.getUid());
+                showNotification(R.string.identityInfoWeiboBoundSuccess);
+            } else {
+                showNotification(R.string.identityInfoWeiboBoundFail);
+            }
+            hideProgress();
+        });
+
+    }
+
+
+    @Background
+    void unbind() {
+        showProgress();
+        new UnBind.Weibo().setUid(uid).with(this).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+            } else if (result.getCode() == ErrorCode.SUCCESS) {
+                setWeiboUid(null);
+                showNotification(R.string.identityInfoWeiboUnboundSuccess);
+            } else {
+                showNotification(R.string.identityInfoWeiboUnboundFail);
+            }
+            hideProgress();
+        });
+    }
+
+    /**
+     * set user uid, null to unbound.This will update ui but won't save data.
+     *
+     * @param uid
+     */
+    @UiThread
+    void setWeiboUid(@Nullable String uid) {
+        this.uid = uid;
+        weiboTextView.setText(uid == null ? R.string.identityInfoWeiboUnbound : R.string.identityInfoWeiboBound);
+    }
+
+    private String uid = null;
 
     @Click(R.id.logoutBtn)
     void logout(View view) {

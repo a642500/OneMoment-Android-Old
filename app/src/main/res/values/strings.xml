@@ -100,7 +100,19 @@
     <string name="identityInfoLogoutAlert">Are you sure you want to logout?</string>
     <string name="identityInfoWeiboBound">Bound</string>
     <string name="identityInfoWeiboUnbound">Unbound</string>
+    <string name="identityInfoWeiboUnboundDialogTitle">Unbound</string>
+    <string name="identityInfoWeiboUnboundDialogContent">Are you sure you want to unbound with Sina weibo?</string>
+    <string name="identityInfoWeiboUnboundImpossible">Your account is weibo account, unable to unbind.</string>
+    <string name="identityInfoWeiboUnboundSuccess">Unbind success</string>
+    <string name="identityInfoWeiboUnboundFail">Unbind failed</string>
+    <string name="identityInfoWeiboBoundSuccess">Bind success</string>
+    <string name="identityInfoWeiboBoundFail">Bound failed</string>
     <string name="identityInfoSelectProfileFail">read image file failed.</string>
+
+    <string name="weiboBindAuthSuccess">Auth Success, now update info…</string>
+    <string name="weiboBindSuccess">Bind Success</string>
+    <string name="weiboBindFail">Bind Failed</string>
+    <string name="weiboBindCancel">Bind Cancel</string>
 
 
     <string name="videoSaveTitle">@string/app_name</string>
