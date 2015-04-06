@@ -71,6 +71,8 @@ public class RecordingActivity extends Activity {
      */
     private AlertDialog mConvertDialog;
 
+    private boolean isAskForResult = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,8 +202,11 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        LogUtil.i(TAG, "onResume");
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-        preview();
+        if (!isAskForResult) {
+            preview();
+        } else isAskForResult = false;
     }
 
     @Override
@@ -482,6 +487,7 @@ public class RecordingActivity extends Activity {
 
     @UiThread
     void askSave(String path, String thumbPath, String largeThumbPath) {
+        isAskForResult = true;
         VideoSaveActivity_.intent(this)
                 .extra("videoPath", path)
                 .extra("thumbPath", thumbPath)
@@ -495,6 +501,7 @@ public class RecordingActivity extends Activity {
 
     @OnActivityResult(REQUEST_SAVE)
     void onResult(int resultCode, Intent data) {
+        LogUtil.i(TAG, "onResult");
         if (resultCode == RESULT_OK) {
             //register at database
             try {
@@ -514,7 +521,6 @@ public class RecordingActivity extends Activity {
                         .setLargeThumbPath(data.getStringExtra("largeThumbPath"))
                         .build();
                 momentDao.create(moment);
-
                 albumBtnClicked(null);
             } catch (SQLException e) {
                 e.printStackTrace();

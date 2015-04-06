@@ -40,7 +40,6 @@ import java.util.List;
  * Camera related utilities.
  */
 public class CameraHelper {
-    static final Object lock = new Object();
     private static final String TAG = LogUtil.makeTag(CameraHelper.class);
     private static boolean isFrontCamera = false;
 
@@ -90,10 +89,7 @@ public class CameraHelper {
      * @return the default camera on the device. Return null if there is no camera on the device.
      */
     public static Camera getCameraInstance() {
-        LogUtil.d(TAG, "lock at getInstance");
-        synchronized (lock) {
-            return isFrontCamera ? getDefaultFrontFacingCameraInstance() : getDefaultBackFacingCameraInstance();
-        }
+        return isFrontCamera ? getDefaultFrontFacingCameraInstance() : getDefaultBackFacingCameraInstance();
     }
 
     public static boolean isFrontCamera() {
@@ -105,11 +101,7 @@ public class CameraHelper {
     }
 
     public static void releaseCamera(Camera camera) {
-        LogUtil.d(TAG, "lock at release");
-        synchronized (lock) {
-            camera.release();
-        }
-        LogUtil.d(TAG, "unlock at getInstance");
+        camera.release();
     }
 
     /**
