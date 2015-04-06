@@ -190,14 +190,14 @@ public abstract class SignUp {
     }
 
     public static class ByWeChat extends Request<AccountResult> {
-        private String uid;
+        private long uid;
         private String nickname;
         private String introduction;
         private String gender;
         private String avatarUrl;
         private String location;
 
-        public ByWeChat setUid(String uid) {
+        public ByWeChat setUid(long uid) {
             this.uid = uid;
             return this;
         }
@@ -238,7 +238,7 @@ public abstract class SignUp {
             if (callback != null && builder != null) {
                 builder.load(getUrl())
                         .setBodyParameter("key", key)
-                        .setBodyParameter("uid", uid)
+                        .setBodyParameter("uid", String.valueOf(uid))
                         .setBodyParameter("nickname", nickname)
                         .setBodyParameter("introduction", introduction)
                         .setBodyParameter("gender", gender)
@@ -264,9 +264,9 @@ public abstract class SignUp {
         @Override
         protected void check() {
             LogUtil.privateLog(TAG, "Check(): " + this.toString());
-            if (uid == null) {
-                throw new IllegalStateException("A request with error data");
-            }
+//            if (uid == 0) {
+//                throw new IllegalStateException("A request with error data");
+//            }
         }
         /*
 
