@@ -9,6 +9,7 @@ import android.widget.TextView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.SignIn;
+import co.yishun.onemoment.app.ui.FindPasswordActivity_;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -20,6 +21,7 @@ import org.androidannotations.annotations.*;
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(LoginActivity.class);
+    public static final int REQUEST_FIND_PASSWORD = 100;
     @Extra
     String phone = "";
     @ViewById
@@ -50,7 +52,7 @@ public class LoginActivity extends ToolbarBaseActivity {
 
     @Click
     void findPasswordBtnClicked(@NonNull View view) {
-
+        FindPasswordActivity_.intent(this).extra("phone", mPhoneNum).startForResult(REQUEST_FIND_PASSWORD);
     }
 
     @Click(R.id.loginBtn)
