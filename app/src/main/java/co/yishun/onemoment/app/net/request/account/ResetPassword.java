@@ -31,7 +31,7 @@ public class ResetPassword extends Request<AccountResult> {
 
     @Override
     public String getUrl() {
-        return Config.getUrlResetPassword() + AccountHelper.getIdentityInfo(mContext).get_id();
+        return Config.getUrlResetPassword();
     }
 
     @Override
