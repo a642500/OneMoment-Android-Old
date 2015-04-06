@@ -17,7 +17,7 @@ import org.androidannotations.annotations.*;
 /**
  * Created by Carlos on 2015/4/6.
  */
-@EActivity
+@EActivity(R.layout.activity_reset_password)
 public class ResetPasswordActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(ResetPasswordActivity.class);
     @Extra
