@@ -62,7 +62,7 @@ public class AccountHelper {
 
     public static Account createAccount(Context context, AccountResult.Data data) {
         // Create the account type and default account
-        Account newAccount = new Account(data.getPhone(), ACCOUNT_TYPE);
+        Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
             mAccount = newAccount;
