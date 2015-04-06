@@ -11,22 +11,22 @@ import com.koushikdutta.async.future.FutureCallback;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Carlos on 2/15/15.
+ * Created by Carlos on 2015/4/6.
  */
-public class UnBind {
+public class Bind {
+
     public static class Weibo extends Request<AccountResult> {
 
         /*
-    POST /api/v2/unbind_weibo/<account_id>
+            POST /api/v2/bind_weibo/<account_id>
 
-    * **Required** `<account_id> Restful形式跟在url后面`
-    * **Required** `key 接口使用秘钥`
-    * **Required** `weibo_uid`
+        * **Required** `key 接口使用秘钥`
+        * **Required** `<account_id> 用户ID`
+        * **Required** `weibo_uid 微博的uid`
          */
-
         @Override
         protected String getUrl() {
-            return Config.getUrlUnbindWeibo() + AccountHelper.getIdentityInfo(mContext).get_id();
+            return Config.getUrlBindWeibo() + AccountHelper.getIdentityInfo(mContext).get_id();
         }
 
         private String uid;
@@ -53,26 +53,5 @@ public class UnBind {
             if (builder == null) throw new IllegalStateException("null builder!");
             if (uid == null) throw new IllegalStateException("null builder");
         }
-    /*
-
-    POST /api/v2/unbind_weibo/<account_id>
-
-    * **Required** `<account_id> Restful`
-    * **Required** `key`
-    * **Required** `weibo_uid`
-
-     */
-    }
-
-    public static class WeChat {
-    /*
-
-    POST /api/v2/unbind_weixin/<account_id>
-
-    * **Required** `<account_id> Restful`
-    * **Required** `key `
-    * **Required** `weixin_uid`
-
-     */
     }
 }

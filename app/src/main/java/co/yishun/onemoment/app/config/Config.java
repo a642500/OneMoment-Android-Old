@@ -40,6 +40,8 @@ public class Config {
     private final static String URL_VIDEO_LIST = "/api/v2/videos/";
     private final static String URL_RESOURCE_DOMAIN = "/api/v2/resource_domain";
     private final static String URL_VIDEO_DELETE = "/api/v2/delete_video";
+    private final static String URL_UNBIND_WEIBO = "/api/v2/unbind_weibo/";
+    private final static String URL_BIND_WEIBO = "/api/v2/bind_weibo/";
 
 
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
@@ -97,6 +99,14 @@ public class Config {
 
     public static String getUrlVideoList() {
         return URL_MAIN + URL_VIDEO_LIST;
+    }
+
+    public static String getUrlUnbindWeibo() {
+        return URL_MAIN + URL_UNBIND_WEIBO;
+    }
+
+    public static String getUrlBindWeibo() {
+        return URL_MAIN + URL_BIND_WEIBO;
     }
 
     public static String getPrivateKey() {
