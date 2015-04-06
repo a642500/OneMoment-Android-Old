@@ -130,4 +130,6 @@
     <string name="resetPasswordSaveFail">重设密码失败！</string>
     <string name="resetPasswordSaveFailFormat">您的密码格式错误！</string>
     <string name="resetPasswordTitle">重设密码</string>
+    <string name="resetPasswordSaveSuccess">保存密码成功</string>
+    <string name="weiboLoginAuthSuccess">授权成功，正在登录</string>
 </resources>

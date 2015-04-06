@@ -149,6 +149,7 @@
     <string name="integrateInfoUpdateSuccess">Update Info Success.</string>
     <string name="integrateInfoUpdateFail">Update Info Failed!</string>
 
+    <string name="weiboLoginAuthSuccess">Auth Success, now login…</string>
     <string name="weiboLoginSuccess">Login Success</string>
     <string name="weiboLoginFail">Login Failed</string>
     <string name="weiboLoginCancel">Login Cancel</string>

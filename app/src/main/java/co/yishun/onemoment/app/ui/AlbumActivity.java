@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.net.request.account.IdentityInfo;
+import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.adapter.ViewPagerController;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
@@ -249,26 +251,55 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             helper.login(new WeiboHelper.WeiboLoginListener() {
                 @Override
                 public void onSuccess(Oauth2AccessToken token) {
-                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginSuccess), Toast.LENGTH_SHORT).show();
-                    //TODO use token to sign up
+                    signUpByWeibo(token);
                     dialog.dismiss();
                 }
 
                 @Override
                 public void onFail() {
-                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginFail), Toast.LENGTH_SHORT).show();
+                    showNotification(R.string.weiboLoginFail);
                 }
 
                 @Override
                 public void onCancel() {
-                    Toast.makeText(AlbumActivity.this, AlbumActivity.this.getString(R.string.weiboLoginCancel), Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+                    showNotification(R.string.weiboLoginCancel);
                 }
             });
-            dialog.dismiss();
         });
         dialog.show();
         return helper;
+    }
+
+    @Background
+    public void signUpByWeibo(Oauth2AccessToken token) {
+        showNotification(R.string.weiboLoginAuthSuccess);
+        showProgress();
+        WeiboHelper.WeiBoInfo info = mWeiboHelper.getUserInfo(token);
+        new SignUp.ByWeiBo().setUid(info.id).setGender(info.gender).setLocation(info.location).setNickname(info.name).setIntroduction(info.description).setAvatarUrl(info.avatar_large).with(this).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification(R.string.weiboLoginFail);
+                hideProgress();
+            } else if (result.getCode() == ErrorCode.SUCCESS) {
+                AccountHelper.createAccount(this, result.getData());
+                showNotification(R.string.weiboLoginSuccess);
+                hideProgress();
+            } else if (result.getErrorCode() == ErrorCode.WEIBO_UID_EXISTS) {
+                //TODO login success at once, update info if not exist when in identity info act
+                new IdentityInfo.Get().overrideUrlUID(token.getUid()).with(this).setCallback((e1, result1) -> {
+                    if (e1 != null) {
+                        e1.printStackTrace();
+                        showNotification(R.string.weiboLoginFail);
+                    } else if (result1.getCode() == ErrorCode.SUCCESS) {
+                        AccountHelper.createAccount(this, result1.getData());
+                        showNotification(R.string.weiboLoginSuccess);
+                    } else {
+                        showNotification(R.string.weiboLoginFail);
+                    }
+                    hideProgress();
+                });
+            }
+        });
     }
 
     private void rate() {
