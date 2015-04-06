@@ -10,7 +10,6 @@ import android.widget.TextView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.net.request.account.PhoneVerification;
-import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.ui.ToolbarBaseActivity;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
@@ -152,18 +151,6 @@ public class SignUpActivity extends ToolbarBaseActivity {
                 this.finish();
                 break;
             default:
-                break;
-        }
-    }
-
-    @UiThread
-    void signUpSuccess(AccountResult result) {
-        switch (result.getCode()) {
-            case ErrorCode.SUCCESS:
-
-                break;
-            default:
-                showNotification("success");
                 break;
         }
     }
