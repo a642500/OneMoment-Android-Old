@@ -114,10 +114,11 @@
         </FrameLayout>
 
 
-        <co.yishun.onemoment.app.ui.view.SquareFrameLayout
+        <FrameLayout
                 android:id="@+id/recordSurfaceParent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/orange"
                 >
 
             <TextureView
@@ -132,7 +133,7 @@
             <!--android:gravity="center"-->
             <!--android:background="@android:color/transparent"-->
             <!--android:id="@+id/"/>-->
-        </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
+        </FrameLayout>
 
         <!--<ImageView-->
         <!--android:visibility="invisible"-->

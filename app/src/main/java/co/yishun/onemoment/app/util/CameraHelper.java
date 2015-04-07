@@ -67,19 +67,17 @@ public class CameraHelper {
 
         for (Camera.Size size : sizes) {
             if (size.height < targetHeight || size.width < targetWidth) continue;
+            //select whose ratio is the most close
             double sizeRatio = ((float) size.width) / size.height;
             double ratioDiff = Math.abs(sizeRatio - ratio);
             if (ratioDiff < minRatioDiff) {
                 minRatioDiff = ratioDiff;
                 optimalSize = size;
+            } else if (ratioDiff == minRatioDiff && size.height > targetHeight && size.height < optimalSize.height) {
+                //if ratio is the same, select whose height is the most close
+                optimalSize = size;
             }
             LogUtil.v("iter height", "width: " + size.width + ", height: " + size.height + ", ratio: " + sizeRatio);
-//                if (size.height >= targetHeight && Math.abs(size.height - targetHeight) <= minHeightDiff
-//                        && size.width >= targetWidth && Math.abs(size.width - targetWidth) <= minWidthDiff) {
-//                    optimalSize = size;
-//                    minHeightDiff = Math.abs(size.height - targetHeight);
-//                    minWidthDiff = Math.abs(size.width - targetWidth);
-//                }
         }
         LogUtil.i("selected size", "width: " + optimalSize.width + ", height: " + optimalSize.height);
         return optimalSize;

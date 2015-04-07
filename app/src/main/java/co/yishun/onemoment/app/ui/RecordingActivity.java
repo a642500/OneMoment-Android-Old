@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -15,6 +16,8 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -78,6 +81,24 @@ public class RecordingActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.mConvertDialog = new MaterialDialog.Builder(this).content(getString(R.string.recordConvertingHint)).cancelable(false).progress(true, 0).build();
 
+    }
+
+    @ViewById
+    FrameLayout recordSurfaceParent;
+
+    @AfterViews
+    void setSquare() {
+        recordSurfaceParent.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            Toast.makeText(this, "onglobal,width: " + recordSurfaceParent.getWidth() + ", height: " + recordSurfaceParent.getHeight(), Toast.LENGTH_LONG);
+        });
+        ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+        float oneDp = getResources().getDimension(R.dimen.oneDp);
+        LogUtil.i(TAG, "oneDp: " + oneDp);
+        int min = Math.min(params.height, params.width);
+        LogUtil.i(TAG, "min: " + min);
+        params.height = 1080;// 640;
+        params.width = 1080;// 480;
+        recordSurfaceParent.setLayoutParams(params);
     }
 
     /**
@@ -274,12 +295,14 @@ public class RecordingActivity extends Activity {
         final Camera.Size optimalPreviewSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), Config.getDefaultCameraSize().first, Config.getDefaultCameraSize().second);
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
 //        mPreview.setOpaque(false);
-
-        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            mPreview.setOpaque(false);
-            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
-            mPreview.setTransform(mat);
-        });
+        this.optimalPreviewSize = optimalPreviewSize;
+//
+//        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+//            mPreview.setOpaque(false);
+//            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
+//            mPreview.setTransform(mat);
+//            Toast.makeText(this, "Transform", Toast.LENGTH_SHORT).show();
+//        });
 //        runOnUiThread(() -> {
 //            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
 //            mPreview.setTransform(mat);
@@ -299,6 +322,42 @@ public class RecordingActivity extends Activity {
 //        mPreview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
         mCamera.startPreview();
+        test();
+    }
+
+    private Camera.Size optimalPreviewSize;
+
+    @UiThread
+    void test() {
+        LogUtil.i(TAG, "optimalPreviewSize, width: " + optimalPreviewSize.width + ", height: " + optimalPreviewSize.height);
+        mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                LogUtil.i(TAG, "onSurfaceTextureAvailable: " + width + " height: " + height);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                LogUtil.i(TAG, "onSurfaceTextureSizeChanged: " + width + " height: " + height);
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                LogUtil.i(TAG, "onSurfaceTextureDestroyed");
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+                Matrix matrix = new Matrix();
+                LogUtil.v(TAG, matrix.toShortString());
+                mPreview.getTransform(matrix);
+                LogUtil.v(TAG, "after: " + matrix.toShortString());
+            }
+        });
+//        Toast.makeText(this, "test()", Toast.LENGTH_SHORT).show();
+        Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
+        mPreview.setTransform(mat);
     }
 
     @UiThread
@@ -568,28 +627,20 @@ public class RecordingActivity extends Activity {
 
         int viewWidth = previewView.getWidth();
         int viewHeight = previewView.getHeight();
-        LogUtil.v(TAG, "view width: " + viewWidth);
         if (viewHeight != viewWidth)
             LogUtil.w(TAG, "preview view width not equals height, width is " + viewWidth + ", height is " + viewHeight);
-        LogUtil.v(TAG, "crop width: " + cropSize.first);
-        if (!cropSize.first.equals(cropSize.second)) {
-            LogUtil.w(TAG, "target size first not equals second, first is " + cropSize.first + ", second is" + cropSize.second);
-        }
+        else LogUtil.v(TAG, "view width: " + viewWidth);
 
-        //set scale
-        double ratio = ((double) cropSize.first) / cropSize.second;
-        assert ratio == 1.0d;
-        int viewLength = Math.min(viewHeight, viewWidth);
-        int croppedLength = Math.min(size.height, size.width);
+        //assert rotation == 90, so width will be height
+        float a = ((float) viewWidth) / size.height;
+        float b = ((float) viewHeight) / size.width;
+        float scaleY = a / b;
+//        float scaleX = 1;
+        mat.setScale(1, scaleY);
 
-        float scale = viewLength / croppedLength;
-
-//        float scaleX = viewWidth / cropSize.first;
-//        float scaleY = viewHeight / cropSize.second;
-//        LogUtil.i(TAG, "scaleX " + scaleX + "; scaleY " + scaleY);
-        mat.setScale(scale, 1);
         //move to center
-//        mat.postTranslate(croppedLength * scale / 2 - viewLength / 2, croppedLength * scale / 2 - viewLength / 2);
+        mat.postTranslate(0, -viewHeight * (scaleY - 1) / 2);
+//        Toast.makeText(this, "scaleX " + scaleX + "; scaleY " + scaleY, Toast.LENGTH_LONG).show();
         return mat;
     }
 
