@@ -196,13 +196,13 @@ public class RecordingActivity extends Activity {
         cameraSwitch.setVisibility(hasFront ? View.VISIBLE : View.INVISIBLE);
         cameraSwitch.getCurrentView().setOnClickListener(hasFront ? v -> {
             CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-            releaseCamera();
-            preview();
+            mCamera.stopPreview();
+            releaseCameraBackgroundAndPreview();
         } : null);
         cameraSwitch.getNextView().setOnClickListener(hasFront ? v -> {
             CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-            releaseCamera();
-            preview();
+            mCamera.stopPreview();
+            releaseCameraBackgroundAndPreview();
         } : null);
     }
 
@@ -223,7 +223,7 @@ public class RecordingActivity extends Activity {
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
-        releaseCamera();
+        releaseCameraBackground();
         LogUtil.d(TAG, "onPause end: " + System.currentTimeMillis());
     }
 
@@ -247,13 +247,20 @@ public class RecordingActivity extends Activity {
     }
 
     @Background
-    void releaseCamera() {
+    void releaseCameraBackground() {
         if (mCamera != null) {
-            // Don't use:mCamera.release();
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
         }
+    }
 
+    @Background
+    void releaseCameraBackgroundAndPreview() {
+        if (mCamera != null) {
+            CameraHelper.releaseCamera(mCamera);
+            mCamera = null;
+        }
+        preview();
     }
 
     //    @AfterViews
@@ -390,7 +397,7 @@ public class RecordingActivity extends Activity {
 
             // inform the user that recording has stopped
             isRecording = false;
-            releaseCamera();
+            releaseCameraBackground();
             startConvert();
         }
     }
