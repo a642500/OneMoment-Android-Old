@@ -1,6 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.VideoView;
@@ -20,6 +23,8 @@ public class PlayActivity extends ToolbarBaseActivity {
     ImageView thumbImageView;
     @ViewById
     ImageButton playBtn;
+    @ViewById
+    FrameLayout recordSurfaceParent;
 
 //    @Extra
 //    String videoPath;
@@ -31,6 +36,19 @@ public class PlayActivity extends ToolbarBaseActivity {
 
     @AfterViews
     void initVideo() {
+        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+                    params.height = recordSurfaceParent.getHeight();
+                    params.width = recordSurfaceParent.getWidth();
+                }
+            });
+        }
+
         Picasso.with(this).load("file://" + moment.getLargeThumbPath()).into(thumbImageView);
         videoView.setVideoPath(moment.getPath());
         videoView.setOnCompletionListener(mp -> {

@@ -1,6 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.VideoView;
@@ -26,6 +29,9 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
     @ViewById
     ImageButton playBtn;
 
+    @ViewById
+    FrameLayout recordSurfaceParent;
+
 //    @Extra
 //    String videoPath;
 //    @Extra
@@ -39,6 +45,20 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
 
     @AfterViews
     void initVideo() {
+        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+                    params.height = recordSurfaceParent.getHeight();
+                    params.width = recordSurfaceParent.getWidth();
+                }
+            });
+        }
+
+
         if (BuildConfig.DEBUG && !(moments.size() >= 2))
             throw new RuntimeException("moment's length is 1 or 0, use PlayActivity");
 
