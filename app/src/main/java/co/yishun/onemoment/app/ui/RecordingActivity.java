@@ -88,17 +88,32 @@ public class RecordingActivity extends Activity {
 
     @AfterViews
     void setSquare() {
-        recordSurfaceParent.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Toast.makeText(this, "onglobal,width: " + recordSurfaceParent.getWidth() + ", height: " + recordSurfaceParent.getHeight(), Toast.LENGTH_LONG);
+        mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                LogUtil.i(TAG, "onSurfaceTextureAvailable: " + width + " height: " + height);
+                ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+                int min = Math.min(height, width);
+                LogUtil.i(TAG, "min: " + min);
+                params.height = min;
+                params.width = min;
+                recordSurfaceParent.setLayoutParams(params);
+                mPreview.setSurfaceTextureListener(null);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            }
         });
-        ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
-        float oneDp = getResources().getDimension(R.dimen.oneDp);
-        LogUtil.i(TAG, "oneDp: " + oneDp);
-        int min = Math.min(params.height, params.width);
-        LogUtil.i(TAG, "min: " + min);
-        params.height = 1080;// 640;
-        params.width = 1080;// 480;
-        recordSurfaceParent.setLayoutParams(params);
     }
 
     /**
@@ -263,11 +278,9 @@ public class RecordingActivity extends Activity {
     @Background
     void releaseCamera() {
         if (mCamera != null) {
-            // release the camera for other applications
             // Don't use:mCamera.release();
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
-//            ((MyApplication) getApplication()).isRelease = true;
         }
 
     }
@@ -276,17 +289,6 @@ public class RecordingActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Background
     void preview() {
-
-        // BEGIN_INCLUDE (configure_preview)
-//        while (!((MyApplication) getApplication()).isRelease) {
-//                try {
-//                    LogUtil.i(TAG, "camera not release, wait");
-//                    wait(100);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//            }
-//        }
-        //TODO cause crash when quick resume activity.
         mCamera = CameraHelper.getCameraInstance();
         if (mCamera == null) return;
         LogUtil.d(TAG, "unlock at getInstance");
@@ -296,18 +298,6 @@ public class RecordingActivity extends Activity {
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
 //        mPreview.setOpaque(false);
         this.optimalPreviewSize = optimalPreviewSize;
-//
-//        mPreview.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-//            mPreview.setOpaque(false);
-//            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
-//            mPreview.setTransform(mat);
-//            Toast.makeText(this, "Transform", Toast.LENGTH_SHORT).show();
-//        });
-//        runOnUiThread(() -> {
-//            Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
-//            mPreview.setTransform(mat);
-//        });
-
 
         mCamera.setParameters(parameters);
         mCamera.setDisplayOrientation(90);
@@ -322,40 +312,13 @@ public class RecordingActivity extends Activity {
 //        mPreview.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
         mCamera.startPreview();
-        test();
+        applyTransform();
     }
 
     private Camera.Size optimalPreviewSize;
 
     @UiThread
-    void test() {
-        LogUtil.i(TAG, "optimalPreviewSize, width: " + optimalPreviewSize.width + ", height: " + optimalPreviewSize.height);
-        mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                LogUtil.i(TAG, "onSurfaceTextureAvailable: " + width + " height: " + height);
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                LogUtil.i(TAG, "onSurfaceTextureSizeChanged: " + width + " height: " + height);
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                LogUtil.i(TAG, "onSurfaceTextureDestroyed");
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                Matrix matrix = new Matrix();
-                LogUtil.v(TAG, matrix.toShortString());
-                mPreview.getTransform(matrix);
-                LogUtil.v(TAG, "after: " + matrix.toShortString());
-            }
-        });
-//        Toast.makeText(this, "test()", Toast.LENGTH_SHORT).show();
+    void applyTransform() {
         Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
         mPreview.setTransform(mat);
     }
