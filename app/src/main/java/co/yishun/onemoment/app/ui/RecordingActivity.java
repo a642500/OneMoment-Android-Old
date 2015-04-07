@@ -585,6 +585,7 @@ public class RecordingActivity extends Activity {
                 e.printStackTrace();
             }
         } else {
+            isAskForResult = false;
             File useless = new File(data.getStringExtra("largeThumbPath"));
             if (useless.exists()) useless.delete();
             useless = new File(data.getStringExtra("videoPath"));
