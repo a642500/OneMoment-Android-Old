@@ -156,89 +156,60 @@ public class RecordingActivity extends Activity {
         new AlbumActivity_.IntentBuilder_(this).start();
     }
 
-    @AfterViews
-    void initViews() {
-        //TODO can switch when recording?
-        //TODO flashlight  http://stackoverflow.com/questions/6068803/how-to-turn-on-camera-flash-light-programmatically-in-android
+    void checkFlashLightAvailability() {
         PackageManager packageManager = getPackageManager();
 
-        boolean hasFlash = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        //TODO can switch when recording?
+        //TODO flashlight  http://stackoverflow.com/questions/6068803/how-to-turn-on-camera-flash-light-programmatically-in-android
+        boolean hasFlash = !CameraHelper.isFrontCamera() && packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         recordFlashSwitch.setEnabled(hasFlash);
         recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
         recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
-                    if (mCamera != null) {
-                        Camera.Parameters p = mCamera.getParameters();
-                        p.setFlashMode(
+            if (mCamera != null) {
+                Camera.Parameters p = mCamera.getParameters();
+                p.setFlashMode(
 //                                isChecked ?
-                                Camera.Parameters.FLASH_MODE_TORCH
+                        Camera.Parameters.FLASH_MODE_TORCH
 //                                        : Camera.Parameters.FLASH_MODE_OFF
-                        );
-                        mCamera.setParameters(p);
-                        recordFlashSwitch.showNext();
-                    }
-                }
-
-        );
+                );
+                mCamera.setParameters(p);
+                recordFlashSwitch.showNext();
+            }
+        });
         recordFlashSwitch.getNextView().setOnClickListener(v -> {
-                    if (mCamera != null) {
-                        Camera.Parameters p = mCamera.getParameters();
-                        p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        mCamera.setParameters(p);
-                        recordFlashSwitch.showNext();
-                    }
-                }
+            if (mCamera != null) {
+                Camera.Parameters p = mCamera.getParameters();
+                p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                mCamera.setParameters(p);
+                recordFlashSwitch.showNext();
+            }
+        });
+    }
 
-        );
-//        recordFlashSwitch.setOnCheckedChangeListener(
-//                hasFlash ?
-//                        (buttonView, isChecked) -> {
-//
-//                        }
-//                        : null
-//        );
+    @AfterViews
+    void initViews() {
+//checked in onResume    checkFlashLightAvailability();
+        PackageManager packageManager = getPackageManager();
 
         boolean hasFront = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
         cameraSwitch.setEnabled(hasFront);
         cameraSwitch.setVisibility(hasFront ? View.VISIBLE : View.INVISIBLE);
-        cameraSwitch.getCurrentView().setOnClickListener(
-                hasFront ?
-                        v -> {
-                            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-                            releaseCamera();
-//                            recordFlashSwitch.reset();
-                            preview();
-                        }
-                        : null
-        );
-        cameraSwitch.getNextView().setOnClickListener(
-                hasFront ?
-                        v -> {
-                            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-                            releaseCamera();
-//                            recordFlashSwitch.reset();
-                            preview();
-                        }
-                        : null
-        );
-
-//        setOnCheckedChangeListener(
-//                hasFront ?
-//                        (v, isChecked) -> {
-//                            CameraHelper.setFrontCamera(isChecked);
-//                            releaseCamera();
-////                            recordFlashSwitch.setChecked(false);//reset flashlight switch's status
-//                            preview();
-//                        }
-//                        : null
-//        );
-
-
+        cameraSwitch.getCurrentView().setOnClickListener(hasFront ? v -> {
+            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
+            releaseCamera();
+            preview();
+        } : null);
+        cameraSwitch.getNextView().setOnClickListener(hasFront ? v -> {
+            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
+            releaseCamera();
+            preview();
+        } : null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtil.i(TAG, "onResume");
+        checkFlashLightAvailability();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         if (!isAskForResult) {
             preview();
