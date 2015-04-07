@@ -2,6 +2,8 @@ package co.yishun.onemoment.app.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.VideoView;
 import co.yishun.onemoment.app.R;
@@ -16,6 +18,9 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
     @ViewById
     ImageView thumbImageView;
 
+    @ViewById
+    FrameLayout recordSurfaceParent;
+
     @Extra
     String videoPath;
     @Extra
@@ -23,6 +28,13 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
 
     @AfterViews
     void initVideo() {
+        ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+        int min = Math.min(params.height, params.width);
+        params.height = min;
+        params.width = min;
+        recordSurfaceParent.setLayoutParams(params);
+
+
         Picasso.with(this).load("file://" + largeThumbPath).into(thumbImageView);
         videoView.setVideoPath(videoPath);
         videoView.setOnCompletionListener(mp -> {
