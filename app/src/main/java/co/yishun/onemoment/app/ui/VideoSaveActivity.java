@@ -48,8 +48,9 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
         Picasso.with(this).load("file://" + largeThumbPath).into(thumbImageView);
         videoView.setVideoPath(videoPath);
         videoView.setOnCompletionListener(mp -> {
+            mp.reset();
             videoView.setVideoPath(videoPath);
-            videoView.setOnClickListener(v -> videoView.start());
+            thumbImageView.setVisibility(View.VISIBLE);
         });
     }
 
