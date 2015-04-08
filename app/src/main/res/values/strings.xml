@@ -178,8 +178,14 @@
     <string name="guideTitle">Help</string>
 
     <string name="syncSettingsTitle">Sync Settings</string>
+    <string name="syncSettingsSyncAuto">Auto Sync</string>
+    <string name="syncSettingsSyncWifi">Over wifi only</string>
+    <string name="syncSettingsSyncNow">Sync Now</string>
+    <string name="syncSettingsSyncNowToast">Syncing…</string>
 
     <string name="playTitle">@string/app_name</string>
     <string name="multiPlayTitle">@string/app_name</string>
+
     <string name="multiPlayShareBtn">Share</string>
+    <string name="multiPlayShareText">One Moment.Every life is a movie, this is my life, how is yours?</string>
 </resources>

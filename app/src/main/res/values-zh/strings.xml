@@ -4,7 +4,7 @@
     <string name="aboutCheckNew">检查新版本</string>
     <string name="aboutChecking">正在检查…</string>
     <string name="aboutRecommend">推荐给好友</string>
-    <string name="aboutRecommendContent">程序员太懒了，居然连推荐语都没写！</string>
+    <string name="aboutRecommendContent">我在用一瞬app记录我的生活，这么有特点的app真的很少见呢！你也来试试吧~</string>
     <string name="aboutTitle">关于我们</string>
     <string name="aboutUpdated">已经是最新版本了！</string>
     <string name="aboutVersion">版本&#160;</string>
@@ -143,4 +143,9 @@
     <string name="weiboBindCancel">取消绑定</string>
     <string name="weiboBindFail">绑定失败</string>
     <string name="weiboBindSuccess">绑定成功</string>
+    <string name="syncSettingsSyncAuto">自动tongbu</string>
+    <string name="syncSettingsSyncNow">立即同步</string>
+    <string name="syncSettingsSyncWifi">仅在WiFi下自动同步</string>
+    <string name="syncSettingsSyncNowToast">正在同步…</string>
+    <string name="multiPlayShareText">一瞬——每个人的生活都是一部电影，这是我的生活，你的呢？</string>
 </resources>
