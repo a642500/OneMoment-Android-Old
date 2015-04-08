@@ -42,7 +42,7 @@ public class SplashActivity extends BaseActivity {
         return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, true);
     }
 
-    @UiThread(delay = 2000)
+    @UiThread(delay = 1000)
     void startRecording() {
         this.finish();
         if (isFirstLaunch()) GuideActivity_.intent(this).start();
