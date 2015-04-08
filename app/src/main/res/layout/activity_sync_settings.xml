@@ -12,4 +12,94 @@
             >
 
     </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+            android:id="@+id/syncAutoItem"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@color/colorTransparentGray"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:text="@string/syncSettingsSyncAuto"
+                />
+
+        <Switch
+                android:id="@+id/syncAutoSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/md_divider_white"/>
+
+    <RelativeLayout
+            android:id="@+id/wifiSyncItem"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@color/colorTransparentGray"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:text="@string/syncSettingsSyncWifi"
+                />
+
+        <Switch
+                android:id="@+id/wifiSyncSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/md_divider_white"/>
+
+    <RelativeLayout
+            android:id="@+id/syncNowItem"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@color/colorTransparentGray"
+            >
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:text="@string/syncSettingsSyncNow"
+                />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/md_divider_white"/>
 </LinearLayout>

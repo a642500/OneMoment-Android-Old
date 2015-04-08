@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
@@ -60,13 +61,26 @@ public class AccountHelper {
         return new File(path).exists();
     }
 
-    public static Account createAccount(Context context, AccountResult.Data data) {
+    public static Account createAccount(Activity activity, AccountResult.Data data) {
+        // Create the account type and default account
+        Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
+        AccountManager accountManager = (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            mAccount = newAccount;
+            saveIdentityInfo(activity, data);
+            return newAccount;
+        } else {
+            LogUtil.e(TAG, "The account exists or some other error occurred.");
+            return null;
+        }
+    }
+
+    public static Account createAccountWithoutEnableAutoSync(Context context, AccountResult.Data data) {
         // Create the account type and default account
         Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
             mAccount = newAccount;
-            enableSync(context);
             saveIdentityInfo(context, data);
             return newAccount;
         } else {
@@ -141,9 +155,31 @@ public class AccountHelper {
         return mIdentityInfo;
     }
 
-    private static void enableSync(Context context) {
-//        ContentResolver.addPeriodicSync(getAccount(context), Contract.AUTHORITY, new Bundle(), 60 * 10);
-        ContentResolver.setSyncAutomatically(getAccount(context), Contract.AUTHORITY, true);
+    public static void setAutoSync(Activity activity, boolean isEnable) {
+        LogUtil.i(TAG, "setAutoSync: " + isEnable);
+        if (isEnable) {
+            ContentResolver.setSyncAutomatically(getAccount(activity), Contract.AUTHORITY, true);
+            ContentResolver.addPeriodicSync(getAccount(activity), Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
+            syncAtOnce(activity);
+        } else {
+            ContentResolver.setSyncAutomatically(getAccount(activity), Contract.AUTHORITY, false);
+        }
+        activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_AUTO_SYNC, isEnable).apply();
+    }
+
+    public static final String IS_AUTO_SYNC = "is_auto_sync";
+    public static final String IS_WIFI_SYNC = "is_wifi_sync";
+
+    public static boolean isAutoSync(Activity activity) {
+        return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_AUTO_SYNC, true);
+    }
+
+    public static void setWifiSyncEnable(Activity activity, boolean isEnable) {
+        activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
+    }
+
+    public static boolean isWifiSyncEnable(Activity activity) {
+        return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WIFI_SYNC, false);
     }
 
     public static void syncAtOnce(Context context) {
