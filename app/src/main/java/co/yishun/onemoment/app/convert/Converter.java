@@ -63,7 +63,18 @@ public abstract class Converter {
      */
     public Converter cropToStandard() {
         mCommand.append(" -vf");
-        mCommand.append(" crop=480:480");
+        mCommand.append(" crop='if(gt(iw,ih),ih,iw)':'if(gt(iw,ih),ih,iw)',scale=480:480");
+        mCommand.append(" -r 30");//fps
+        mCommand.append(" -b:v 4M");//bitrate
+
+
+        mCommand.append(" -aspect 1");//ratio
+        mCommand.append(" -vcodec h264");
+        mCommand.append(" -b:a 128k");
+
+        mCommand.append(" -y");//overwrite output files
+        mCommand.append(" -t 1.2");// set the recording time
+
         mCommand.append(" -strict");
         mCommand.append(" -2");
         return this;
