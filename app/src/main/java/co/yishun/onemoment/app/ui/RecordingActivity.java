@@ -343,6 +343,13 @@ public class RecordingActivity extends Activity {
         mCurrentVideoPath = CameraHelper.getOutputMediaFile(this, CameraHelper.Type.RECORDED, System.currentTimeMillis()).toString();
         mMediaRecorder.setOutputFile(mCurrentVideoPath);
         mMediaRecorder.setOrientationHint(90);
+        mMediaRecorder.setMaxDuration(1200);
+        mMediaRecorder.setOnInfoListener((mr, what, extra) ->
+                {
+                    if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED)
+                        onRecordEnd();
+                }
+        );
         // END_INCLUDE (configure_media_recorder)
 
         // Step 5: Prepare configured MediaRecorder
@@ -370,7 +377,6 @@ public class RecordingActivity extends Activity {
         if (prepareStatus == PREPARED) {
             mMediaRecorder.start();
             isRecording = true;
-            stopRecordAfterSomeTime();
         } else {
             releaseMediaRecorder();
         }
@@ -386,16 +392,14 @@ public class RecordingActivity extends Activity {
         showNotification(getString(textRes));
     }
 
-    @UiThread(delay = 1200L)
-    void stopRecordAfterSomeTime() {
+
+    private void onRecordEnd() {
         LogUtil.i(TAG, "time run out, isRecording: " + isRecording);
         if (isRecording) {
-            // stop recording and release camera
-            mMediaRecorder.stop();  // stop the recording
+            // release media recorder and  camera
             releaseMediaRecorder(); // release the MediaRecorder object
             mCamera.lock();         // take camera access back from MediaRecorder
 
-            // inform the user that recording has stopped
             isRecording = false;
             releaseCameraBackground();
             startConvert();
