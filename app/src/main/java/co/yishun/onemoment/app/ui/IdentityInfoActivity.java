@@ -255,7 +255,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     private void setProvinceAndDistrict(String pro, String dis) {
         mProvince = pro;
         mDistrict = dis;
-        areaTextView.setText(pro + dis);
+        areaTextView.setText(pro + " " + dis);
     }
 
     private void setProvinceAndDistrict(String provinceAndDistrict) {
@@ -267,7 +267,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         for (String province : provinces) {
             if (province.startsWith(twoChar)) mProvince = province;
         }
-        mDistrict = provinceAndDistrict.substring(mProvince.length());
+        mDistrict = provinceAndDistrict.substring(mProvince.length()).trim();
         areaTextView.setText(provinceAndDistrict);
     }
 
@@ -313,7 +313,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     void updateArea(@NonNull String pro, @NonNull String dis) {
         showProgress();
         ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
-                .setLocation(pro + dis).setCallback((e, result) -> {
+                .setLocation(pro + " " + dis).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
                 showNotification(R.string.identityInfoUpdateFail);

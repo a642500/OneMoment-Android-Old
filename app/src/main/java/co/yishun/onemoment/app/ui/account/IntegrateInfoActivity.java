@@ -107,7 +107,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     private void setProvinceAndDistrict(String pro, String dis) {
         mProvince = pro;
         mDistrict = dis;
-        areaTextView.setText(pro + dis);
+        areaTextView.setText(pro + " " + dis);
     }
 
     private void setGender(int gender) {
@@ -196,7 +196,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     void updateInfo(@Nullable String qiNiuKey, String nickname) {
         IdentityInfo.Update bu = ((IdentityInfo.Update) (new IdentityInfo.Update().with(this))).setGender(gender[genderSelected]);
         if (qiNiuKey != null) bu = bu.setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey);
-        bu.setLocation(mProvince + mDistrict).setNickname(nickname).setCallback(
+        bu.setLocation(mProvince + " " + mDistrict).setNickname(nickname).setCallback(
                 (e, result) -> {
                     if (e != null) {
                         e.printStackTrace();
