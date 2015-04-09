@@ -18,6 +18,7 @@ class Converter2 extends Converter {
     private FFmpegExecuteResponseHandler mHandler;
 
     Converter2(Context context) {
+        LogUtil.i(TAG, "Converter2 get instance time: " + System.currentTimeMillis());
         mFFmpeg = FFmpeg.getInstance(context);
         try {
             mFFmpeg.loadBinary(new FFmpegLoadBinaryResponseHandler() {
@@ -58,6 +59,7 @@ class Converter2 extends Converter {
         try {
             String cmd = mCommand.toString();
             LogUtil.i(TAG, "cmd: " + cmd);
+            LogUtil.i(TAG, "Converter2 exec start time: " + System.currentTimeMillis());
             mFFmpeg.execute(cmd, mHandler);
         } catch (FFmpegCommandAlreadyRunningException e) {
             e.printStackTrace();

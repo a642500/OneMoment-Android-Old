@@ -436,11 +436,13 @@ public class RecordingActivity extends Activity {
             @Override
             public void onStart() {
                 LogUtil.i(TAG, "start");
+                LogUtil.i(TAG, "Converter2 onStart time: " + System.currentTimeMillis());
 
             }
 
             @Override
             public void onFinish() {
+                LogUtil.i(TAG, "Converter2 onFinish time: " + System.currentTimeMillis());
                 LogUtil.i(TAG, "finish");
                 onConvert(0, from, to);
             }

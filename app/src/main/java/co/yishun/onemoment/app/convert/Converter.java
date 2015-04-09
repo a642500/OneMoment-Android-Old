@@ -65,15 +65,18 @@ public abstract class Converter {
         mCommand.append(" -vf");
         mCommand.append(" crop='if(gt(iw,ih),ih,iw)':'if(gt(iw,ih),ih,iw)',scale=480:480");
         mCommand.append(" -r 30");//fps
-        mCommand.append(" -b:v 4M");//bitrate
+        mCommand.append(" -b:v 1M");//bitrate
 
 
         mCommand.append(" -aspect 1");//ratio
         mCommand.append(" -vcodec h264");
-        mCommand.append(" -b:a 128k");
+        mCommand.append(" -b:a 96k");
 
         mCommand.append(" -y");//overwrite output files
         mCommand.append(" -t 1.2");// set the recording time
+        mCommand.append(" -preset ultrafast");
+        mCommand.append(" -threads 5");
+        mCommand.append(" -cpu-used 16");
 
         mCommand.append(" -strict");
         mCommand.append(" -2");
