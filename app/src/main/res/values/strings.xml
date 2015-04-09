@@ -2,7 +2,7 @@
     <string name="app_name">One Moment</string>
     <string name="appVersion" translatable="false">1.0</string>
 
-    <string-array name="jazzy_effects">
+    <string-array name="jazzy_effects" translatable="false">
         <item>Standard</item>
         <item>Tablet</item>
         <item>CubeIn</item>
