@@ -27,6 +27,9 @@ public class Config {
     public static final String TIME_FORMAT = "yyyyMMdd";
     public static final String PREFERENCE = "preferences";
     public static final String PREFERENCE_IS_FIRST_LAUNCH = "is_first_launch";
+
+    public static final String URL_SHARE_LONG_VIDEO = "http://yishun.co/share_long?account_id=";
+
     private final static String URL_MAIN = "http://test.yishun.co";
     private final static String URL_SIGN_UP_BY_PHONE = "/api/v2/signup";
     private final static String URL_SIGN_UP_BY_WEIBO = "/api/v2/weibo_signup";

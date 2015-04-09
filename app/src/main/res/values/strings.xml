@@ -188,4 +188,6 @@
 
     <string name="multiPlayShareBtn">Share</string>
     <string name="multiPlayShareText">One Moment.Every life is a movie, this is my life, how is yours?</string>
+    <string name="multiPlayShareLoginAlert">Sorry, you must login first!</string>
+    <string name="multiPlayShareFail">Upload video failed, unable to share.</string>
 </resources>
