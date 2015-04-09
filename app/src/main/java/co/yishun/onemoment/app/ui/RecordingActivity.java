@@ -313,8 +313,45 @@ public class RecordingActivity extends Activity {
     @SupposeBackground
     void prepare() {
         Camera.Parameters parameters = mCamera.getParameters();
-        Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(parameters.getSupportedVideoSizes(), 480, 480);
-        CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+        List<Camera.Size> sizeList = parameters.getSupportedVideoSizes();
+        if (sizeList == null) sizeList = parameters.getSupportedPreviewSizes();
+        Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(sizeList, 480, 480);
+        CamcorderProfile profile = null;
+        int[] allProfiles = {
+                CamcorderProfile.QUALITY_HIGH_SPEED_480P,
+                CamcorderProfile.QUALITY_480P,
+                CamcorderProfile.QUALITY_TIME_LAPSE_480P,
+
+                CamcorderProfile.QUALITY_HIGH_SPEED_720P,
+                CamcorderProfile.QUALITY_720P,
+                CamcorderProfile.QUALITY_TIME_LAPSE_720P,
+                CamcorderProfile.QUALITY_LOW,
+                CamcorderProfile.QUALITY_HIGH_SPEED_LOW,
+                CamcorderProfile.QUALITY_TIME_LAPSE_LOW,
+                CamcorderProfile.QUALITY_QCIF,
+                CamcorderProfile.QUALITY_TIME_LAPSE_QCIF,
+                CamcorderProfile.QUALITY_CIF,
+                CamcorderProfile.QUALITY_TIME_LAPSE_CIF,
+
+                CamcorderProfile.QUALITY_HIGH_SPEED_HIGH,
+                CamcorderProfile.QUALITY_HIGH,
+                CamcorderProfile.QUALITY_TIME_LAPSE_HIGH,
+                CamcorderProfile.QUALITY_HIGH_SPEED_1080P,
+                CamcorderProfile.QUALITY_1080P,
+                CamcorderProfile.QUALITY_TIME_LAPSE_1080P,
+                CamcorderProfile.QUALITY_HIGH_SPEED_2160P,
+                CamcorderProfile.QUALITY_2160P,
+                CamcorderProfile.QUALITY_TIME_LAPSE_2160P
+
+        };
+        for (int oneProfile : allProfiles) {
+            if (CamcorderProfile.hasProfile(oneProfile)) {
+                profile = CamcorderProfile.get(oneProfile);
+                break;
+            }
+        }
+        if (profile == null) throw new IllegalArgumentException("no profile at all!!");
+
         profile.videoFrameWidth = optimalVideoSize.width;
         profile.videoFrameHeight = optimalVideoSize.height;
         profile.videoFrameRate = 30;
