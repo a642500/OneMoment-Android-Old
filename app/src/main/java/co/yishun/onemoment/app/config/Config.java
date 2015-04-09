@@ -14,7 +14,7 @@ public class Config {
     public static final String VIDEO_FILE_SUFFIX = ".mp4";
     public static final String THUMB_FILE_SUFFIX = ".png";
     public static final String URL_HYPHEN = "-";
-    public static final String LONG_VIDEO_PREFIX = "long";
+    public static final String LONG_VIDEO_PREFIX = "long-";
     public static final String PROFILE_PREFIX = "avatar-";
     public static final String PROFILE_SUFFIX = ".png";
     public static final String AES_KEY = "QJBBNfrwp2oN4ZBwT9qZ4MGObN8y56bEydJj48L8xVs=";
@@ -30,7 +30,7 @@ public class Config {
 
     public static final String URL_SHARE_LONG_VIDEO = "http://yishun.co/share_long?account_id=";
 
-    private final static String URL_MAIN = "http://test.yishun.co";
+    private final static String URL_MAIN = "http://yishun.co";
     private final static String URL_SIGN_UP_BY_PHONE = "/api/v2/signup";
     private final static String URL_SIGN_UP_BY_WEIBO = "/api/v2/weibo_signup";
     private final static String URL_SIGN_UP_BY_WECHAT = "/api/v2/weixin_signup";
