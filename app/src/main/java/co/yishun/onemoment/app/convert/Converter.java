@@ -45,6 +45,12 @@ public abstract class Converter {
         return this;
     }
 
+    public Converter merge(@NonNull final String inputFileList) {
+        mCommand.append(" -f concat -i ");
+        mCommand.append(inputFileList);
+        return this;
+    }
+
     /**
      * set output file arg, you can only set one output file arg.
      *
@@ -64,6 +70,7 @@ public abstract class Converter {
     public Converter cropToStandard() {
         mCommand.append(" -vf");
         mCommand.append(" crop='if(gt(iw,ih),ih,iw)':'if(gt(iw,ih),ih,iw)',scale=480:480");
+        mCommand.append(" -t 1.2");// set the recording time
         return this;
     }
 
@@ -89,7 +96,6 @@ public abstract class Converter {
         mCommand.append(" -vcodec h264");
         mCommand.append(" -b:a 96k");
         mCommand.append(" -y");//overwrite output files
-        mCommand.append(" -t 1.2");// set the recording time
         mCommand.append(" -preset ultrafast");
         mCommand.append(" -threads 5");
         mCommand.append(" -strict");
