@@ -48,6 +48,7 @@ public abstract class Converter {
     public Converter merge(@NonNull final String inputFileList) {
         mCommand.append(" -f concat -i ");
         mCommand.append(inputFileList);
+        mCommand.append(" -vf transpose=1");
         return this;
     }
 
