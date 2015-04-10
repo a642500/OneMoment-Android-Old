@@ -1,11 +1,11 @@
 package co.yishun.onemoment.app.ui;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.umeng.analytics.MobclickAgent;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 
@@ -16,6 +16,18 @@ import org.androidannotations.annotations.UiThread;
 public class BaseActivity extends ActionBarActivity {
 
     private MaterialDialog mProgressDialog;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     @UiThread
     public void showNotification(String text) {

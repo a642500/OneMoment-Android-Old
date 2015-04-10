@@ -32,6 +32,7 @@ import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.dao.Dao;
+import com.umeng.analytics.MobclickAgent;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
@@ -209,6 +210,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         checkFlashLightAvailability();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         if (!isAskForResult) {
@@ -220,6 +222,7 @@ public class RecordingActivity extends Activity {
     protected void onPause() {
         LogUtil.d(TAG, "onPause start: " + System.currentTimeMillis());
         super.onPause();
+        MobclickAgent.onPause(this);
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event

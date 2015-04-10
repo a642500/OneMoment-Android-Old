@@ -17,8 +17,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
@@ -164,6 +166,15 @@
                   android:windowSoftInputMode="adjustResize"
                   android:exported="false" >
         </activity>
+
+        <meta-data
+                android:name="UMENG_APPKEY"
+                android:value="549e2c80fd98c5e4cf000f64"
+                />
+        <meta-data
+                android:name="UMENG_CHANNEL"
+                android:value="QQ Test Group"
+                />
     </application>
 
 </manifest>
