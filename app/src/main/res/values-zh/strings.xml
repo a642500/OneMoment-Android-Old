@@ -143,7 +143,7 @@
     <string name="weiboBindCancel">取消绑定</string>
     <string name="weiboBindFail">绑定失败</string>
     <string name="weiboBindSuccess">绑定成功</string>
-    <string name="syncSettingsSyncAuto">自动tongbu</string>
+    <string name="syncSettingsSyncAuto">自动同步</string>
     <string name="syncSettingsSyncNow">立即同步</string>
     <string name="syncSettingsSyncWifi">仅在WiFi下自动同步</string>
     <string name="syncSettingsSyncNowToast">正在同步…</string>
