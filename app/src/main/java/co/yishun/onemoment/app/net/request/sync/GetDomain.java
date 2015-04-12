@@ -26,27 +26,28 @@ public class GetDomain extends Request<GetDomain.DomainResult> {
 
     @Override
     public void setCallback(FutureCallback<DomainResult> callback) {
-        check();
-        if (builder != null && callback != null) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(getUrl() + "?key=" + key)
-                        .get().build();
-                Response response = client.newCall(request).execute();
+        check(callback);
+        try {
+            OkHttpClient client = new OkHttpClient();
+            com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(getUrl() + "?key=" + key)
+                    .get().build();
+            Response response = client.newCall(request).execute();
 
-                callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), DomainResult.class));
-            } catch (IOException e) {
-                callback.onCompleted(e, null);
-            }
+            callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), DomainResult.class));
+        } catch (IOException e) {
+            callback.onCompleted(e, null);
         }
     }
 
     @Override
-    protected void check() {
-        if (builder==null) throw new IllegalStateException("you need call with() method first");
-        //do nothing
+    protected void check(FutureCallback<DomainResult> callback) {
+        if (builder == null) {
+            throw new IllegalStateException("null builder");
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("null callback");
+        }
     }
-
 
     public static class DomainResult implements Serializable {
         private int code;

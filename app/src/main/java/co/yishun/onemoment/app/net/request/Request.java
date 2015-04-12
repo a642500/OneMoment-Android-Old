@@ -42,6 +42,6 @@ public abstract class Request<R> {
 
     public abstract void setCallback(final FutureCallback<R> callback);
 
-    abstract protected void check();
+    abstract protected void check(final FutureCallback<R> callback);
 
 }

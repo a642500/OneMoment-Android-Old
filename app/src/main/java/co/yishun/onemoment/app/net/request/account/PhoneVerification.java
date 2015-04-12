@@ -28,23 +28,27 @@ public abstract class PhoneVerification {
 
         @Override
         public void setCallback(FutureCallback<VerificationResult> callback) {
-            check();
-            if (callback != null) {
-                try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key)
-                            .setBodyParameter("phone", phone)
-                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+            check(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("phone", phone)
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
         }
 
         @Override
-        protected void check() {
+        protected void check(FutureCallback<VerificationResult> callback) {
             if (phone == null) {
-                throw new IllegalStateException("phone is null!");
+                throw new IllegalArgumentException("phone is null!");
+            }
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
             }
         }
            /*
@@ -110,25 +114,28 @@ public abstract class PhoneVerification {
 
         @Override
         public void setCallback(FutureCallback<VerificationResult> callback) {
-            check();
-            if (callback != null) {
-                try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key)
-                            .setBodyParameter("phone", phone)
-                            .setBodyParameter("verify_code", verifyCode)
-                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+            check(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("phone", phone)
+                        .setBodyParameter("verify_code", verifyCode)
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), VerificationResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
         }
 
         @Override
-        protected void check() {
-            if (verifyCode == null || phone == null) {
-                throw new IllegalStateException("error data request");
+        protected void check(FutureCallback<VerificationResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
             }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
+            if (phone == null) throw new IllegalStateException("null phone");
+            if (verifyCode == null) throw new IllegalStateException("null verify code");
         }
     }
 }

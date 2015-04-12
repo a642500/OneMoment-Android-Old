@@ -35,28 +35,31 @@ public abstract class IdentityInfo {
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
-            check();
-            if (builder != null && callback != null) {
-                OkHttpClient client = new OkHttpClient();
-                com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
-                        .url(getUrl() + "?key=" + key).get().build();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(com.squareup.okhttp.Request request, IOException e) {
-                        callback.onCompleted(e, null);
-                    }
+            check(callback);
+            OkHttpClient client = new OkHttpClient();
+            com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                    .url(getUrl() + "?key=" + key).get().build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(com.squareup.okhttp.Request request, IOException e) {
+                    callback.onCompleted(e, null);
+                }
 
-                    @Override
-                    public void onResponse(Response response) throws IOException {
-                        callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), AccountResult.class));
-                    }
-                });
-            }
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), AccountResult.class));
+                }
+            });
         }
 
         @Override
-        protected void check() {
-            //do nothing
+        protected void check(final FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
         }
     /*
 
@@ -115,27 +118,30 @@ public abstract class IdentityInfo {
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
-            check();
-            if (callback != null && builder != null) {
-                try {
-                    Builders.Any.U u = builder.load(getUrl()).setBodyParameter("key", key);
-                    if (nickname != null) u.setBodyParameter("nickname", nickname);
-                    if (introduction != null) u.setBodyParameter("introduction", introduction);
-                    if (gender != null) u.setBodyParameter("gender", gender);
-                    if (avatarUrl != null) u.setBodyParameter("avatar_url", avatarUrl);
-                    if (location != null) u.setBodyParameter("location", location);
-                    if (mValue != null && mKey != null) u.setBodyParameter(mKey, mValue);
-                    u.asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+            check(callback);
+            try {
+                Builders.Any.U u = builder.load(getUrl()).setBodyParameter("key", key);
+                if (nickname != null) u.setBodyParameter("nickname", nickname);
+                if (introduction != null) u.setBodyParameter("introduction", introduction);
+                if (gender != null) u.setBodyParameter("gender", gender);
+                if (avatarUrl != null) u.setBodyParameter("avatar_url", avatarUrl);
+                if (location != null) u.setBodyParameter("location", location);
+                if (mValue != null && mKey != null) u.setBodyParameter(mKey, mValue);
+                u.asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
         }
 
 
         @Override
-        protected void check() {
-            //do nothing
+        protected void check(final FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
         }
     /*
 

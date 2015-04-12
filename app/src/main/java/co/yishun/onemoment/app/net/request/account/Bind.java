@@ -38,8 +38,7 @@ public class Bind {
 
         @Override
         public void setCallback(FutureCallback<AccountResult> callback) {
-            check();
-            if (callback == null) throw new IllegalStateException("null callback");
+            check(callback);
             try {
                 builder.load(getUrl()).setBodyParameter("key", key).setBodyParameter("weibo_uid", uid)
                         .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
@@ -49,8 +48,13 @@ public class Bind {
         }
 
         @Override
-        protected void check() {
-            if (builder == null) throw new IllegalStateException("null builder!");
+        protected void check(FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
             if (uid == null) throw new IllegalStateException("null uid");
         }
     }

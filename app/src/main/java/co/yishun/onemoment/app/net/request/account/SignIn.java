@@ -37,23 +37,27 @@ public class SignIn extends Request<AccountResult> {
 
     @Override
     public void setCallback(final FutureCallback<AccountResult> callback) {
-        check();
-        if (builder != null && callback != null) {
-            try {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("phone", phone)
-                        .setBodyParameter("password", password)
-                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            LogUtil.i(TAG, "load sign in");
+        check(callback);
+        try {
+            builder.load(getUrl())
+                    .setBodyParameter("key", key)
+                    .setBodyParameter("phone", phone)
+                    .setBodyParameter("password", password)
+                    .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
+        LogUtil.i(TAG, "load sign in");
     }
 
     @Override
-    protected void check() {
+    protected void check(FutureCallback<AccountResult> callback) {
+        if (builder == null) {
+            throw new IllegalStateException("null builder");
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("null callback");
+        }
         LogUtil.privateLog(TAG, "Check(): " + this.toString());
         if (!(AccountHelper.isValidPhoneNum(phone)
                 && AccountHelper.isValidPassword(password)

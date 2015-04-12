@@ -28,22 +28,26 @@ public class CheckNickName extends Request<NickNameResult> {
 
     @Override
     public void setCallback(FutureCallback<NickNameResult> callback) {
-        check();
-        if (builder != null && callback != null) {
-            try {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("nickname", nickname).asString().setCallback((e, result) ->
-                                callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), NickNameResult.class))
-                ).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+        check(callback);
+        try {
+            builder.load(getUrl())
+                    .setBodyParameter("key", key)
+                    .setBodyParameter("nickname", nickname).asString().setCallback((e, result) ->
+                            callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), NickNameResult.class))
+            ).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    protected void check() {
+    protected void check(FutureCallback<NickNameResult> callback) {
+        if (builder == null) {
+            throw new IllegalStateException("null builder");
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("null callback");
+        }
         if (nickname == null || TextUtils.isEmpty(nickname)) {
             throw new IllegalStateException("error nick name");
         }

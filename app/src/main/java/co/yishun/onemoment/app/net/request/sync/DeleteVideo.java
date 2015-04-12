@@ -28,23 +28,27 @@ public class DeleteVideo extends Request<DeleteVideo.DeleteResult> {
 
     @Override
     public void setCallback(FutureCallback<DeleteResult> callback) {
-        check();
-        if (builder != null && callback != null) {
-            try {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("filename", fileName)
-                        .asString()
-                        .setCallback((e, result) ->
-                                callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), DeleteResult.class))).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+        check(callback);
+        try {
+            builder.load(getUrl())
+                    .setBodyParameter("key", key)
+                    .setBodyParameter("filename", fileName)
+                    .asString()
+                    .setCallback((e, result) ->
+                            callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), DeleteResult.class))).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    protected void check() {
+    protected void check(FutureCallback<DeleteResult> callback) {
+        if (builder == null) {
+            throw new IllegalStateException("null builder");
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("null callback");
+        }
         if (fileName == null) {
             throw new IllegalStateException("null file name");
         }

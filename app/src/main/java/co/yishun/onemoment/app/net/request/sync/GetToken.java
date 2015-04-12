@@ -31,24 +31,28 @@ public class GetToken extends Request<GetToken.TokenResult> {
 
     @Override
     public void setCallback(final FutureCallback<TokenResult> callback) {
-        check();
-        if (builder != null && callback != null) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(getUrl() + "?key=" + key + "&filename=" + fileName)
-                        .get().build();
-                Response response = client.newCall(request).execute();
+        check(callback);
+        try {
+            OkHttpClient client = new OkHttpClient();
+            com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(getUrl() + "?key=" + key + "&filename=" + fileName)
+                    .get().build();
+            Response response = client.newCall(request).execute();
 
-                callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), TokenResult.class));
+            callback.onCompleted(null, new Gson().fromJson(DecodeUtil.decode(response.body().string()), TokenResult.class));
 //    GET /api/v2/upload_token?key=<key>&filename=<filename>
-            } catch (IOException e) {
-                callback.onCompleted(e, null);
-            }
+        } catch (IOException e) {
+            callback.onCompleted(e, null);
         }
     }
 
     @Override
-    protected void check() {
+    protected void check(FutureCallback<TokenResult> callback) {
+        if (builder == null) {
+            throw new IllegalStateException("null builder");
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("null callback");
+        }
         if (fileName == null) {
             throw new IllegalStateException("null file name");
         }

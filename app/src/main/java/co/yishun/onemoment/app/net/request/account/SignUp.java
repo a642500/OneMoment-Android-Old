@@ -49,16 +49,6 @@ public abstract class SignUp {
         }
 
         @Override
-        protected void check() {
-            LogUtil.privateLog(TAG, "Check(): " + this.toString());
-            if (!(AccountHelper.isValidPhoneNum(String.valueOf(phone))
-                    && AccountHelper.isValidPassword(password)
-            )) {
-                throw new IllegalStateException("A request with error data");
-            }
-        }
-
-        @Override
         public String toString() {
             return "SignUp ByPhone | " + "phone: " + phone + " password: " + password;
         }
@@ -71,18 +61,31 @@ public abstract class SignUp {
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
-            check();
-            if (callback != null && builder != null) {
-                try {
-                    builder.load(getUrl())
-                            .setBodyParameter("key", key)
-                            .setBodyParameter("phone", String.valueOf(phone))
-                            .setBodyParameter("password", password)
-                            .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+            check(callback);
+            try {
+                builder.load(getUrl())
+                        .setBodyParameter("key", key)
+                        .setBodyParameter("phone", String.valueOf(phone))
+                        .setBodyParameter("password", password)
+                        .asString().setCallback((e, result) -> callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), AccountResult.class))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
 
+        @Override
+        protected void check(FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
+            LogUtil.privateLog(TAG, "Check(): " + this.toString());
+            if (!(AccountHelper.isValidPhoneNum(String.valueOf(phone))
+                    && AccountHelper.isValidPassword(password)
+            )) {
+                throw new IllegalStateException("A request with error data");
             }
         }
 
@@ -134,8 +137,7 @@ public abstract class SignUp {
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
-            check();
-            if (callback == null) throw new IllegalStateException("A request with null callback");
+            check(callback);
             try {
                 builder.load(getUrl())
                         .setBodyParameter("key", key)
@@ -152,6 +154,17 @@ public abstract class SignUp {
         }
 
         @Override
+        protected void check(FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
+            }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
+            LogUtil.privateLog(TAG, "Check(): " + this.toString());
+        }
+
+        @Override
         public String toString() {
             return "SignUp ByWeibo |"
                     + " uid: " + uid
@@ -161,13 +174,6 @@ public abstract class SignUp {
                     + " avatar_url: " + avatarUrl
                     + " location: " + location
                     ;
-        }
-
-        @Override
-        protected void check() {
-            LogUtil.privateLog(TAG, "Check(): " + this.toString());
-//            if (uid == null) {
-            if (builder == null) throw new IllegalStateException("A request with no context");
         }
     }
 
@@ -231,19 +237,27 @@ public abstract class SignUp {
 
         @Override
         public void setCallback(final FutureCallback<AccountResult> callback) {
-            check();
-            if (callback != null && builder != null) {
-                builder.load(getUrl())
-                        .setBodyParameter("key", key)
-                        .setBodyParameter("uid", String.valueOf(uid))
-                        .setBodyParameter("nickname", nickname)
-                        .setBodyParameter("introduction", introduction)
-                        .setBodyParameter("gender", gender)
-                        .setBodyParameter("avatar_url", avatarUrl)
-                        .setBodyParameter("location", location)
-                        .as(AccountResult.class).setCallback(callback);
+            check(callback);
+            builder.load(getUrl())
+                    .setBodyParameter("key", key)
+                    .setBodyParameter("uid", String.valueOf(uid))
+                    .setBodyParameter("nickname", nickname)
+                    .setBodyParameter("introduction", introduction)
+                    .setBodyParameter("gender", gender)
+                    .setBodyParameter("avatar_url", avatarUrl)
+                    .setBodyParameter("location", location)
+                    .as(AccountResult.class).setCallback(callback);
+        }
 
+        @Override
+        protected void check(FutureCallback<AccountResult> callback) {
+            if (builder == null) {
+                throw new IllegalStateException("null builder");
             }
+            if (callback == null) {
+                throw new IllegalArgumentException("null callback");
+            }
+            LogUtil.privateLog(TAG, "Check(): " + this.toString());
         }
 
         @Override
@@ -258,13 +272,6 @@ public abstract class SignUp {
                     ;
         }
 
-        @Override
-        protected void check() {
-            LogUtil.privateLog(TAG, "Check(): " + this.toString());
-//            if (uid == 0) {
-//                throw new IllegalStateException("A request with error data");
-//            }
-        }
         /*
 
         POST /api/v2/weixin_signup
