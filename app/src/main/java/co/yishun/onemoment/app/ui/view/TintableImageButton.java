@@ -57,7 +57,7 @@ public class TintableImageButton extends ImageButton {
             return;
 
         int tint = mColorStateList.getColorForState(getDrawableState(), 0x00000000);
-        setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(tint, PorterDuff.Mode.SRC_IN);
     }
 
     @Override
