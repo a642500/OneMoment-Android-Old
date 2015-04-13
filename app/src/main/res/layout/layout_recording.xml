@@ -36,7 +36,7 @@
             android:orientation="vertical">
 
         <FrameLayout
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:id="@+id/recordHeader"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/fragmentRecordHeaderHeight"
@@ -68,7 +68,7 @@
                             android:src="@drawable/ic_flashlight_switch_on"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="@drawable/abc_item_background_holo_light"
+                            android:background="?android:selectableItemBackground"
                             />
 
                     <ImageButton
@@ -77,7 +77,7 @@
                             android:src="@drawable/ic_flashlight_switch_off"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="@drawable/abc_item_background_holo_light"
+                            android:background="?android:selectableItemBackground"
                             />
                 </ImageSwitcher>
 
@@ -97,7 +97,7 @@
                             android:src="@drawable/ic_camera_switch"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="@null"
+                            android:background="?android:selectableItemBackground"
                             />
 
                     <ImageButton
@@ -106,7 +106,7 @@
                             android:src="@drawable/ic_camera_switch"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="@null"
+                            android:background="?android:selectableItemBackground"
                             />
                 </ImageSwitcher>
             </RelativeLayout>
@@ -146,42 +146,56 @@
         <!--android:focusable="false"-->
         <!--android:scaleType="center"/>-->
 
-        <RelativeLayout
+
+        <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_weight="3"
-                android:id="@+id/recordBottom"
+                android:minHeight="@dimen/fragmentRecordBottomHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/fragmentRecordBottomHeight"
-                android:background="@color/bgColorRecordBottom"
-                android:paddingBottom="20dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="20dp"
                 >
+
 
             <ImageButton
                     android:id="@+id/recordVideoBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:minHeight="56dp"
                     android:minWidth="56dp"
-                    android:scaleType="fitXY"
-                    android:background="@drawable/abc_item_background_holo_light"
+                    android:scaleType="center"
+                    android:background="@null"
                     android:src="@drawable/ic_shooting"
                     />
 
-            <ImageButton
-                    android:id="@+id/albumBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_album"
-                    android:background="@drawable/abc_item_background_holo_light"
-                    />
-        </RelativeLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/recordBottom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?android:selectableItemBackground"-->
+        <!-->-->
+
+
+        <!--</RelativeLayout>-->
     </LinearLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageButton
+                android:id="@+id/albumBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_album"
+                android:background="?android:selectableItemBackground"
+                android:padding="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                />
+    </RelativeLayout>
 
     <ImageView
             android:id="@+id/welcomeOverlay"

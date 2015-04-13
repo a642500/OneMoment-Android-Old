@@ -98,4 +98,5 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:0.9.10@aar'
     compile 'com.qiniu:qiniu-android-sdk:7.0.3'
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.1.0@aar'
+    compile 'com.balysv:material-ripple:1.0.1'
 }
