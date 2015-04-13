@@ -5,44 +5,47 @@
 
     <color name="colorPrimary">#151515</color>
     <color name="colorPrimaryDark">#151515</color>
-    <color name="colorOrange">#FF853F</color>
+    <color name="colorOrange">#FD8F3E</color>
+    <color name="colorGreenBlue">#17d79e</color>
 
     <color name="colorTransparentGray">#20000000</color>
     <color name="colorTransparentGrayDark">#63000000</color>
 
-    <color name="underlineIndicatorColor">#02fba1</color>
+    <color name="underlineIndicatorColor">@color/colorGreenBlue</color>
 
     <color name="bgColorRecordHeader">#151515</color>
     <color name="bgColorRecordBottom">#151515</color>
 
     <color name="bgColorCalenderDay">#3D3D3D</color>
-    <color name="bgColorCalenderDaySelected">#FF853F</color>
-    <color name="textColorCalenderCurrentDay">#FF853F</color>
+    <color name="bgColorCalenderDaySelected">@color/colorOrange</color>
+    <color name="textColorCalenderCurrentDay">@color/colorOrange</color>
     <color name="textColorCalenderDayOfWeek">#fff</color>
-    <color name="textColorCalenderTitle">#02fba1</color>
+    <color name="textColorCalenderTitle">@color/colorGreenBlue</color>
     <color name="textColorCalenderSubtitle">#fff</color>
-    <color name="textColorCalenderTileNum">#02fba1</color>
+    <color name="textColorCalenderTileNum">@color/colorGreenBlue</color>
 
     <color name="calenderCellSelectedMaskColor">#80FF853F</color>
     <color name="calenderCellDefaultMaskColor">#80000000</color>
 
-    <color name="bgColorLoginBtn">#17d79e</color>
+    <color name="bgColorLoginBtn">@color/colorGreenBlue</color>
     <color name="bgColorLoginToolbar">#253d3d3d</color>
 
     <color name="dividerColorAlbum">#CCffffff</color>
 
-    <color name="textColorLogoColor">#FF853F</color>
-    <color name="textColorVersionColor">#02fba1</color>
-    <color name="textColorGuideOk">#02fba1</color>
+    <color name="textColorLogoColor">@color/colorOrange</color>
+    <color name="textColorVersionColor">@color/colorGreenBlue</color>
+    <color name="textColorGuideOk">@color/colorGreenBlue</color>
 
     <color name="bgLoginDialogColor">#212121</color>
-    <color name="bgLoginDialogSinaBtnColor">#FE8F3E</color>
+    <color name="bgLoginDialogSinaBtnColor">@color/colorOrange</color>
     <color name="bgLoginDialogSinaBtnColorPressed">#ff6b351c</color>
 
     <color name="bgUpdatedDialogColor">#212121</color>
 
-    <color name="bgColorNextBtn">#FE8F3E</color>
-    <color name="bgColorGetVerificationCodeBtn">#17d79e</color>
+    <color name="bgColorNextBtn">@color/colorOrange</color>
+    <color name="bgColorGetVerificationCodeBtn">@color/colorGreenBlue</color>
     <color name="bgColorNextBtnSelected">#ffc97131</color>
 
+
+    <color name="colorTinted">@color/colorOrange</color>
 </resources>
