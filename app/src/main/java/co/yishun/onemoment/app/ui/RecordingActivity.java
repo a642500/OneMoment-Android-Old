@@ -210,6 +210,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        isRecording = false;
         MobclickAgent.onResume(this);
         checkFlashLightAvailability();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
@@ -413,10 +414,10 @@ public class RecordingActivity extends Activity {
             showNotification(R.string.recordLoadCameraError);
             return;
         }
+        isRecording = true;
         prepare();
         if (prepareStatus == PREPARED) {
             mMediaRecorder.start();
-            isRecording = true;
         } else {
             releaseMediaRecorder();
         }
@@ -439,8 +440,6 @@ public class RecordingActivity extends Activity {
             // release media recorder and  camera
             releaseMediaRecorder(); // release the MediaRecorder object
             mCamera.lock();         // take camera access back from MediaRecorder
-
-            isRecording = false;
             releaseCameraBackground();
             startConvert();
         }
