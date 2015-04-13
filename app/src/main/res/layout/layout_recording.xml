@@ -63,22 +63,26 @@
                         android:paddingLeft="16dp"
                         >
 
-                    <ImageButton
+                    <co.yishun.onemoment.app.ui.view.TintableImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_flashlight_switch_on"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="?android:selectableItemBackground"
+                            android:background="@drawable/ripple_only"
+                            app:tintColorStateList="@drawable/bg_normal_color_selector"
+                            app:tintUpdateDelay="1000"
                             />
 
-                    <ImageButton
+                    <co.yishun.onemoment.app.ui.view.TintableImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_flashlight_switch_off"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="?android:selectableItemBackground"
+                            android:background="@drawable/ripple_only"
+                            app:tintColorStateList="@drawable/bg_normal_color_selector"
+                            app:tintUpdateDelay="1000"
                             />
                 </ImageSwitcher>
 
@@ -92,22 +96,25 @@
                         android:paddingRight="16dp"
                         >
 
-                    <ImageButton
+                    <co.yishun.onemoment.app.ui.view.TintableImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_camera_switch"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="?android:selectableItemBackground"
-                            />
+                            android:background="@drawable/ripple_only"
+                            app:tintColorStateList="@drawable/bg_normal_color_selector"
+                            app:tintUpdateDelay="1000"                            />
 
-                    <ImageButton
+                    <co.yishun.onemoment.app.ui.view.TintableImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_camera_switch"
                             android:scaleType="centerInside"
                             android:layout_gravity="center"
-                            android:background="?android:selectableItemBackground"
+                            android:background="@drawable/ripple_only"
+                            app:tintColorStateList="@drawable/bg_normal_color_selector"
+                            app:tintUpdateDelay="1000"
                             />
                 </ImageSwitcher>
             </RelativeLayout>
@@ -190,12 +197,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_album"
-                android:background="@null"
                 android:padding="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:background="@drawable/ripple_only"
                 app:tintColorStateList="@drawable/bg_normal_color_selector"
                 app:tintUpdateDelay="1000"
                 />
