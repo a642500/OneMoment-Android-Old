@@ -176,6 +176,7 @@
     <string name="dayOfWeekSat">Saturday</string>
 
     <string name="guideTitle">Help</string>
+    <string name="guideBtnText">Start</string>
 
     <string name="syncSettingsTitle">Sync Settings</string>
     <string name="syncSettingsSyncAuto">Auto Sync</string>

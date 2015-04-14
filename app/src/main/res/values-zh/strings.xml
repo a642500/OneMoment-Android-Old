@@ -150,4 +150,5 @@
     <string name="multiPlayShareText">一瞬——每个人的生活都是一部电影，这是我的生活，你的呢？</string>
     <string name="multiPlayShareFail">上传视频失败，无法分享</string>
     <string name="multiPlayShareLoginAlert">很抱歉，您必须先登录</string>
+    <string name="guideBtnText">开启一瞬</string>
 </resources>
