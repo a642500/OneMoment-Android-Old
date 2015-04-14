@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="16dp"
-                android:background="@color/colorTransparentGray"
+                android:background="?android:selectableItemBackground"
                 >
 
 
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:background="@color/colorTransparentGray"
+                android:background="?android:selectableItemBackground"
                 >
 
 
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:background="@color/colorTransparentGray"
+                android:background="?android:selectableItemBackground"
                 >
 
 
@@ -170,7 +170,7 @@
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorTransparentGray"
+                android:background="?android:selectableItemBackground"
                 android:paddingRight="16dp"
                 >
 
@@ -217,7 +217,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:background="@color/colorTransparentGray"
+                android:background="?android:selectableItemBackground"
                 >
 
 
@@ -261,7 +261,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_orange_btn"
+                android:background="@drawable/bg_orange_no_radius_btn"
                 android:text="@string/identityInfoLogout"
                 />
     </LinearLayout>
