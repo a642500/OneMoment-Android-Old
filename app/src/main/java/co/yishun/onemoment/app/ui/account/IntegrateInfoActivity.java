@@ -22,6 +22,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.qiniu.android.storage.UploadManager;
 import com.soundcloud.android.crop.Crop;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.res.StringArrayRes;
@@ -249,14 +250,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         } else croppedProfileUri = null;
     }
 
-    @Background
-    void uploadProfile(Uri uri) {
-
-
-    }
-
     @UiThread
     void setProfileImage(Uri uri) {
-        Picasso.with(this).load(uri).into(profileImageView);
+//        if (needInvalidate) {
+//            Picasso.with(this).invalidate(uri);
+//            Picasso.with(this).load(uri).into(profileImageView);
+//        } else {
+//            needInvalidate = true;
+//        }
+        Picasso.with(this).load(uri).memoryPolicy(MemoryPolicy.NO_STORE).memoryPolicy(MemoryPolicy.NO_CACHE).into(profileImageView);
     }
 }
