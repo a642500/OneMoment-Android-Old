@@ -58,7 +58,7 @@
     <!--android:paddingRight="16dp"-->
     <!--android:paddingTop="20dp"-->
     <!-->-->
-    <LinearLayout
+    <com.balysv.materialripple.MaterialRippleLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -73,12 +73,12 @@
                 android:minHeight="64dp"
                 android:minWidth="64dp"
                 android:scaleType="fitXY"
-                android:background="?android:selectableItemBackground"
+                android:background="@null"
                 android:drawableTop="@drawable/ic_share"
                 android:text="@string/multiPlayShareBtn"
                 android:textColor="@android:color/white"
                 />
 
-    </LinearLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
 
 </LinearLayout>
