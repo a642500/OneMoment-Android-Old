@@ -48,6 +48,7 @@
                 android:text="@string/signUpGetVerificationCode"
                 android:textColor="@color/bgColorGetVerificationCodeBtn"
                 android:background="@drawable/bg_square_greenblue_btn"
+                android:layout_marginTop="16dp"
                 />
 
         <Button
