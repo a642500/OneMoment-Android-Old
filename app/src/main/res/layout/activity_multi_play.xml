@@ -73,7 +73,7 @@
                 android:minHeight="64dp"
                 android:minWidth="64dp"
                 android:scaleType="fitXY"
-                android:background="@drawable/abc_item_background_holo_light"
+                android:background="?android:selectableItemBackground"
                 android:drawableTop="@drawable/ic_share"
                 android:text="@string/multiPlayShareBtn"
                 android:textColor="@android:color/white"

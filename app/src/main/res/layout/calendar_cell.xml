@@ -4,7 +4,7 @@
              android:layout_width="48dp"
              android:layout_height="48dp"
              android:padding="2dp"
-             android:background="@drawable/abc_item_background_holo_light"
+             android:background="?android:selectableItemBackground"
         >
 
     <ImageView

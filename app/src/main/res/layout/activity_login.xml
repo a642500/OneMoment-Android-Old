@@ -54,6 +54,7 @@
                 android:minHeight="48dp"
                 android:text="@string/loginSignInBtnString"
                 android:background="@drawable/bg_greenblue_btn"
+                android:layout_marginTop="16dp"
                 />
 
 
@@ -66,6 +67,6 @@
             android:minHeight="56dp"
             android:layout_alignParentBottom="true"
             android:text="@string/loginForgetBtnString"
-            android:background="@drawable/abc_item_background_holo_light"
+            android:background="?android:selectableItemBackground"
             />
 </RelativeLayout>
