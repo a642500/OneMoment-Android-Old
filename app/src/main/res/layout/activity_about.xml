@@ -74,7 +74,7 @@
             android:minHeight="56dp"
             android:text="@string/aboutCheckNew"
             android:visibility="invisible"
-            android:background="@drawable/bg_square_frame"
+            android:background="@drawable/bg_square_btn"
             />
 
     <Button
@@ -86,7 +86,7 @@
             android:layout_marginRight="16dp"
             android:minHeight="56dp"
             android:text="@string/aboutRecommend"
-            android:background="@drawable/bg_square_frame"
+            android:background="@drawable/bg_square_btn"
             />
 
 
