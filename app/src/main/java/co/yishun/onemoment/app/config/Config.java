@@ -48,7 +48,6 @@ public class Config {
 
 
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
-    private static final int FFMPEG_RAW_ID = R.raw.ffmpeg;
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
 
     public static String getUrlDomain() {
@@ -118,10 +117,6 @@ public class Config {
 
     public static Pair<Integer, Integer> getDefaultCameraSize() {
         return mCameraSize;
-    }
-
-    public static int getFfmpegRawId() {
-        return FFMPEG_RAW_ID;
     }
 
     private static String mResourceDomain = null;
