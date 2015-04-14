@@ -50,7 +50,7 @@
             android:paddingLeft="32dp"
             android:paddingRight="16dp"
             android:text="@string/loginDialogEntryByPhone"
-            android:background="@drawable/bg_normal_btn"
+            android:background="?android:selectableItemBackground"
             android:drawableRight="@drawable/ic_right"
             android:drawablePadding="16dp"
             />

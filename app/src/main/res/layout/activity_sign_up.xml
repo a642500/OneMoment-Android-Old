@@ -70,6 +70,6 @@
             android:minHeight="56dp"
             android:layout_alignParentBottom="true"
             android:text="@string/signUpLoginEntry"
-            android:background="@drawable/bg_normal_btn"
+            android:background="?android:selectableItemBackground"
             />
 </RelativeLayout>
