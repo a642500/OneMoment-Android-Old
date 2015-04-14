@@ -47,7 +47,7 @@
                 android:minHeight="48dp"
                 android:text="@string/signUpGetVerificationCode"
                 android:textColor="@color/bgColorGetVerificationCodeBtn"
-                android:background="@drawable/bg_square_frame_green"
+                android:background="@drawable/bg_square_greenblue_btn"
                 />
 
         <Button

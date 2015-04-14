@@ -23,7 +23,7 @@
             android:layout_marginBottom="64dp"
             android:id="@+id/okBtn"
             android:textColor="@color/textColorGuideOk"
-            android:background="@drawable/bg_square_frame_green"
+            android:background="@drawable/bg_square_greenblue_btn"
             />
 
 </RelativeLayout>
