@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:text="@string/loginSignInBtnString"
-                android:background="@color/bgColorLoginBtn"
+                android:background="@drawable/bg_greenblue_btn"
                 />
 
 

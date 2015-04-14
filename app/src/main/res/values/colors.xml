@@ -6,7 +6,9 @@
     <color name="colorPrimary">#151515</color>
     <color name="colorPrimaryDark">#151515</color>
     <color name="colorOrange">#FD8F3E</color>
+    <color name="colorOrangeDark">#ffc97131</color>
     <color name="colorGreenBlue">#17d79e</color>
+    <color name="colorGreenBlueDark">#ff17936a</color>
     <color name="colorGray">#b0b0b0</color>
     <color name="colorGrayDim">#415a5a5a</color>
 
