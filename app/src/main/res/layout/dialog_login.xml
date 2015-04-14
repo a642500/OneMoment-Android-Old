@@ -29,7 +29,7 @@
             android:text="@string/loginDialogByWeibo"
             android:drawableLeft="@drawable/ic_weibo"
             android:drawablePadding="5dp"
-            android:background="@drawable/bg_login_sina"
+            android:background="@drawable/bg_orange_btn"
             android:paddingLeft="32dp"
             android:layout_marginLeft="16dp"
             android:paddingRight="32dp"
