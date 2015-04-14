@@ -5,7 +5,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@drawable/bg_main</item>
-        <item name="android:selectableItemBackground">@drawable/bg_normal_btn</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

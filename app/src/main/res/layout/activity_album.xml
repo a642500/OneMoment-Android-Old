@@ -37,7 +37,7 @@
                 android:orientation="vertical"
                 android:paddingBottom="8dp"
                 android:gravity="center_horizontal"
-                android:background="@drawable/abc_item_background_holo_light"
+                android:background="?android:selectableItemBackground"
                 >
 
             <TextView
@@ -125,7 +125,7 @@
                     android:src="@drawable/ic_left"
                     android:paddingRight="16dp"
                     android:paddingLeft="16dp"
-                    android:background="@drawable/abc_item_background_holo_light"
+                    android:background="?android:selectableItemBackground"
                     android:layout_gravity="center"
                     />
 
@@ -146,7 +146,7 @@
                     android:paddingRight="16dp"
                     android:paddingLeft="16dp"
                     android:src="@drawable/ic_right"
-                    android:background="@drawable/abc_item_background_holo_light"
+                    android:background="?android:selectableItemBackground"
                     android:layout_gravity="center"
                     />
         </LinearLayout>
@@ -273,7 +273,7 @@
                 android:text="@string/albumShotBtnText"
                 android:id="@+id/shootingBtn"
                 android:drawableTop="@drawable/ic_shoot"
-                android:background="@drawable/abc_item_background_holo_light"
+                android:background="?android:selectableItemBackground"
                 />
 
         <Button
@@ -286,7 +286,7 @@
                 android:id="@+id/replayBtn"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/ic_replay"
-                android:background="@drawable/abc_item_background_holo_light"
+                android:background="?android:selectableItemBackground"
                 />
 
         <Button
@@ -298,7 +298,7 @@
                 android:text="@string/albumSyncBtnText"
                 android:id="@+id/syncBtn"
                 android:drawableTop="@drawable/ic_sync"
-                android:background="@drawable/abc_item_background_holo_light"
+                android:background="?android:selectableItemBackground"
                 />
     </LinearLayout>
 
