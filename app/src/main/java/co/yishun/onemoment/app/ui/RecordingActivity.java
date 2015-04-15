@@ -383,7 +383,7 @@ public class RecordingActivity extends Activity {
         // Step 4: Set output file
         mCurrentVideoPath = CameraHelper.getOutputMediaFile(this, CameraHelper.Type.RECORDED, System.currentTimeMillis()).toString();
         mMediaRecorder.setOutputFile(mCurrentVideoPath);
-        mMediaRecorder.setOrientationHint(90);
+        mMediaRecorder.setOrientationHint(CameraHelper.isFrontCamera() ? 270 : 90);
         mMediaRecorder.setMaxDuration(1200);
         mMediaRecorder.setOnInfoListener((mr, what, extra) ->
                 {
