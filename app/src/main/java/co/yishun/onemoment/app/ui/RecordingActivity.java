@@ -33,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.dao.Dao;
 import com.umeng.analytics.MobclickAgent;
+import me.toxz.circularprogressview.library.CircularProgressView;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
@@ -64,8 +65,8 @@ public class RecordingActivity extends Activity {
     @ViewById
     ImageView welcomeOverlay;
     private Camera mCamera;
-    //    @ViewById(R.id.recordVideoBtn)
-//    ImageButton captureButton;
+    @ViewById(R.id.recordVideoBtn)
+    CircularProgressView circularProgressView;
     private MediaRecorder mMediaRecorder;
     private String mCurrentVideoPath = null;
     private boolean isRecording = false;
@@ -122,14 +123,24 @@ public class RecordingActivity extends Activity {
      * stops recording, releases {@link MediaRecorder} and {@link Camera}. When not recording,
      * it prepares the {@link MediaRecorder} and starts recording.
      *
-     * @param view the view generating the event.
      */
     @Fun
-    @Click(R.id.recordVideoBtn)
-    void onCaptureClick(View view) {
-        if (!isRecording) {
-            record();
-        }
+    @AfterViews
+    void initCircularProgressView() {
+        circularProgressView.setOnStateListener(status -> {
+                    switch (status) {
+                        case START:
+                            if (!isRecording) {
+                                record();
+                                circularProgressView.setDuration(1400);
+                            }
+                            break;
+                        case END:
+                            //TODO remove video save act
+                            break;
+                    }
+                }
+        );
     }
 
     @Override
@@ -216,6 +227,7 @@ public class RecordingActivity extends Activity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         if (!isAskForResult) {
             preview();
+            circularProgressView.resetSmoothly();
         } else isAskForResult = false;
     }
 
