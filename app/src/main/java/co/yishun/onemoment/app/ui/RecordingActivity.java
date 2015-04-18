@@ -134,7 +134,7 @@ public class RecordingActivity extends Activity {
                         case START:
                             if (!isRecording) {
                                 record();
-                                circularProgressView.setDuration(1400);
+                                circularProgressView.setDuration(1200);
                             }
                             break;
                         case END:

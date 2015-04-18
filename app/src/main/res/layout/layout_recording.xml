@@ -189,6 +189,7 @@
                     app:cpv_endDrawableMargins="0dp"
                     android:layout_centerInParent="true"
                     app:cpv_strokeSize="3dp"
+                    app:cpv_clickAnimationDelayMillis="1000"
                     android:background="@null"
                     />
 
