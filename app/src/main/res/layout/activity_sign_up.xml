@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:float="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
@@ -22,23 +23,36 @@
             android:layout_below="@id/toolbar"
             >
 
-        <EditText
-                android:id="@+id/phoneEditText"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:inputType="phone"
-                android:hint="@string/signUpPhone"
-                />
+                float:fletTextAppearance="@style/FloatingTextHintStyle"
+                >
 
-        <EditText
-                android:id="@+id/verificationCodeEditText"
+            <EditText
+                    android:id="@+id/phoneEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:hint="@string/signUpPhone"
+                    />
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:inputType="number"
-                android:hint="@string/signUpVerificationCode"
-                />
+                float:fletTextAppearance="@style/FloatingTextHintStyle"
+                >
+
+
+            <EditText
+                    android:id="@+id/verificationCodeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="@string/signUpVerificationCode"
+                    />
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <Button
                 android:id="@+id/getVerificationCodeBtn"
