@@ -9,6 +9,8 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:2.5.0'
     }
 }
+
+apply plugin: 'idea'
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
@@ -16,6 +18,13 @@ apply plugin: 'com.neenbedankt.android-apt'
 repositories {
     jcenter()
 
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 android {
@@ -55,23 +64,17 @@ apt {
 
 dependencies {
     apt "org.androidannotations:androidannotations:3.2"
-
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.androidannotations:androidannotations-api:3.2'
-
     //if test code need
     androidTestApt 'org.androidannotations:androidannotations:3.2'
     androidTestCompile 'org.androidannotations:androidannotations-api:3.2'
-
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
     // Set this dependency to build and run Espresso tests
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     // Set this dependency to build and run UI Automator tests
-//    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.0.0'
 
+    //    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.0.0'
     compile 'org.androidannotations:androidannotations-api:3.2'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
@@ -99,4 +102,6 @@ dependencies {
     compile 'com.qiniu:qiniu-android-sdk:7.0.3'
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.1.0@aar'
     compile 'com.balysv:material-ripple:1.0.1'
+    compile 'me.toxz.circularprogressview:library:1.0.1'
+    //    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }
