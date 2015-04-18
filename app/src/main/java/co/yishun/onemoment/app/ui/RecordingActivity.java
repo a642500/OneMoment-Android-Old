@@ -3,11 +3,13 @@ package co.yishun.onemoment.app.ui;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -221,6 +223,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        ((AudioManager) getSystemService(Context.AUDIO_SERVICE)).setStreamMute(AudioManager.STREAM_SYSTEM, true);
         isRecording = false;
         MobclickAgent.onResume(this);
         checkFlashLightAvailability();
@@ -235,6 +238,7 @@ public class RecordingActivity extends Activity {
 
     @Override
     protected void onPause() {
+        ((AudioManager) getSystemService(Context.AUDIO_SERVICE)).setStreamMute(AudioManager.STREAM_SYSTEM, false);
         LogUtil.d(TAG, "onPause start: " + System.currentTimeMillis());
         super.onPause();
         MobclickAgent.onPause(this);
