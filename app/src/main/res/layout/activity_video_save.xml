@@ -49,11 +49,14 @@
     <!--android:paddingRight="16dp"-->
     <!--android:paddingTop="20dp"-->
     <!-->-->
-    <com.balysv.materialripple.MaterialRippleLayout
+    <com.andexert.library.RippleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:gravity="center|top"
+            app:rv_rippleDuration="200"
+            app:rv_color="@android:color/black"
+            app:rv_centered="true"
             >
 
         <Button
@@ -66,10 +69,11 @@
                 android:scaleType="fitXY"
                 android:background="@null"
                 android:drawableTop="@drawable/ic_save"
+                android:layout_centerInParent="true"
                 android:text="@string/recordEndSave"
                 android:textColor="@android:color/white"
                 />
 
-    </com.balysv.materialripple.MaterialRippleLayout>
+    </com.andexert.library.RippleView>
 
 </LinearLayout>

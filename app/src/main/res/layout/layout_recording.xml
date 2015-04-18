@@ -155,11 +155,14 @@
         <!--android:scaleType="center"/>-->
 
 
-        <com.balysv.materialripple.MaterialRippleLayout
+        <com.andexert.library.RippleView
                 android:layout_weight="3"
                 android:minHeight="@dimen/fragmentRecordBottomHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:rv_rippleDuration="200"
+                app:rv_color="@android:color/black"
+                app:rv_centered="true"
                 >
 
 
@@ -189,7 +192,7 @@
                     android:background="@null"
                     />
 
-        </com.balysv.materialripple.MaterialRippleLayout>
+        </com.andexert.library.RippleView>
 
         <!--<RelativeLayout-->
         <!--android:id="@+id/recordBottom"-->

@@ -203,7 +203,15 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         String msg = getString(R.string.multiPlayShareText);
 
         Intent sendIntent = new Intent().setAction(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, msg + url).setType("text/plain");
-        startActivity(sendIntent);
+        postStartActivity(sendIntent);
+    }
+
+    /**
+     * delay to wait animation ending.
+     */
+    @UiThread(delay = 200)
+    void postStartActivity(Intent intent) {
+        startActivity(intent);
     }
 
     private void shareFail() {

@@ -69,6 +69,14 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
     @Click
     void saveVideoBtnClicked(View view) {
         setResult(RESULT_OK, getIntent());
+        postFinish();
+    }
+
+    /**
+     * delay to wait animation ending.
+     */
+    @UiThread(delay = 200)
+    void postFinish() {
         this.finish();
     }
 }

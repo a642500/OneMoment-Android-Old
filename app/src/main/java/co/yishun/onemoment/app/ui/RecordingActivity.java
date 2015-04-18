@@ -71,6 +71,7 @@ public class RecordingActivity extends Activity {
     private String mCurrentVideoPath = null;
     private boolean isRecording = false;
     private int prepareStatus = NOT_PREPARED;
+    private boolean isJustCreated = true;
     /*
     Dialog to display convert progress.
      */
@@ -122,7 +123,6 @@ public class RecordingActivity extends Activity {
      * The capture button controls all user interaction. When recording, the button click
      * stops recording, releases {@link MediaRecorder} and {@link Camera}. When not recording,
      * it prepares the {@link MediaRecorder} and starts recording.
-     *
      */
     @Fun
     @AfterViews
@@ -227,7 +227,9 @@ public class RecordingActivity extends Activity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         if (!isAskForResult) {
             preview();
-            circularProgressView.resetSmoothly();
+            if (!isJustCreated) {
+                circularProgressView.resetSmoothly();
+            } else isJustCreated = false;
         } else isAskForResult = false;
     }
 
