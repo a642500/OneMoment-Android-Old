@@ -100,8 +100,8 @@
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-integration-1.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="material-dialogs-0.6.5.2" level="project" />
-    <orderEntry type="library" exported="" name="retrolambda-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="ormlite-android-4.48" level="project" />
+    <orderEntry type="library" exported="" name="retrolambda-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="weibosdkcore_v3.0.1" level="project" />
     <orderEntry type="library" exported="" name="FFmpegAndroid-0.2.5" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
