@@ -34,6 +34,11 @@
     <string name="loginPasswordHint">Password</string>
     <string name="loginSignInBtnString">Login</string>
     <string name="loginForgetBtnString">Forgotten? To find here ></string>
+    <string name="loginLoginFailNetwork">Login failed! Please check your network.</string>
+    <string name="loginLoginFailAccountNotExist">"Account doesn't exist!"</string>
+    <string name="loginLoginFailPasswordError">Your account or password is wrong.</string>
+    <string name="loginLoginFail">Login failed!</string>
+    <string name="loginLoginSuccess">Login success</string>
 
     <string name="action_identity">Identity</string>
     <string name="action_sync_settings">Sync Settings</string>

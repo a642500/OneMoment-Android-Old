@@ -60,22 +60,26 @@ public class LoginActivity extends ToolbarBaseActivity {
     void loginBtn(@NonNull View view) {
         if (checkPhoneNum() && checkPassword()) {
             showProgress();
-            ((SignIn) (new SignIn().with(this))).setPhone(mPhoneNum).setPassword(mPassword).setCallback((e, result) -> {
+            new SignIn().setPhone(mPhoneNum).setPassword(mPassword).with(this).setCallback((e, result) -> {
                 if (e != null) {
                     e.printStackTrace();
-                    showNotification("Login failed! Please check your network.");
+                    showNotification(R.string.loginLoginFailNetwork);
+                    AccountHelper.createAccount(this, result.getData());
+                    setResult(RESULT_OK);
+                    this.finish();
+                } else if (result.getCode() == ErrorCode.SUCCESS) {
+                    showNotification(R.string.loginLoginSuccess);
+
                 } else {
-                    switch (result.getCode()) {
-                        case ErrorCode.SUCCESS:
-                            showNotification("Login success");
-                            AccountHelper.createAccount(this, result.getData());
-                            setResult(RESULT_OK);
-                            this.finish();
-                            break;
+                    switch (result.getErrorCode()) {
                         case ErrorCode.ACCOUNT_DOESNT_EXIST:
-                            showNotification("Your account or password is wrong.");
+                            showNotification(R.string.loginLoginFailAccountNotExist);
+                            break;
+                        case ErrorCode.PASSWORD_NOT_CORRECT:
+                            showNotification(R.string.loginLoginFailPasswordError);
+                            break;
                         default:
-                            showNotification("Login failed!");
+                            showNotification(R.string.loginLoginFail);
                             break;
                     }
                 }
