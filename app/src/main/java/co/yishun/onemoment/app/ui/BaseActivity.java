@@ -1,10 +1,10 @@
 package co.yishun.onemoment.app.ui;
 
 import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
 import co.yishun.onemoment.app.R;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.nispok.snackbar.Snackbar;
 import com.umeng.analytics.MobclickAgent;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -31,7 +31,7 @@ public class BaseActivity extends ActionBarActivity {
 
     @UiThread
     public void showNotification(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        Snackbar.with(getApplicationContext()).text(text).show(this);
     }
 
     @UiThread
@@ -52,7 +52,12 @@ public class BaseActivity extends ActionBarActivity {
         mProgressDialog.hide();
     }
 
-//    @Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
 //        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);

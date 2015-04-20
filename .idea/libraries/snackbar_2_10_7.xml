@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="snackbar-2.10.7">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.nispok/snackbar/2.10.7/annotations.zip!/"/>
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.nispok/snackbar/2.10.7/classes.jar!/"/>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.nispok/snackbar/2.10.7/res"/>
+    </CLASSES>
+    <JAVADOC/>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.nispok/snackbar/2.10.7/8b9967131a203bd7ef1e800992fa27507d27a6b/snackbar-2.10.7-sources.jar!/"/>
+    </SOURCES>
+  </library>
+</component>
