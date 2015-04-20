@@ -19,7 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
             android:layout_below="@id/toolbar"
             >
 
@@ -62,7 +64,7 @@
                 android:text="@string/signUpGetVerificationCode"
                 android:textColor="@color/bgColorGetVerificationCodeBtn"
                 android:background="@drawable/bg_square_greenblue_btn"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 />
 
         <Button
@@ -71,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:text="@string/signUpNextBtn"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_orange_btn"
                 />
 
@@ -82,7 +84,7 @@
             android:id="@+id/loginEntryBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
+            android:minHeight="48dp"
             android:layout_alignParentBottom="true"
             android:text="@string/signUpLoginEntry"
             android:background="?android:selectableItemBackground"

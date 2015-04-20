@@ -2,5 +2,6 @@
 
     <style name="FloatingTextHintStyle" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/colorGreenBlue</item>
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>
