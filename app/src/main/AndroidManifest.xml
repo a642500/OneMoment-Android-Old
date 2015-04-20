@@ -68,7 +68,9 @@
         <activity
                 android:name=".ui.account.LoginActivity_"
                 android:label="@string/loginByPhoneTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar"/>
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"
+                />
 
 
         <activity
@@ -104,7 +106,9 @@
         <activity
                 android:name=".ui.account.SignUpActivity_"
                 android:label="@string/signUpTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"
+                >
         </activity>
         <activity
                 android:name=".ui.account.IntegrateInfoActivity_"
