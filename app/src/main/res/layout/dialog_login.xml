@@ -3,6 +3,7 @@
 
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,19 +23,32 @@
             android:layout_marginBottom="8dp"
             />
 
-    <Button
-            android:id="@+id/loginByWeiboBtn"
+    <com.andexert.library.RippleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loginDialogByWeibo"
-            android:drawableLeft="@drawable/ic_weibo"
-            android:drawablePadding="5dp"
-            android:background="@drawable/bg_orange_btn"
+            app:rv_color="@color/bgColorNextBtnSelected"
             android:paddingLeft="32dp"
             android:layout_marginLeft="16dp"
             android:paddingRight="32dp"
+            android:background="@color/bgColorNextBtn"
             android:layout_marginRight="16dp"
-            />
+            app:rv_rippleDuration="100"
+            app:rv_zoomDuration="100"
+            >
+
+        <Button
+                android:id="@+id/loginByWeiboBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loginDialogByWeibo"
+                android:drawableLeft="@drawable/ic_weibo"
+                android:drawablePadding="5dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:layout_centerInParent="true"
+                />
+    </com.andexert.library.RippleView>
+
 
     <TextView
             android:layout_width="wrap_content"

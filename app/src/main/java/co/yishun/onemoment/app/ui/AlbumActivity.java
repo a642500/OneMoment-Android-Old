@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -242,30 +243,25 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     public WeiboHelper showLoginDialog() {
         final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).autoDismiss(false).build();
         View view = dialog.getCustomView();
-        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> {
-            SignUpActivity_.intent(this).start();
-            dialog.dismiss();
-        });
+        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> new Handler().postDelayed(() -> SignUpActivity_.intent(this).start(), 150));
         final WeiboHelper helper = new WeiboHelper(this);
-        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> {
-            helper.login(new WeiboHelper.WeiboLoginListener() {
-                @Override
-                public void onSuccess(Oauth2AccessToken token) {
-                    signUpByWeibo(token);
-                    dialog.dismiss();
-                }
+        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> new Handler().postDelayed(() -> helper.login(new WeiboHelper.WeiboLoginListener() {
+            @Override
+            public void onSuccess(Oauth2AccessToken token) {
+                signUpByWeibo(token);
+                dialog.dismiss();
+            }
 
-                @Override
-                public void onFail() {
-                    showNotification(R.string.weiboLoginFail);
-                }
+            @Override
+            public void onFail() {
+                showNotification(R.string.weiboLoginFail);
+            }
 
-                @Override
-                public void onCancel() {
-                    showNotification(R.string.weiboLoginCancel);
-                }
-            });
-        });
+            @Override
+            public void onCancel() {
+                showNotification(R.string.weiboLoginCancel);
+            }
+        }), 150));
         dialog.show();
         return helper;
     }
