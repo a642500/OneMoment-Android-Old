@@ -14,6 +14,7 @@ import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.TextureView;
@@ -171,6 +172,7 @@ public class RecordingActivity extends Activity {
         new AlbumActivity_.IntentBuilder_(this).start();
     }
 
+    @UiThread
     void checkFlashLightAvailability() {
         PackageManager packageManager = getPackageManager();
 
@@ -180,7 +182,7 @@ public class RecordingActivity extends Activity {
         recordFlashSwitch.setEnabled(hasFlash);
         recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
         recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
-            if (mCamera != null) {
+            if (mCamera != null && !cameraSwitchDisablePending) {
                 Camera.Parameters p = mCamera.getParameters();
                 p.setFlashMode(
 //                                isChecked ?
@@ -192,7 +194,7 @@ public class RecordingActivity extends Activity {
             }
         });
         recordFlashSwitch.getNextView().setOnClickListener(v -> {
-            if (mCamera != null) {
+            if (mCamera != null && !cameraSwitchDisablePending) {
                 Camera.Parameters p = mCamera.getParameters();
                 p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 mCamera.setParameters(p);
@@ -210,15 +212,36 @@ public class RecordingActivity extends Activity {
         cameraSwitch.setEnabled(hasFront);
         cameraSwitch.setVisibility(hasFront ? View.VISIBLE : View.INVISIBLE);
         cameraSwitch.getCurrentView().setOnClickListener(hasFront ? v -> {
-            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-            mCamera.stopPreview();
-            releaseCameraBackgroundAndPreview();
+            setCameraSwitchEnable(false);
+            new Handler().postDelayed(() -> {
+                CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
+                recordFlashSwitch.setEnabled(false);
+                mCamera.stopPreview();
+                releaseCameraBackgroundAndPreview();
+                recordFlashSwitch.setEnabled(true);
+            }, 150);
         } : null);
         cameraSwitch.getNextView().setOnClickListener(hasFront ? v -> {
-            CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
-            mCamera.stopPreview();
-            releaseCameraBackgroundAndPreview();
+            setCameraSwitchEnable(false);
+            new Handler().postDelayed(() -> {
+                CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
+                recordFlashSwitch.setEnabled(false);
+                mCamera.stopPreview();
+                releaseCameraBackgroundAndPreview();
+                recordFlashSwitch.setEnabled(true);
+            }, 150);
         } : null);
+    }
+
+    private boolean cameraSwitchDisablePending = false;
+
+    private void setCameraSwitchEnable(boolean enable) {
+        if (cameraSwitch != null) {
+            cameraSwitchDisablePending = !enable;
+            cameraSwitch.setEnabled(enable);
+            cameraSwitch.getCurrentView().setEnabled(enable);
+            cameraSwitch.getNextView().setEnabled(enable);
+        }
     }
 
     @Override
@@ -284,6 +307,13 @@ public class RecordingActivity extends Activity {
             mCamera = null;
         }
         preview();
+        checkFlashLightAvailability();
+        enableCameraSwitch();
+    }
+
+    @UiThread(delay = 300)
+    void enableCameraSwitch() {
+        setCameraSwitchEnable(true);
     }
 
     //    @AfterViews
