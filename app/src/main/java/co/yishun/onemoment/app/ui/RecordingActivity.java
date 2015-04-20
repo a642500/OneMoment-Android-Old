@@ -32,6 +32,7 @@ import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.dao.Dao;
 import com.umeng.analytics.MobclickAgent;
@@ -84,7 +85,7 @@ public class RecordingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mConvertDialog = new MaterialDialog.Builder(this).content(getString(R.string.recordConvertingHint)).cancelable(false).progress(true, 0).build();
+        this.mConvertDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).content(getString(R.string.recordConvertingHint)).cancelable(false).progress(true, 0).build();
 
     }
 
