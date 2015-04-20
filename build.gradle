@@ -17,3 +17,13 @@ allprojects {
         jcenter()
     }
 }
+
+buildscript {
+    repositories {
+        maven { url 'https://raw.github.com/xujiaao/mvn-repository/master/releases' }
+    }
+
+    dependencies {
+        classpath 'com.github.xujiaao:aarLinkSources:1.0.0'
+    }
+}

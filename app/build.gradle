@@ -105,3 +105,12 @@ dependencies {
     compile 'me.toxz.circularprogressview:library:1.0.3'
     //    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }
+
+apply plugin: 'aar-link-sources'
+
+dependencies {
+//    aarLinkSources {
+//        downloadAllSources = true
+//    }
+    aarLinkSources 'com.nispok:snackbar:2.10.7:sources@jar'
+}
