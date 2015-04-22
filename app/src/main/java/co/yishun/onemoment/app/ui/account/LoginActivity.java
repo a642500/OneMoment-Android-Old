@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.ui.account;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
@@ -64,12 +65,11 @@ public class LoginActivity extends ToolbarBaseActivity {
                 if (e != null) {
                     e.printStackTrace();
                     showNotification(R.string.loginLoginFailNetwork);
-                    AccountHelper.createAccount(this, result.getData());
-                    setResult(RESULT_OK);
-                    this.finish();
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     showNotification(R.string.loginLoginSuccess);
-
+                    AccountHelper.createAccount(this, result.getData());
+                    setResult(RESULT_OK);
+                    new Handler().postDelayed(super::finish, 1000);
                 } else {
                     switch (result.getErrorCode()) {
                         case ErrorCode.ACCOUNT_DOESNT_EXIST:

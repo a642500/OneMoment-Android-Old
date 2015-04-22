@@ -243,7 +243,10 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     public WeiboHelper showLoginDialog() {
         final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).autoDismiss(false).build();
         View view = dialog.getCustomView();
-        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> new Handler().postDelayed(() -> SignUpActivity_.intent(this).start(), 150));
+        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> new Handler().postDelayed(() -> {
+            SignUpActivity_.intent(this).start();
+            dialog.dismiss();
+        }, 150));
         final WeiboHelper helper = new WeiboHelper(this);
         view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> new Handler().postDelayed(() -> helper.login(new WeiboHelper.WeiboLoginListener() {
             @Override
