@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
@@ -91,6 +92,11 @@ public class ResetPasswordActivity extends ToolbarBaseActivity {
                 hideProgress();
             });
         }
+    }
+
+    @Override
+    public void finish() {
+        new Handler().postDelayed(super::finish, 1000);
     }
 
     private boolean checkPassword() {

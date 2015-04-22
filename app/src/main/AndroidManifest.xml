@@ -86,17 +86,22 @@
         <activity
                 android:name=".ui.FindPasswordActivity_"
                 android:label="@string/findPasswordTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"
+                >
         </activity>
         <activity
                 android:name=".ui.ResetPasswordActivity_"
                 android:label="@string/resetPasswordTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"
+                >
         </activity>
         <activity
                 android:name=".ui.IdentityInfoActivity_"
                 android:label="@string/identityInfoTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                >
         </activity>
         <activity
                 android:name=".ui.VideoSaveActivity_"
@@ -117,7 +122,9 @@
         <activity
                 android:name=".ui.account.SetPasswordActivity_"
                 android:label="@string/setPasswordTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar"/>
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"
+                />
         <activity
                 android:name=".ui.SyncSettingsActivity_"
                 android:label="@string/syncSettingsTitle"

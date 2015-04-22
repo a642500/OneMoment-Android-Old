@@ -111,7 +111,7 @@ public class FindPasswordActivity extends ToolbarBaseActivity {
                     } else switch (result.getCode()) {
                         case ErrorCode.SUCCESS:
                             showNotification(R.string.signUpVerifySuccess);
-                            ResetPasswordActivity_.intent(this).extra("phone", phone).startForResult(REQUEST_SET_PASSWORD);
+                            startResetPasswordActivity();
                             break;
                         case ErrorCode.PHONE_FORMAT_ERROR:
                             showNotification(R.string.signUpPhoneInvalidToast);
@@ -131,6 +131,11 @@ public class FindPasswordActivity extends ToolbarBaseActivity {
             shakePhoneEditText();
             showNotification(R.string.signUpPhoneInvalidToast);
         }
+    }
+
+    @UiThread(delay = 1000)
+    void startResetPasswordActivity() {
+        ResetPasswordActivity_.intent(this).extra("phone", phone).startForResult(REQUEST_SET_PASSWORD);
     }
 
     @OnActivityResult(REQUEST_SET_PASSWORD)
