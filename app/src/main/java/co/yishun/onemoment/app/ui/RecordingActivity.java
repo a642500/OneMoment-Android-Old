@@ -132,9 +132,12 @@ public class RecordingActivity extends Activity {
     @AfterViews
     void initCircularProgressView() {
         circularProgressView.setOnStateListener(status -> {
+                    LogUtil.v(TAG, "onStatus");
                     switch (status) {
                         case START:
                             if (!isRecording) {
+                                setCameraSwitchEnable(false);
+                                prepareStatus = NOT_PREPARED;
                                 record();
                                 circularProgressView.setDuration(1200);
                             }
@@ -182,23 +185,31 @@ public class RecordingActivity extends Activity {
         recordFlashSwitch.setEnabled(hasFlash);
         recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
         recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
-            if (mCamera != null && !cameraSwitchDisablePending) {
-                Camera.Parameters p = mCamera.getParameters();
-                p.setFlashMode(
-//                                isChecked ?
-                        Camera.Parameters.FLASH_MODE_TORCH
-//                                        : Camera.Parameters.FLASH_MODE_OFF
-                );
-                mCamera.setParameters(p);
-                recordFlashSwitch.showNext();
+            try {
+                if (mCamera != null && !cameraSwitchDisablePending && prepareStatus == PREPARED) {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(
+                            //                                isChecked ?
+                            Camera.Parameters.FLASH_MODE_TORCH
+                            //                                        : Camera.Parameters.FLASH_MODE_OFF
+                    );
+                    mCamera.setParameters(p);
+                    recordFlashSwitch.showNext();
+                }
+            } catch (RuntimeException e) {
+                e.printStackTrace();
             }
         });
         recordFlashSwitch.getNextView().setOnClickListener(v -> {
-            if (mCamera != null && !cameraSwitchDisablePending) {
-                Camera.Parameters p = mCamera.getParameters();
-                p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                mCamera.setParameters(p);
-                recordFlashSwitch.showNext();
+            try {
+                if (mCamera != null && !cameraSwitchDisablePending && prepareStatus == PREPARED) {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    mCamera.setParameters(p);
+                    recordFlashSwitch.showNext();
+                }
+            } catch (RuntimeException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -295,6 +306,7 @@ public class RecordingActivity extends Activity {
     @Background
     void releaseCameraBackground() {
         if (mCamera != null) {
+            prepareStatus = NOT_PREPARED;
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
         }
@@ -303,6 +315,7 @@ public class RecordingActivity extends Activity {
     @Background
     void releaseCameraBackgroundAndPreview() {
         if (mCamera != null) {
+            prepareStatus = NOT_PREPARED;
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
         }
@@ -365,6 +378,7 @@ public class RecordingActivity extends Activity {
      */
     @SupposeBackground
     void prepare() {
+        prepareStatus = NOT_PREPARED;
         Camera.Parameters parameters = mCamera.getParameters();
         List<Camera.Size> sizeList = parameters.getSupportedVideoSizes();
         if (sizeList == null) sizeList = parameters.getSupportedPreviewSizes();
@@ -459,6 +473,7 @@ public class RecordingActivity extends Activity {
 
     @Background
     void record() {
+        LogUtil.v(TAG, "record (background)");
         if (mCamera == null) {
             showNotification(R.string.recordLoadCameraError);
             return;
@@ -568,6 +583,7 @@ public class RecordingActivity extends Activity {
 
     @UiThread
     void onConvert(int exitCode, String origin, String converted) {
+        setCameraSwitchEnable(true);
         if (0 == exitCode) {
             saveData(origin, converted);
         } else {
