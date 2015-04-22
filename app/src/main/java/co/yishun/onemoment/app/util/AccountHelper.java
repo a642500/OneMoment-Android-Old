@@ -184,7 +184,9 @@ public class AccountHelper {
 
     public static void syncAtOnce(Context context) {
         LogUtil.i(TAG, "sync at once");
-        ContentResolver.requestSync(getAccount(context), Contract.AUTHORITY, new Bundle());
+        Account account = getAccount(context);
+        LogUtil.i(TAG, "sync account: " + account.toString());
+        ContentResolver.requestSync(account, Contract.AUTHORITY, new Bundle());
     }
 
     public enum PasswordType {

@@ -221,13 +221,13 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             AccountHelper.syncAtOnce(this);
             justPressed = true;
             delayEnableSyncBtn();
-        }
+        } else LogUtil.v(TAG, "sync pressed in 10s, do nothing");
         showNotification("syncing...");
     }
 
     @Background(delay = 10 * 1000)
     void delayEnableSyncBtn() {
-        justPressed = true;
+        justPressed = false;
     }
 
     @AfterViews
