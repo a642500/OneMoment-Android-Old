@@ -20,10 +20,9 @@ import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.*;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
@@ -71,6 +70,8 @@ public class RecordingActivity extends Activity {
     private Camera mCamera;
     @ViewById(R.id.recordVideoBtn)
     CircularProgressView circularProgressView;
+    @ViewById
+    ImageButton albumBtn;
     private MediaRecorder mMediaRecorder;
     private String mCurrentVideoPath = null;
     private boolean isRecording = false;
@@ -137,6 +138,25 @@ public class RecordingActivity extends Activity {
                         case START:
                             if (!isRecording) {
                                 setCameraSwitchEnable(false);
+                                Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+                                a.setDuration(300);
+                                a.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        albumBtn.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+
+                                    }
+                                });
+                                albumBtn.startAnimation(a);
                                 prepareStatus = NOT_PREPARED;
                                 record();
                                 circularProgressView.setDuration(1200);
@@ -584,6 +604,7 @@ public class RecordingActivity extends Activity {
     @UiThread
     void onConvert(int exitCode, String origin, String converted) {
         setCameraSwitchEnable(true);
+        albumBtn.setVisibility(View.VISIBLE);
         if (0 == exitCode) {
             saveData(origin, converted);
         } else {
