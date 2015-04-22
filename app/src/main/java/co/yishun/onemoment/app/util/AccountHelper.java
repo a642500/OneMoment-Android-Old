@@ -68,6 +68,7 @@ public class AccountHelper {
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
             mAccount = newAccount;
             saveIdentityInfo(activity, data);
+            setWifiSyncEnable(activity,true);
             return newAccount;
         } else {
             LogUtil.e(TAG, "The account exists or some other error occurred.");
