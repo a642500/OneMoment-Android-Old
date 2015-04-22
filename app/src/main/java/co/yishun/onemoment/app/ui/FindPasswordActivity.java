@@ -100,6 +100,7 @@ public class FindPasswordActivity extends ToolbarBaseActivity {
     }
 
     @Click(R.id.nextBtn)
+    @Background
     void nextBtnClicked(@NonNull View view) {
         if (checkPhoneNum()) {
             if (checkVerificationCode()) {

@@ -69,4 +69,12 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
     public int compareTo(Data another) {
         return this.getKey() - another.getKey();
     }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "key='" + key + '\'' +
+                ", putTime='" + putTime + '\'' +
+                '}';
+    }
 }

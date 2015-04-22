@@ -69,15 +69,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         for (Moment moment : dao) {
             Integer key = Integer.parseInt(moment.getTime());
             Data video = videosOnServer.get(key);
+            LogUtil.v(TAG, "sync iter: " + moment.toString());
             if (video != null) {
+                LogUtil.v(TAG, "on server: " + video.toString());
                 //if server has today moment
                 if (video.getTimeStamp() > moment.getTimeStamp()) {
                     //if server is newer, download and delete older
+                    LogUtil.v(TAG, "download: " + video.toString());
                     downloadVideo(video, moment);
                 } else if (video.getTimeStamp() < moment.getTimeStamp()) {
                     //if local is newer, upload and delete older
+                    LogUtil.v(TAG, "upload: " + video.toString());
                     uploadMoment(moment, video);
-                } else continue;
+                } else {
+                    LogUtil.v(TAG, "same, do nothing");
+                }
                 //the video sync ok, remove
                 videosOnServer.remove(key);
             } else uploadMoment(moment, null);//server not have today moment, upload
@@ -119,7 +125,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Background
     void deleteVideo(@NonNull Data videoOnServer) {
         LogUtil.i(TAG, "delete a video: " + videoOnServer.getQiuniuKey());
-        new DeleteVideo().setFileName(videoOnServer.getQiuniuKey()).setCallback((e, result) -> {
+        new DeleteVideo().setFileName(videoOnServer.getQiuniuKey()).with(getContext()).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
             } else if (result.getCode() != ErrorCode.SUCCESS)

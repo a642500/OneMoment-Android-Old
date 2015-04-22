@@ -128,4 +128,13 @@ public class Moment implements Serializable {
                 .setLargeThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LARGE_THUMB, timeStamp))
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "Moment{" +
+                "path='" + path + '\'' +
+                ", time='" + time + '\'' +
+                ", timeStamp=" + timeStamp +
+                '}';
+    }
 }

@@ -57,7 +57,7 @@ public class DeleteVideo extends Request<DeleteVideo.DeleteResult> {
     public static class DeleteResult implements Serializable {
         private int code;
         private String msg;
-        private String data;//file name deleted
+        private Data data;//file name deleted
 
         public String getMsg() {
             return msg;
@@ -67,8 +67,12 @@ public class DeleteVideo extends Request<DeleteVideo.DeleteResult> {
             return code;
         }
 
-        public String getData() {
+        public Data getData() {
             return data;
+        }
+
+        class Data {
+            String filename;
         }
     }
 }
