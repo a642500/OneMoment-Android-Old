@@ -225,7 +225,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         showNotification("syncing...");
     }
 
-    @UiThread(delay = 10 * 1000)
+    @Background(delay = 10 * 1000)
     void delayEnableSyncBtn() {
         justPressed = true;
     }
