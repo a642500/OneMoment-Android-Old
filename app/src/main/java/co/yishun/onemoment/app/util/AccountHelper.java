@@ -1,7 +1,6 @@
 package co.yishun.onemoment.app.util;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.accounts.*;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -61,18 +60,42 @@ public class AccountHelper {
         return new File(path).exists();
     }
 
-    public static Account createAccount(Activity activity, AccountResult.Data data) {
+    public static void createAccount(Activity activity, AccountResult.Data data) {
         // Create the account type and default account
         Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            mAccount = newAccount;
-            saveIdentityInfo(activity, data);
-            setWifiSyncEnable(activity,true);
-            return newAccount;
-        } else {
-            LogUtil.e(TAG, "The account exists or some other error occurred.");
-            return null;
+        Account[] oldAccount = accountManager.getAccountsByType(ACCOUNT_TYPE);
+        for (Account account : oldAccount) {
+            LogUtil.v(TAG, "remove old account: " + account);
+            accountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    try {
+                        if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+                                mAccount = newAccount;
+                                saveIdentityInfo(activity, data);
+                                setWifiSyncEnable(activity, true);
+                            } else {
+                                LogUtil.e(TAG, "The account exists or some other error occurred.");
+                            }
+                        }
+                    } catch (OperationCanceledException | IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, null);
+        }
+        if (oldAccount.length == 0) {
+            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+                mAccount = newAccount;
+                saveIdentityInfo(activity, data);
+                setWifiSyncEnable(activity, true);
+            } else {
+                LogUtil.e(TAG, "Add account occurred, but no old account exists.");
+            }
         }
     }
 
@@ -177,6 +200,7 @@ public class AccountHelper {
 
     public static void setWifiSyncEnable(Activity activity, boolean isEnable) {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
+        syncAtOnce(activity);
     }
 
     public static boolean isWifiSyncEnable(Activity activity) {
