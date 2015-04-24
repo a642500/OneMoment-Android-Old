@@ -67,24 +67,19 @@ public class AccountHelper {
         Account[] oldAccount = accountManager.getAccountsByType(ACCOUNT_TYPE);
         for (Account account : oldAccount) {
             LogUtil.v(TAG, "remove old account: " + account);
-            accountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-                    try {
-                        if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-                            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-                                mAccount = newAccount;
-                                saveIdentityInfo(activity, data);
-                                setWifiSyncEnable(activity, true);
-                            } else {
-                                LogUtil.e(TAG, "The account exists or some other error occurred.");
-                            }
+            accountManager.removeAccount(account, activity, future -> {
+                try {
+                    if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+                            mAccount = newAccount;
+                            saveIdentityInfo(activity, data);
+                            setWifiSyncEnable(activity, true);
+                        } else {
+                            LogUtil.e(TAG, "The account exists or some other error occurred.");
                         }
-                    } catch (OperationCanceledException | IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
                     }
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
                 }
             }, null);
         }
