@@ -76,7 +76,7 @@ public class AccountHelper {
                         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                             mAccount = newAccount;
                             saveIdentityInfo(activity, data);
-                            setOnlyWifiSyncEnable(activity, true);
+                            setAutoSync(activity,true);
                         } else {
                             LogUtil.e(TAG, "The account exists or some other error occurred.");
                         }
@@ -90,7 +90,7 @@ public class AccountHelper {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
-                setOnlyWifiSyncEnable(activity, true);
+                setAutoSync(activity,true);
             } else {
                 LogUtil.e(TAG, "Add account occurred, but no old account exists.");
             }
