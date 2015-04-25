@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Contract;
 import co.yishun.onemoment.app.net.result.AccountResult;
@@ -76,7 +77,7 @@ public class AccountHelper {
                         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                             mAccount = newAccount;
                             saveIdentityInfo(activity, data);
-                            setAutoSync(activity,true);
+                            setAutoSync(activity, true);
                         } else {
                             LogUtil.e(TAG, "The account exists or some other error occurred.");
                         }
@@ -90,7 +91,7 @@ public class AccountHelper {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
-                setAutoSync(activity,true);
+                setAutoSync(activity, true);
             } else {
                 LogUtil.e(TAG, "Add account occurred, but no old account exists.");
             }
@@ -180,11 +181,14 @@ public class AccountHelper {
     public static void setAutoSync(Activity activity, boolean isEnable) {
         LogUtil.i(TAG, "setAutoSync: " + isEnable);
         if (isEnable) {
-            ContentResolver.setSyncAutomatically(getAccount(activity), Contract.AUTHORITY, true);
-            ContentResolver.addPeriodicSync(getAccount(activity), Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
-            syncAtOnce(activity);
+            Account account = syncAtOnce(activity);
+            ContentResolver.addPeriodicSync(account, Contract.AUTHORITY, new Bundle(), BuildConfig.DEBUG ? 10 : 60 * 10);//10 min
+            LogUtil.v(TAG, "set sync period every " + (BuildConfig.DEBUG ? 10 : 60 * 10) + " seconds");
+            ContentResolver.setSyncAutomatically(account, Contract.AUTHORITY, true);
         } else {
             ContentResolver.setSyncAutomatically(getAccount(activity), Contract.AUTHORITY, false);
+            ContentResolver.removePeriodicSync(getAccount(activity), Contract.AUTHORITY, new Bundle());
+            LogUtil.v(TAG, "remove sync period");
         }
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_AUTO_SYNC, isEnable).apply();
     }
@@ -198,11 +202,6 @@ public class AccountHelper {
 
     public static void setOnlyWifiSyncEnable(Activity activity, boolean isEnable) {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
-        Account account = syncAtOnce(activity);
-        LogUtil.i(TAG, "sync account add period.");
-        Bundle b = new Bundle();
-        ContentResolver.addPeriodicSync(account, Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
-        ContentResolver.setSyncAutomatically(account, Contract.AUTHORITY, true);
     }
 
     public static boolean isOnlyWifiSyncEnable(Activity activity) {
