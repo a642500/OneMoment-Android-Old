@@ -57,23 +57,6 @@ import static co.yishun.onemoment.app.ui.RecordingActivity.RecordStatus.*;
 @EActivity(R.layout.layout_recording)
 public class RecordingActivity extends Activity {
     public static final int REQUEST_SAVE = 100;
-
-    enum RecordStatus implements Comparable<RecordStatus> {
-        CAMERA_NOT_PREPARED,
-        CAMERA_PREPARED,
-        PREVIEW_PREPARED,
-        RECORDER_NOT_PREPARED,
-        RECORDER_PREPARED,
-        RECORDER_STARTED,
-        RECORDER_ENDED,
-        CONVERTER_STARTED,
-        CONVERTER_ENDED,//converted, will ask user whether save it
-        MOMENT_PREPARED,//has asked for saving, will jump to album act
-        MOMENT_OK,//has created a new moment or give up the moment,just back to this act to create new
-        ERROR_STATUS
-    }
-
-    private RecordStatus mStatus = RecordStatus.CAMERA_NOT_PREPARED;
     private static final String TAG = LogUtil.makeTag(RecordingActivity.class);
     @ViewById(R.id.surfaceView) TextureView mPreview;
     @ViewById ImageSwitcher recordFlashSwitch;
@@ -83,6 +66,7 @@ public class RecordingActivity extends Activity {
     @ViewById ImageButton albumBtn;
     @ViewById FrameLayout recordSurfaceParent;
     @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class) Dao<Moment, Integer> momentDao;
+    private RecordStatus mStatus = RecordStatus.CAMERA_NOT_PREPARED;
     private Camera mCamera;
     private MediaRecorder mMediaRecorder;
     private String mCurrentVideoPath = null;
@@ -191,22 +175,7 @@ public class RecordingActivity extends Activity {
         boolean hasFlash = !CameraHelper.isFrontCamera() && packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         recordFlashSwitch.setEnabled(hasFlash);
         recordFlashSwitch.setVisibility(hasFlash ? View.VISIBLE : View.INVISIBLE);
-        recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
-            if (mStatus.compareTo(CAMERA_PREPARED) >= 0 && mStatus.compareTo(RECORDER_ENDED) < 0) {
-                Camera.Parameters p = mCamera.getParameters();
-                p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                mCamera.setParameters(p);
-                recordFlashSwitch.showNext();
-            }
-        });
-        recordFlashSwitch.getNextView().setOnClickListener(v -> {
-            if (mStatus.compareTo(CAMERA_PREPARED) >= 0 && mStatus.compareTo(RECORDER_ENDED) < 0) {
-                Camera.Parameters p = mCamera.getParameters();
-                p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                mCamera.setParameters(p);
-                recordFlashSwitch.showNext();
-            }
-        });
+        recordFlashSwitch.setDisplayedChild(0);
     }
 
     @UiThread void checkFrontCameraLightAvailability() {
@@ -218,6 +187,7 @@ public class RecordingActivity extends Activity {
             View.OnClickListener listener = v -> {
                 //delay to let animation end, but disable itself to prevent post many switch event
                 setCameraSwitchEnable(false);
+                circularProgressView.setEnabled(false);
                 mStatus = CAMERA_NOT_PREPARED;
                 switchCamera();
             };
@@ -236,6 +206,32 @@ public class RecordingActivity extends Activity {
 
     @AfterViews void initViews() {
         checkFrontCameraLightAvailability();
+
+        recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
+            try {
+                if ((mStatus.compareTo(CAMERA_PREPARED) >= 0 && mStatus.compareTo(RECORDER_NOT_PREPARED) < 0)
+                        || (mStatus.compareTo(RECORDER_STARTED) >= 0 && mStatus.compareTo(RECORDER_ENDED) < 0)) {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    mCamera.setParameters(p);
+                    recordFlashSwitch.showNext();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        recordFlashSwitch.getNextView().setOnClickListener(v -> {
+            try {
+                if (mStatus.compareTo(CAMERA_PREPARED) >= 0 && mStatus.compareTo(RECORDER_ENDED) < 0) {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    mCamera.setParameters(p);
+                    recordFlashSwitch.showNext();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         //checked in onResume    checkFlashLightAvailability();
     }
 
@@ -315,7 +311,12 @@ public class RecordingActivity extends Activity {
         }
         preview();
         checkFlashLightAvailability();
-        setCameraSwitchEnable(true);//TODO is preview sync ?
+        delayEnable();
+    }
+
+    @UiThread void delayEnable() {
+        setCameraSwitchEnable(true);
+        circularProgressView.setEnabled(true);
     }
 
     //    @AfterViews
@@ -350,6 +351,7 @@ public class RecordingActivity extends Activity {
         mCamera.startPreview();
         applyTransform();
         mStatus = RecordStatus.PREVIEW_PREPARED;
+        delayEnable();
     }
 
     @UiThread void applyTransform() {
@@ -574,7 +576,6 @@ public class RecordingActivity extends Activity {
         }
     }
 
-
     @Background void saveData(String origin, String converted) {
         //delete origin file
         File file = new File(origin);
@@ -669,6 +670,21 @@ public class RecordingActivity extends Activity {
         mat.postTranslate(0, -viewHeight * (scaleY - 1) / 2);
 //        Toast.makeText(this, "scaleX " + scaleX + "; scaleY " + scaleY, Toast.LENGTH_LONG).show();
         return mat;
+    }
+
+    enum RecordStatus implements Comparable<RecordStatus> {
+        CAMERA_NOT_PREPARED,
+        CAMERA_PREPARED,
+        PREVIEW_PREPARED,
+        RECORDER_NOT_PREPARED,
+        RECORDER_PREPARED,
+        RECORDER_STARTED,
+        RECORDER_ENDED,
+        CONVERTER_STARTED,
+        CONVERTER_ENDED,//converted, will ask user whether save it
+        MOMENT_PREPARED,//has asked for saving, will jump to album act
+        MOMENT_OK,//has created a new moment or give up the moment,just back to this act to create new
+        ERROR_STATUS
     }
 
 }
