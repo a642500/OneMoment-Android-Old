@@ -47,7 +47,7 @@
             android:background="@color/md_divider_white"/>
 
     <RelativeLayout
-            android:id="@+id/wifiSyncItem"
+            android:id="@+id/onlyWifiSyncItem"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 />
 
         <Switch
-                android:id="@+id/wifiSyncSwitch"
+                android:id="@+id/onlyWifiSyncSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="8dp"

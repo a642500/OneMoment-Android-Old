@@ -76,7 +76,7 @@ public class AccountHelper {
                         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                             mAccount = newAccount;
                             saveIdentityInfo(activity, data);
-                            setWifiSyncEnable(activity, true);
+                            setOnlyWifiSyncEnable(activity, true);
                         } else {
                             LogUtil.e(TAG, "The account exists or some other error occurred.");
                         }
@@ -90,7 +90,7 @@ public class AccountHelper {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
-                setWifiSyncEnable(activity, true);
+                setOnlyWifiSyncEnable(activity, true);
             } else {
                 LogUtil.e(TAG, "Add account occurred, but no old account exists.");
             }
@@ -196,15 +196,15 @@ public class AccountHelper {
         return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_AUTO_SYNC, true);
     }
 
-    public static void setWifiSyncEnable(Activity activity, boolean isEnable) {
+    public static void setOnlyWifiSyncEnable(Activity activity, boolean isEnable) {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
         Account account = syncAtOnce(activity);
         LogUtil.i(TAG, "sync account add period.");
         ContentResolver.addPeriodicSync(account, Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
     }
 
-    public static boolean isWifiSyncEnable(Activity activity) {
-        return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WIFI_SYNC, false);
+    public static boolean isOnlyWifiSyncEnable(Activity activity) {
+        return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WIFI_SYNC, true);
     }
 
     public static Account syncAtOnce(Context context) {
