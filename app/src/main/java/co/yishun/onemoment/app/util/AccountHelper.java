@@ -200,7 +200,9 @@ public class AccountHelper {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
         Account account = syncAtOnce(activity);
         LogUtil.i(TAG, "sync account add period.");
+        Bundle b = new Bundle();
         ContentResolver.addPeriodicSync(account, Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
+        ContentResolver.setSyncAutomatically(account, Contract.AUTHORITY, true);
     }
 
     public static boolean isOnlyWifiSyncEnable(Activity activity) {
@@ -211,7 +213,10 @@ public class AccountHelper {
         LogUtil.i(TAG, "sync at once");
         Account account = getAccount(context);
         LogUtil.i(TAG, "sync account: " + account);
-        ContentResolver.requestSync(account, Contract.AUTHORITY, new Bundle());
+        Bundle b = new Bundle();
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(account, Contract.AUTHORITY, b);
         return account;
     }
 
