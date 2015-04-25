@@ -1,6 +1,9 @@
 package co.yishun.onemoment.app.util;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -57,7 +60,7 @@ public class AccountHelper {
 
     public static boolean isLogin(Context context) {
         String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-        return new File(path).exists();
+        return getAccount(context) != null && new File(path).exists();//TODO integrate identity info into account, add update identity when lost
     }
 
     public static void createAccount(Activity activity, AccountResult.Data data) {
@@ -205,7 +208,7 @@ public class AccountHelper {
     public static void syncAtOnce(Context context) {
         LogUtil.i(TAG, "sync at once");
         Account account = getAccount(context);
-        LogUtil.i(TAG, "sync account: " + account.toString());
+        LogUtil.i(TAG, "sync account: " + account);
         ContentResolver.requestSync(account, Contract.AUTHORITY, new Bundle());
     }
 
