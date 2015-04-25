@@ -47,7 +47,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        LogUtil.i(TAG, "onPerformSync, account: " + account.name);
+        LogUtil.i(TAG, "onPerformSync, account: " + account.name + ", Bundle: " + extras);
         //see:http://developer.android.com/training/sync-adapters/creating-sync-adapter.html
 
         new GetVideoList().with(getContext()).setCallback((e, result) -> {
@@ -122,8 +122,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         });
     }
 
-    @Background
-    void deleteVideo(@NonNull Data videoOnServer) {
+    @Background void deleteVideo(@NonNull Data videoOnServer) {
         LogUtil.i(TAG, "delete a video: " + videoOnServer.getQiuniuKey());
         new DeleteVideo().setFileName(videoOnServer.getQiuniuKey()).with(getContext()).setCallback((e, result) -> {
             if (e != null) {

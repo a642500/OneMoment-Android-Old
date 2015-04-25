@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
@@ -196,13 +197,19 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         }
     }
 
+    @SystemService ConnectivityManager connectivityManager;
+
     @Override
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG, "onResume");
-        if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this)) {
+    }
+
+    @AfterInject void trySync() {
+        if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this) && (!AccountHelper.isOnlyWifiSyncEnable(this) || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) {
+            LogUtil.v(TAG, "try sync, start.");
             AccountHelper.syncAtOnce(this);
-        }
+        } else LogUtil.v(TAG, "try sync, not start");
     }
 
     @Fun
