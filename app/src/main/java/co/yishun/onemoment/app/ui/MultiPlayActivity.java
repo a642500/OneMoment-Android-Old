@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -55,6 +56,12 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
     List<Moment> moments;
 
     Queue<Moment> toPlayMoments;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
     @AfterViews
     void setSquare() {
