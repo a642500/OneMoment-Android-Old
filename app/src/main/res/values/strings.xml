@@ -160,7 +160,6 @@
     <string-array name="integrateInfoGenderArray">
         <item>male</item>
         <item>female</item>
-        <item>private</item>
     </string-array>
     <string name="integrateInfoChooseBtn">CHOOSE</string>
     <string name="integrateInfoUpdateSuccess">Update Info Success.</string>

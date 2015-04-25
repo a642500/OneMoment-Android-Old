@@ -66,8 +66,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     @ViewById
     TextView areaTextView;
 
-    @Click
-    void areaItemClicked(View view) {
+    @Click void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
                 .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick).build();
         View dialogView = dialog.getCustomView();
@@ -100,8 +99,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         dialog.show();
     }
 
-    @AfterViews
-    void initAreaTextView() {
+    @AfterViews void initAreaTextView() {
         setProvinceAndDistrict(provinces[0], getResources().getStringArray(Constants.provincesItemsRes[0])[0]);
     }
 
@@ -128,13 +126,12 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         }
     }
 
-    @Click
-    void genderItemClicked(View view) {
+    @Click void genderItemClicked(View view) {
         new MaterialDialog.Builder(this)
                 .theme(Theme.DARK)
                 .title(R.string.integrateInfoGenderHint)
                 .items(R.array.integrateInfoGenderArray)
-                .itemsCallbackSingleChoice(genderSelected, (dialog, view1, which, text) -> {
+                .itemsCallbackSingleChoice(genderSelected % 2, (dialog, view1, which, text) -> {
                     setGender(which);
                     return true; // allow selection
                 })
@@ -142,14 +139,12 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 .show();
     }
 
-    @UiThread
-    void shakeNickNameEditText() {
+    @UiThread void shakeNickNameEditText() {
         YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration)).playOn(nickNameEditText);
     }
 
     @Click
-    @Background
-    void okBtnClicked(View view) {
+    @Background void okBtnClicked(View view) {
         String nickname = String.valueOf(nickNameEditText.getText());
         if (TextUtils.isEmpty(nickname)) {
             shakeNickNameEditText();
@@ -193,8 +188,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     }
 
-    @Background
-    void updateInfo(@Nullable String qiNiuKey, String nickname) {
+    @Background void updateInfo(@Nullable String qiNiuKey, String nickname) {
         IdentityInfo.Update bu = ((IdentityInfo.Update) (new IdentityInfo.Update().with(this))).setGender(gender[genderSelected]);
         if (qiNiuKey != null) bu = bu.setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey);
         bu.setLocation(mProvince + " " + mDistrict).setNickname(nickname).setCallback(
@@ -218,16 +212,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     @ViewById
     ImageView profileImageView;
 
-    @Click
-    void profileImageViewClicked(View view) {
+    @Click void profileImageViewClicked(View view) {
         Crop.pickImage(this);
     }
 
     Uri croppedProfileUri;
 
     @OnActivityResult(Crop.REQUEST_PICK)
-    @Background
-    void onPictureSelected(int resultCode, Intent data) {
+    @Background void onPictureSelected(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
                 Uri selectedImage = data.getData();
@@ -243,15 +235,13 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     }
 
     @OnActivityResult(Crop.REQUEST_CROP)
-    @Background
-    void onPictureCropped(int resultCode, Intent data) {
+    @Background void onPictureCropped(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             setProfileImage(croppedProfileUri);
         } else croppedProfileUri = null;
     }
 
-    @UiThread
-    void setProfileImage(Uri uri) {
+    @UiThread void setProfileImage(Uri uri) {
 //        if (needInvalidate) {
 //            Picasso.with(this).invalidate(uri);
 //            Picasso.with(this).load(uri).into(profileImageView);

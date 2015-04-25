@@ -63,7 +63,6 @@
     <string-array name="integrateInfoGenderArray">
         <item>男</item>
         <item>女</item>
-        <item>保密</item>
     </string-array>
     <string name="integrateInfoAreaHint">地区</string>
     <string name="integrateInfoChooseBtn">选择</string>

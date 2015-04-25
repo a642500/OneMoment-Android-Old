@@ -50,8 +50,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     @ViewById
     TextView areaTextView;
 
-    @AfterViews
-    void initViews() {
+    @AfterViews void initViews() {
         AccountResult.Data data = AccountHelper.getIdentityInfo(this);
         Picasso.with(this).load(data.getAvatar_url()).into(profileImageView);
         nickNameTextView.setText(data.getNickname());
@@ -63,7 +62,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     public static final int MALE = 0;
     public static final int FEMALE = 1;
     public static final int PRIVATE = 2;
-    private final String[] gender = {"m", "f", "n"};
+    private final String[] genders = {"m", "f", "n"};
     private int genderSelected = MALE;
 
     private void setGender(int gender) {
@@ -84,21 +83,22 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     }
 
     private void setGender(String gender) {
-        int genderInt = gender.indexOf(gender.trim());
+        int genderInt = 2;
+        for (int i = 0; i < genders.length; i++) {
+            if (genders[i].equals(gender.trim())) genderInt = i;
+        }
         genderSelected = genderInt;
         setGender(genderInt);
     }
 
-    @Click
-    void profileItemClicked(View view) {
+    @Click void profileItemClicked(View view) {
         Crop.pickImage(this);
     }
 
     Uri croppedProfileUri;
 
     @OnActivityResult(Crop.REQUEST_PICK)
-    @Background
-    void onPictureSelected(int resultCode, Intent data) {
+    @Background void onPictureSelected(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
                 Uri selectedImage = data.getData();
@@ -114,8 +114,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     }
 
     @OnActivityResult(Crop.REQUEST_CROP)
-    @Background
-    void onPictureCropped(int resultCode, Intent data) {
+    @Background void onPictureCropped(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             showProgress();
             String uriString = croppedProfileUri.toString();
@@ -124,8 +123,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 //        else showNotification(R.string.identityInfoSelectProfileFail);
     }
 
-    @Background
-    void uploadProfile(String path) {
+    @Background void uploadProfile(String path) {
         UploadManager uploadManager = new UploadManager();
         String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + System.currentTimeMillis() + Config.PROFILE_SUFFIX;
         new GetToken().setFileName(qiNiuKey).with(this).setCallback((e, result) -> {
@@ -154,8 +152,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @Background
-    void updateProfile(String qiNiuKey) {
+    @Background void updateProfile(String qiNiuKey) {
         new IdentityInfo.Update().setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey)
                 .with(this).setCallback((e1, result1) -> {
             if (e1 != null) {
@@ -171,13 +168,11 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @UiThread
-    void setProfileImage(Uri uri) {
+    @UiThread void setProfileImage(Uri uri) {
         Picasso.with(this).load(uri).into(profileImageView);
     }
 
-    @Click
-    void nickNameItemClicked(View view) {
+    @Click void nickNameItemClicked(View view) {
         final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_nickname, null);
         final EditText edit = (EditText) customView.findViewById(R.id.nickNameEditText);
         final String oldName = nickNameTextView.getText().toString().trim();
@@ -209,24 +204,22 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         }).show();
     }
 
-    @Click
-    void genderItemClicked(View view) {
+    @Click void genderItemClicked(View view) {
         new MaterialDialog.Builder(this)
                 .theme(Theme.DARK)
                 .title(R.string.integrateInfoGenderHint)
                 .items(R.array.integrateInfoGenderArray)
-                .itemsCallbackSingleChoice(genderSelected, (dialog, view1, which, text) -> {
+                .itemsCallbackSingleChoice(genderSelected % 2, (dialog, view1, which, text) -> {
                     updateGender(which);
                     return true; // allow selection
                 }).positiveText(R.string.integrateInfoChooseBtn)
                 .show();
     }
 
-    @Background
-    void updateGender(int which) {
+    @Background void updateGender(int which) {
         showProgress();
         ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
-                .setGender(gender[which]).setCallback((e, result) -> {
+                .setGender(genders[which]).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
                 showNotification(R.string.identityInfoUpdateFail);
@@ -272,8 +265,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     }
 
 
-    @Click
-    void areaItemClicked(View view) {
+    @Click void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
                 .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick).build();
         View dialogView = dialog.getCustomView();
@@ -309,8 +301,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         dialog.show();
     }
 
-    @Background
-    void updateArea(@NonNull String pro, @NonNull String dis) {
+    @Background void updateArea(@NonNull String pro, @NonNull String dis) {
         showProgress();
         ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
                 .setLocation(pro + " " + dis).setCallback((e, result) -> {
@@ -334,8 +325,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @Background
-    void updateInfo(String key, String value, TextView showValueView) {
+    @Background void updateInfo(String key, String value, TextView showValueView) {
         showProgress();
         ((IdentityInfo.Update) (new IdentityInfo.Update().with(this)))
                 .set(key, value).setCallback((e, result) -> {
@@ -366,8 +356,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @Click
-    void weiboItemClicked(View view) {
+    @Click void weiboItemClicked(View view) {
         if (AccountHelper.getIdentityInfo(this).getPhone() == null) {
             showNotification(R.string.identityInfoWeiboUnboundImpossible);
             return;
@@ -402,8 +391,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         }
     }
 
-    @Background
-    void bind(Oauth2AccessToken token) {
+    @Background void bind(Oauth2AccessToken token) {
         //weibo user won't run this code, don't need take in account
         showProgress();
         new Bind.Weibo().setUid(token.getUid()).with(this).setCallback((e, result) -> {
@@ -422,8 +410,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     }
 
 
-    @Background
-    void unbind() {
+    @Background void unbind() {
         showProgress();
         new UnBind.Weibo().setUid(uid).with(this).setCallback((e, result) -> {
             if (e != null) {
@@ -444,16 +431,14 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
      *
      * @param uid
      */
-    @UiThread
-    void setWeiboUid(@Nullable String uid) {
+    @UiThread void setWeiboUid(@Nullable String uid) {
         this.uid = uid;
         weiboTextView.setText(uid == null ? R.string.identityInfoWeiboUnbound : R.string.identityInfoWeiboBound);
     }
 
     private String uid = null;
 
-    @Click(R.id.logoutBtn)
-    void logout(View view) {
+    @Click(R.id.logoutBtn) void logout(View view) {
         new MaterialDialog.Builder(this).theme(Theme.DARK).title(R.string.identityInfoLogout).content(R.string.identityInfoLogoutAlert)
                 .positiveText(R.string.identityInfoLogout).negativeText(R.string.identityInfoCancel).callback(new MaterialDialog.ButtonCallback() {
             @Override
