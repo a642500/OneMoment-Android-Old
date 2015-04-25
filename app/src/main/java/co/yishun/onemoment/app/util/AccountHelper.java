@@ -198,18 +198,21 @@ public class AccountHelper {
 
     public static void setWifiSyncEnable(Activity activity, boolean isEnable) {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putBoolean(IS_WIFI_SYNC, isEnable).apply();
-        syncAtOnce(activity);
+        Account account = syncAtOnce(activity);
+        LogUtil.i(TAG, "sync account add period.");
+        ContentResolver.addPeriodicSync(account, Contract.AUTHORITY, new Bundle(), 60 * 10);//10 min
     }
 
     public static boolean isWifiSyncEnable(Activity activity) {
         return activity.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WIFI_SYNC, false);
     }
 
-    public static void syncAtOnce(Context context) {
+    public static Account syncAtOnce(Context context) {
         LogUtil.i(TAG, "sync at once");
         Account account = getAccount(context);
         LogUtil.i(TAG, "sync account: " + account);
         ContentResolver.requestSync(account, Contract.AUTHORITY, new Bundle());
+        return account;
     }
 
     public enum PasswordType {

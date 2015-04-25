@@ -62,8 +62,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     FrameLayout viewPagerContainer;
 
     @Fun
-    @Click
-    void backToToday(View view) {
+    @Click void backToToday(View view) {
         viewPagerContainer.removeAllViews();
         viewPager = new JazzyViewPager(this);
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
@@ -74,19 +73,16 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     }
 
     @Fun
-    @Click
-    void nextMonthBtn(View view) {
+    @Click void nextMonthBtn(View view) {
         mController.showNextMonthCalendar();
     }
 
     @Fun
-    @Click
-    void previousMonthBtn(View view) {
+    @Click void previousMonthBtn(View view) {
         mController.showPreviousMonthCalendar();
     }
 
-    @AfterViews
-    void initToolbar() {
+    @AfterViews void initToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getString(R.string.albumTitle));
         toolbar.setTitleTextColor(getResources().getColor(R.color.textColorCalenderTitle));
@@ -95,8 +91,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
     }
 
-    @AfterViews
-    void initToday() {
+    @AfterViews void initToday() {
         Calendar today = Calendar.getInstance();
         int day = today.get(Calendar.DAY_OF_MONTH);
         calendarCurrentDay.setText(day > 9 ? String.valueOf(day) : "0" + day);
@@ -108,8 +103,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     SparseArray storedPager = new SparseArray<>();
 
-    @AfterViews
-    void initViewPager() {
+    @AfterViews void initViewPager() {
         backToToday(null);
 //        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
 //        mController = new ViewPagerController(this, viewPager);
@@ -180,8 +174,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     }
 
     @Fun
-    @Click
-    void shootingBtn(View view) {
+    @Click void shootingBtn(View view) {
         onBackPressed();
     }
 
@@ -189,8 +182,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     Dao<Moment, Integer> momentDao;
 
     @Fun
-    @Click
-    void replayBtn(View view) {
+    @Click void replayBtn(View view) {
         try {
             ArrayList<Moment> momentList = new ArrayList<>(15);
             momentList.addAll(momentDao.queryBuilder().limit(15).orderBy("timeStamp", true).query());
@@ -208,11 +200,13 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG, "onResume");
+        if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this)) {
+            AccountHelper.syncAtOnce(this);
+        }
     }
 
     @Fun
-    @Click
-    void syncBtn(View view) {
+    @Click void syncBtn(View view) {
         if (!AccountHelper.isLogin(this)) {
             mWeiboHelper = showLoginDialog();
             return;
@@ -225,13 +219,11 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         showNotification("syncing...");
     }
 
-    @Background(delay = 10 * 1000)
-    void delayEnableSyncBtn() {
+    @Background(delay = 10 * 1000) void delayEnableSyncBtn() {
         justPressed = false;
     }
 
-    @AfterViews
-    void setOneMomentCount() {
+    @AfterViews void setOneMomentCount() {
         try {
             titleOfCalender.setText(String.valueOf(OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).countOf()));
         } catch (SQLException e) {
