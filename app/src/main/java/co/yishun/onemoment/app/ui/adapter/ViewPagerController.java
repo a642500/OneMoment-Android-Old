@@ -92,6 +92,13 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
 
     private OnMonthChangeListener mListener;
 
+    public void notifyUpdate() {
+        for (int i = 0; i < holder.length; i++) {
+            ViewHolder viewHolder = holder[i];
+            viewHolder.refresh(viewHolder.oldOffset);
+        }
+    }
+
     @Override
     public void setOnMonthChangeListener(OnMonthChangeListener listener) {
         mListener = listener;
@@ -131,6 +138,7 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
         View view;
         GridView calendarGridView;
         CalendarAdapter adapter;
+        int oldOffset;
 
         public ViewHolder(View view) {
             this.view = view;
@@ -141,6 +149,7 @@ public class ViewPagerController extends PagerAdapter implements AlbumController
         }
 
         public void refresh(int offset) {
+            oldOffset = offset;
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, offset);
             adapter.setCalender(calendar);

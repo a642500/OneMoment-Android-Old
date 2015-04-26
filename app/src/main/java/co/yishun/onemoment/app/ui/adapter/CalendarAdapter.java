@@ -70,6 +70,10 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
         return 0;
     }
 
+    @Override public void notifyUpdate() {
+        LogUtil.e(TAG, "not support method");
+    }
+
     private void onChange(Calendar calendar) {
         if (onMonthChangeListener != null) {
             onMonthChangeListener.onMonthChange(calendar);
@@ -179,8 +183,7 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
         return holder.view;
     }
 
-    @Background
-    void fillBackground(CellView holder, int day) {
+    @Background void fillBackground(CellView holder, int day) {
 //            return;
         ImageView imageView = holder.backgroundImageView;
         Calendar todayOfMonth = ((Calendar) (mCalender.clone()));

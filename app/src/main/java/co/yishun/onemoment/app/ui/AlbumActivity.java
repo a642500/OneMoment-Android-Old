@@ -1,6 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -19,6 +22,7 @@ import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.request.account.SignUp;
+import co.yishun.onemoment.app.sync.SyncAdapter;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
 import co.yishun.onemoment.app.ui.adapter.ViewPagerController;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
@@ -204,6 +208,15 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG, "onResume");
+        registerReceiver(new BroadcastReceiver() {
+            @Override public void onReceive(Context context, Intent intent) {
+                LogUtil.i(TAG, "received sync done intent");
+                if (mController != null && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_CHANGED, false)) {
+                    LogUtil.i(TAG, "update ui");
+                    mController.notifyUpdate();
+                }
+            }
+        }, new IntentFilter(SyncAdapter.SYNC_BROADCAST));
     }
 
     @AfterInject void trySync() {

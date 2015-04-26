@@ -16,4 +16,6 @@ public interface AlbumController {
     }
 
     int getTodayIndex();
+
+    void notifyUpdate();
 }

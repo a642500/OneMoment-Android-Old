@@ -90,7 +90,27 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
         for (Data data : videosOnServer.values())
             downloadVideo(data, null);//other unhandled video mean they need download
+        syncDone();
     }
+
+    /**
+     * send broadcast to notify finishing syncing
+     */
+    private void syncDone() {
+        Intent intent = new Intent(SYNC_BROADCAST);
+        intent.putExtra(SYNC_BROADCAST_EXTRA_IS_CHANGED, isChange);
+        LogUtil.i(TAG, "sync done, send a broadcast. isChange: " + isChange);
+        getContext().sendBroadcast(intent);
+    }
+
+    /**
+     * whether local data update while sync. if true, need to notify some ui update
+     */
+    boolean isChange = false;
+
+    public static final String SYNC_BROADCAST = "co.yishun.onemoment.app.sync.done";
+    public static final String SYNC_BROADCAST_EXTRA_IS_CHANGED = "is_changed";
+
 
     private UploadManager mUploadManager;
 
@@ -151,6 +171,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+    /**
+     * download a video from server, then register in database.
+     *
+     * @param aVideoOnServer video to download.
+     * @param momentOld      old local moment. It will be deleted if it isn't null.
+     */
     private void downloadVideo(Data aVideoOnServer, @Nullable Moment momentOld) {
         LogUtil.i(TAG, "download a video: " + aVideoOnServer.getQiuniuKey());
         File fileTemp = CameraHelper.getOutputMediaFile(getContext(), aVideoOnServer);
@@ -176,6 +202,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), file.getPath());
                     dao.create(Moment.from(aVideoOnServer, file.getPath(), pathToThumb, pathToLargeThumb));
                     LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
+                    isChange = true;
                 }
             } catch (Exception e1) {
                 e1.printStackTrace();
