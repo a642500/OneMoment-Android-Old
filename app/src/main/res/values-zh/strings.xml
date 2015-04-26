@@ -158,4 +158,5 @@
     <string name="albumSyncAlertText">正在使用数据流量，确认同步？</string>
     <string name="albumSyncAlertOk">同步</string>
     <string name="albumSyncText">正在同步…</string>
+    <string name="albumSyncDoneSuccess">同步已完成</string>
 </resources>

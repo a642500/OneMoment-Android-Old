@@ -208,16 +208,41 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG, "onResume");
-        registerReceiver(new BroadcastReceiver() {
-            @Override public void onReceive(Context context, Intent intent) {
-                LogUtil.i(TAG, "received sync done intent");
-                if (mController != null && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_CHANGED, false)) {
-                    LogUtil.i(TAG, "update ui");
-                    mController.notifyUpdate();
-                }
-            }
-        }, new IntentFilter(SyncAdapter.SYNC_BROADCAST));
+        registerReceiver(mSyncDoneReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_DONE));
+        registerReceiver(mDownloadUpdateReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_UPDATE_DOWNLOAD));
     }
+
+    @Override protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mDownloadUpdateReceiver);
+        unregisterReceiver(mSyncDoneReceiver);
+        isManualSync = false;//cancel notify sync done if user leaves.
+    }
+
+    BroadcastReceiver mDownloadUpdateReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received download progress update intent");
+            if (mController != null && intent.getIntExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_THIS_PROGRESS, 0) == 100) {
+                mController.notifyUpdate();
+            }
+        }
+
+    };
+
+    /**
+     * only after manual sync, it will notify user sync success.
+     */
+    boolean isManualSync = false;
+    BroadcastReceiver mSyncDoneReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received sync done intent");
+            if (isManualSync && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_SUCCESS, false)) {
+                LogUtil.i(TAG, "notify sync done");
+                showNotification(R.string.albumSyncDoneSuccess);
+                isManualSync = false;
+            }
+        }
+    };
 
     @AfterInject void trySync() {
         if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this) && (!AccountHelper.isOnlyWifiSyncEnable(this) || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) {
@@ -240,6 +265,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     void sync() {
         if (!justPressed) {
+            isManualSync = true;
             AccountHelper.syncAtOnce(this);
             justPressed = true;
             delayEnableSyncBtn();
