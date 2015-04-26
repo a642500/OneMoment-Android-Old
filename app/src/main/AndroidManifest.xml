@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -32,11 +32,13 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:theme="@style/Base.AppTheme.NoActionBar"
-            android:screenOrientation="portrait"
             >
         <activity
                 android:name=".ui.SplashActivity_"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -45,12 +47,16 @@
         </activity>
         <activity
                 android:name=".ui.guide.GuideActivity_"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 android:label="@string/guideTitle">
         </activity>
         <activity
                 android:name=".ui.RecordingActivity_"
                 android:configChanges="orientation|keyboardHidden"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                >
             >
         </activity>
         <!-- <activity -->
@@ -70,24 +76,33 @@
                 android:label="@string/loginByPhoneTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 />
 
 
         <activity
                 android:name=".ui.AlbumActivity_"
                 android:label="@string/albumTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
+                >
         </activity>
         <activity
                 android:name=".ui.AboutActivity_"
                 android:label="@string/aboutTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity
                 android:name=".ui.FindPasswordActivity_"
                 android:label="@string/findPasswordTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 >
         </activity>
         <activity
@@ -95,49 +110,67 @@
                 android:label="@string/resetPasswordTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 >
         </activity>
         <activity
                 android:name=".ui.IdentityInfoActivity_"
                 android:label="@string/identityInfoTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 >
         </activity>
         <activity
                 android:name=".ui.VideoSaveActivity_"
                 android:label="@string/videoSaveTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar">
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity
                 android:name=".ui.account.SignUpActivity_"
                 android:label="@string/signUpTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 >
         </activity>
         <activity
                 android:name=".ui.account.IntegrateInfoActivity_"
                 android:label="@string/integrateInfoTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar"/>
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"/>
         <activity
                 android:name=".ui.account.SetPasswordActivity_"
                 android:label="@string/setPasswordTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 />
         <activity
                 android:name=".ui.SyncSettingsActivity_"
                 android:label="@string/syncSettingsTitle"
-                android:theme="@style/Base.AppTheme.NoActionBar"/>
+                android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"/>
         <activity
                 android:name=".ui.PlayActivity_"
                 android:label="@string/playTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 />
         <activity
                 android:name=".ui.MultiPlayActivity_"
                 android:label="@string/multiPlayTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"
                 />
 
         <service
@@ -170,12 +203,17 @@
                 android:exported="false"
                 android:syncable="true"/>
 
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
+        <activity
+                android:name="com.soundcloud.android.crop.CropImageActivity"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden"/>
 
-        <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:windowSoftInputMode="adjustResize"
-                  android:exported="false" >
+        <activity
+                android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+                android:windowSoftInputMode="adjustResize"
+                android:exported="false"
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|keyboardHidden">
         </activity>
 
         <meta-data
