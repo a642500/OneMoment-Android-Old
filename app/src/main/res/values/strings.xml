@@ -55,6 +55,9 @@
     <string name="albumReplayBtnText">Replay</string>
     <string name="albumReplayNoMoment">No moment at all!</string>
     <string name="albumSyncBtnText">Sync</string>
+    <string name="albumSyncText">Sync…</string>
+    <string name="albumSyncAlertText">Not connected wifi, sync anyway?</string>
+    <string name="albumSyncAlertOk">Sync</string>
     <string name="albumWeekTitleSun">Sun</string>
     <string name="albumWeekTitleMon">Mon</string>
     <string name="albumWeekTitleTue">Tue</string>

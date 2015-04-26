@@ -29,6 +29,7 @@ import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.nispok.snackbar.Snackbar;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
 
@@ -218,12 +219,19 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             mWeiboHelper = showLoginDialog();
             return;
         }
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            sync();
+        } else
+            Snackbar.with(this).text(R.string.albumSyncAlertText).actionLabel(R.string.albumSyncAlertOk).actionColorResource(R.color.colorGreenBlue).actionListener(snackbar -> sync()).show(this);
+    }
+
+    void sync() {
         if (!justPressed) {
             AccountHelper.syncAtOnce(this);
             justPressed = true;
             delayEnableSyncBtn();
         } else LogUtil.v(TAG, "sync pressed in 10s, do nothing");
-        showNotification("syncing...");
+        showNotification(R.string.albumSyncText);
     }
 
     @Background(delay = 10 * 1000) void delayEnableSyncBtn() {
