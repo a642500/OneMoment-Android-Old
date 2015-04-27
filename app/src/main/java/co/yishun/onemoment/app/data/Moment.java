@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.data;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.sync.Data;
 import co.yishun.onemoment.app.util.CameraHelper;
@@ -23,24 +24,20 @@ import java.util.Date;
 @AdditionalAnnotation.DefaultContentMimeTypeVnd(name = Contract.Moment.MIMETYPE_NAME, type = Contract.Moment.MIMETYPE_TYPE)
 @DatabaseTable(tableName = Contract.DATABASE_NAME)
 public class Moment implements Serializable {
-    @DatabaseField
-    String path;
-    @DatabaseField
-    String thumbPath;
-    @DatabaseField
-    String largeThumbPath;
-    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true)
-    private int id;
+    @DatabaseField String path;
+    @DatabaseField String thumbPath;
+    @DatabaseField String largeThumbPath;
+    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true) private int id;
     //auto set when created
-    @DatabaseField
-    private long timeStamp;
+    @DatabaseField private long timeStamp;
+    /**
+     * add at database version 2.0
+     */
+    @DatabaseField private String owner;
 
-    @DatabaseField
-    private String time;
+    @DatabaseField private String time;
 
-    public Moment() {
-        //keep for ormlite
-    }
+    public Moment() { /*keep for ormlite*/ }
 
     private static Moment newInstance() {
         Moment m = new Moment();
@@ -49,35 +46,37 @@ public class Moment implements Serializable {
         return m;
     }
 
-    public String getPath() {
-        return path;
+    /**
+     * Set the owner of the moment, null to set it public.
+     *
+     * @param owner id of the owner
+     */
+    public void setOwner(@Nullable String owner) {
+        this.owner = owner;
     }
 
-    public File getFile() {
-        return new File(path);
+    public String getOwner() {
+        return owner;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
-    }
+    public String getPath() { return path; }
 
-    public String getTime() {
-        return time;
-    }
+    public File getFile() { return new File(path); }
 
-    public String getThumbPath() {
-        return thumbPath;
-    }
+    public long getTimeStamp() { return timeStamp; }
 
-    public String getLargeThumbPath() {
-        return largeThumbPath;
-    }
+    public String getTime() { return time; }
+
+    public String getThumbPath() { return thumbPath; }
+
+    public String getLargeThumbPath() { return largeThumbPath; }
 
     public static class MomentBuilder {
         private static final String TAG = LogUtil.makeTag(MomentBuilder.class);
         private String mPath;
         private String mThumbPath = null;
         private String mLargeThumbPath = null;
+        private String mOwner = "LOC";//have default value
 
         public MomentBuilder setPath(String path) {
             mPath = path;
@@ -94,20 +93,37 @@ public class Moment implements Serializable {
             return this;
         }
 
+        /**
+         * set owner of the moment, null to set public
+         *
+         * @param userId
+         * @return
+         */
+        public MomentBuilder setOwner(@Nullable String userId) {
+            if (userId == null) {
+                mOwner = "LOC";
+            } else mOwner = userId;
+            return this;
+        }
+
         public Moment build() {
             check();
             Moment m = Moment.newInstance();
             m.path = mPath;
             m.thumbPath = mThumbPath;
             m.largeThumbPath = mLargeThumbPath;
+            m.owner = mOwner;
             return m;
         }
 
         private void check() {
-            if (mPath == null)
-                throw new IllegalStateException("field value is error");
+            if (mPath == null) throw new IllegalStateException("field value is error");
             if (mThumbPath == null) LogUtil.w(TAG, "null thumb path");
             if (mLargeThumbPath == null) LogUtil.w(TAG, "null large thumb path");
+            if (mOwner == null) {
+                LogUtil.e(TAG, "null owner, has set LOC");
+                mOwner = "LOC";
+            }
         }
     }
 
@@ -118,6 +134,7 @@ public class Moment implements Serializable {
         m.largeThumbPath = largeThumbPath;
         m.timeStamp = video.getTimeStamp();
         m.time = video.getTime();
+        m.setOwner(null);
         return m;
     }
 
@@ -133,6 +150,7 @@ public class Moment implements Serializable {
     public String toString() {
         return "Moment{" +
                 "path='" + path + '\'' +
+                ", owner='" + owner + '\'' +
                 ", time='" + time + '\'' +
                 ", timeStamp=" + timeStamp +
                 '}';

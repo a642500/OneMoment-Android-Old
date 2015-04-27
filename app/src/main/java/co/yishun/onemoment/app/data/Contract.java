@@ -12,7 +12,7 @@ import android.provider.BaseColumns;
 public class Contract {
 
     public static final String DATABASE_NAME = "OneDataBase.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;//2.0 add "owner" column
     public static final String AUTHORITY = "co.yishun.onemoment.app";
 
 
@@ -27,7 +27,7 @@ public class Contract {
         public static final String MIMETYPE_NAME = AUTHORITY + "provider";
 
         public static final String PATH = "path";
-        //TODO ??
+        //TODO need??
         public static final int CONTENT_URI_PATTERN_MANY = 1;
         public static final int CONTENT_URI_PATTERN_ONE = 2;
 
