@@ -451,6 +451,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                 super.onPositive(dialog);
                 deleteAccountBackground();
                 IdentityInfoActivity.this.finish();
+                RecordingActivity_.intent(IdentityInfoActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP).start();
             }
         }).show();
     }
