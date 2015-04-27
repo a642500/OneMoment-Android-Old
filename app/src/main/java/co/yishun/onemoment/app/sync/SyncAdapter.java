@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.sync;
 
 import android.accounts.Account;
 import android.content.*;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.qiniu.android.utils.Etag;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.annotations.SystemService;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,11 +43,15 @@ import java.util.Map;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String TAG = LogUtil.makeTag(SyncAdapter.class);
     ContentResolver mContentResolver;
+    public static final String BUNLDE_IGNORE_NETWORK = "boolean_ignore_network";
 
     public SyncAdapter(Context context) {
         super(context, true);
         mContentResolver = context.getContentResolver();
     }
+
+    @SystemService
+    ConnectivityManager connectivityManager;
 
     /**
      * To execute sync. When sync end, it will call {@link #syncDone(boolean)} to send broadcast notify sync process ending. And in syncing process, it calls {@link #syncUpdate(UpdateType, int, int, int)} to broadcast progress.
@@ -53,6 +59,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         LogUtil.i(TAG, "onPerformSync, account: " + account.name + ", Bundle: " + extras);
+
+        if (!extras.getBoolean(BUNLDE_IGNORE_NETWORK, false) && !connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            LogUtil.i(TAG, "cancel sync because network is not wifi");
+            return;
+        }
         //see:http://developer.android.com/training/sync-adapters/creating-sync-adapter.html
 
         new GetVideoList().with(getContext()).setCallback((e, result) -> {

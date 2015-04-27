@@ -245,9 +245,11 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     };
 
     @AfterInject void trySync() {
-        if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this) && (!AccountHelper.isOnlyWifiSyncEnable(this) || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) {
+        if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this)) {
             LogUtil.v(TAG, "try sync, start.");
-            AccountHelper.syncAtOnce(this);
+            if (!AccountHelper.isOnlyWifiSyncEnable(this)) {
+                AccountHelper.syncAtOnce(this);
+            } else AccountHelper.syncAtOnceIgnoreNetwork(this);
         } else LogUtil.v(TAG, "try sync, not start");
     }
 
@@ -258,15 +260,16 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             return;
         }
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            sync();
+            sync(false);
         } else
-            Snackbar.with(this).text(R.string.albumSyncAlertText).actionLabel(R.string.albumSyncAlertOk).actionColorResource(R.color.colorGreenBlue).actionListener(snackbar -> sync()).show(this);
+            Snackbar.with(this).text(R.string.albumSyncAlertText).actionLabel(R.string.albumSyncAlertOk).actionColorResource(R.color.colorGreenBlue).actionListener(snackbar -> sync(true)).show(this);
     }
 
-    void sync() {
+    void sync(boolean ignoreNetwork) {
         if (!justPressed) {
             isManualSync = true;
-            AccountHelper.syncAtOnce(this);
+            if (ignoreNetwork) AccountHelper.syncAtOnceIgnoreNetwork(this);
+            else AccountHelper.syncAtOnce(this);
             justPressed = true;
             delayEnableSyncBtn();
         } else LogUtil.v(TAG, "sync pressed in 10s, do nothing");

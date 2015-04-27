@@ -16,6 +16,7 @@ import co.yishun.onemoment.app.data.Contract;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import co.yishun.onemoment.app.sync.SyncAdapter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -264,6 +265,18 @@ public class AccountHelper {
         Account account = getAccount(context);
         LogUtil.i(TAG, "sync account: " + account);
         Bundle b = new Bundle();
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(account, Contract.AUTHORITY, b);
+        return account;
+    }
+
+    public static Account syncAtOnceIgnoreNetwork(Context context) {
+        LogUtil.i(TAG, "sync at once ignore network");
+        Account account = getAccount(context);
+        LogUtil.i(TAG, "sync account: " + account);
+        Bundle b = new Bundle();
+        b.putBoolean(SyncAdapter.BUNLDE_IGNORE_NETWORK, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(account, Contract.AUTHORITY, b);
