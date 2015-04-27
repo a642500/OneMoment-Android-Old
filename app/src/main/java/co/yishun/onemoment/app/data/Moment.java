@@ -52,11 +52,21 @@ public class Moment implements Serializable {
      * @param owner id of the owner
      */
     public void setOwner(@Nullable String owner) {
-        this.owner = owner;
+        if (owner == null) {
+            this.owner = "LOC";
+        } else this.owner = owner;
     }
 
     public String getOwner() {
         return owner;
+    }
+
+    public boolean isPublic() {
+        return owner.startsWith("LOC");
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getPath() { return path; }
@@ -127,6 +137,15 @@ public class Moment implements Serializable {
         }
     }
 
+    /**
+     * Create a private moment from {@link Data}
+     *
+     * @param video
+     * @param path
+     * @param thumbPath
+     * @param largeThumbPath
+     * @return
+     */
     public static Moment from(Data video, String path, String thumbPath, String largeThumbPath) {
         Moment m = new Moment();
         m.path = path;
@@ -134,7 +153,7 @@ public class Moment implements Serializable {
         m.largeThumbPath = largeThumbPath;
         m.timeStamp = video.getTimeStamp();
         m.time = video.getTime();
-        m.setOwner(null);
+        m.setOwner(video.getUserID());
         return m;
     }
 

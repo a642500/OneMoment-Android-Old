@@ -48,6 +48,10 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
         return this;
     }
 
+    public String getUserID() {
+        return this.key.substring(0, key.indexOf(Config.URL_HYPHEN));
+    }
+
     @Override
     public Data setValue(Data object) {
         return null;

@@ -218,12 +218,57 @@ public class CameraHelper {
         return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + Config.URL_HYPHEN + time + Config.URL_HYPHEN + timestamp + type.getSuffix());
     }
 
+    public static File getOutputMediaDir(Context context) {
+        return context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
+    }
+
     public static File getOutputMediaFile(Context context, Type type, @NonNull File file) {
         return getOutputMediaFile(context, type, parseTimeStamp(file));
     }
 
+    /**
+     * Return supposing name of synced type of a video on server
+     *
+     * @param context
+     * @param syncedVideo
+     * @return
+     */
     public static File getOutputMediaFile(Context context, Data syncedVideo) {
         return getOutputMediaFile(context, Type.SYNCED, syncedVideo.getTimeStamp());
+    }
+
+    /**
+     * return media type by file path.
+     * <p>
+     * You must ensure the file is one of {@link Type}. Otherwise it may cause wrong result.
+     *
+     * @param filePath of the media file
+     * @return type of the media file
+     */
+    public static Type whatTypeOf(String filePath) {
+        File file = new File(filePath);
+        Type type = null;
+        if (file.getName().length() > 3) {
+            String prefix = file.getName().substring(0, 3);
+            switch (prefix) {
+                case "LOC":
+                    type = Type.LOCAL;
+                    break;
+                case "VID":
+                    type = Type.RECORDED;
+                    break;
+                case "LAT":
+                    type = Type.LARGE_THUMB;
+                    break;
+                case "MIT":
+                    type = Type.MICRO_THUMB;
+                    break;
+                default:
+                    type = Type.SYNCED;
+                    break;
+            }
+        }
+        return type;
     }
 
     public static long parseTimeStamp(File file) {
@@ -234,14 +279,32 @@ public class CameraHelper {
         return Long.parseLong(pathOrFileName.substring(pathOrFileName.lastIndexOf(Config.URL_HYPHEN) + 1, pathOrFileName.lastIndexOf(".")));
     }
 
+    /**
+     * Create full screen thumb of a video file. If thumb exists, it will be deleted.
+     *
+     * @return path to the thumb
+     * @throws IOException
+     */
     public static String createLargeThumbImage(Context context, String videoPath) throws IOException {
         return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
     }
 
+    /**
+     * Create micro thumb of a video file. If thumb exists, it will be deleted.
+     *
+     * @return path to the thumb
+     * @throws IOException
+     */
     public static String createThumbImage(Context context, String videoPath) throws IOException {
         return createThumbImage(context, videoPath, MediaStore.Images.Thumbnails.MICRO_KIND);
     }
 
+    /**
+     * Create target kind thumb of a video file. If thumb exists, it will be deleted.
+     *
+     * @return path to the thumb
+     * @throws IOException
+     */
     private static String createThumbImage(Context context, String videoPath, int kind) throws IOException {
         File thumbFile = getOutputMediaFile(context, kind == MediaStore.Images.Thumbnails.FULL_SCREEN_KIND ? Type.LARGE_THUMB : Type.MICRO_THUMB, new File(videoPath));
         Log.i(TAG, "create thumb image: " + thumbFile.getPath());
