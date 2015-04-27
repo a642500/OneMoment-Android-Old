@@ -13,7 +13,6 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
-import co.yishun.onemoment.app.ui.AlbumController;
 import co.yishun.onemoment.app.ui.PlayActivity_;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
@@ -36,8 +35,7 @@ import java.util.List;
  * Created by Carlos on 2015/4/4.
  */
 @EBean
-@Deprecated
-public class CalendarAdapter extends BaseAdapter implements AlbumController {//TODO delete interface
+public class CalendarAdapter extends BaseAdapter {
     public static final int[] WEEK_TITLE_RES = new int[]{
 //                R.string.albumWeekTitleSun,
 //                R.string.albumWeekTitleMon,
@@ -50,7 +48,6 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {//T
     private static final String TAG = LogUtil.makeTag(CalendarAdapter.class);
     private final Calendar mCalender;
     private final Context mContext;
-    private OnMonthChangeListener onMonthChangeListener;
 
 
     public CalendarAdapter(Context context) {
@@ -62,54 +59,6 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {//T
         mCalender.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
         mCalender.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
         notifyDataSetInvalidated();
-    }
-
-    public void setOnMonthChangeListener(OnMonthChangeListener listener) {
-        onMonthChangeListener = listener;
-    }
-
-    @Override
-    public int getTodayIndex() {
-        return 0;
-    }
-
-    @Override public void notifyUpdate() {
-        LogUtil.e(TAG, "not support method");
-    }
-
-    private void onChange(Calendar calendar) {
-        if (onMonthChangeListener != null) {
-            onMonthChangeListener.onMonthChange(calendar);
-        }
-    }
-
-    public void showPreviousMonthCalendar() {
-        mCalender.add(Calendar.MONTH, -1);
-        notifyDataSetInvalidated();
-    }
-
-    public void showNextMonthCalendar() {
-        mCalender.add(Calendar.MONTH, 1);
-        notifyDataSetInvalidated();
-    }
-
-    public void showTodayMonthCalendar() {
-        Calendar today = Calendar.getInstance();
-        mCalender.set(Calendar.YEAR, today.get(Calendar.YEAR));
-        mCalender.set(Calendar.MONTH, today.get(Calendar.MONTH));
-        notifyDataSetInvalidated();
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        onChange(mCalender);
-        super.notifyDataSetChanged();
-    }
-
-    @Override
-    public void notifyDataSetInvalidated() {
-        onChange(mCalender);
-        super.notifyDataSetInvalidated();
     }
 
     @Override
