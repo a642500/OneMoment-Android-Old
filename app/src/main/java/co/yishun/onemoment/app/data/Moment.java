@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @AdditionalAnnotation.DefaultContentUri(authority = Contract.AUTHORITY, path = Contract.Moment.CONTENT_URI_PATH)
 @AdditionalAnnotation.DefaultContentMimeTypeVnd(name = Contract.Moment.MIMETYPE_NAME, type = Contract.Moment.MIMETYPE_TYPE)
-@DatabaseTable(tableName = Contract.DATABASE_NAME)
+@DatabaseTable(tableName = Contract.Moment.TABLE_NAME)
 public class Moment implements Serializable {
     @DatabaseField String path;
     @DatabaseField String thumbPath;

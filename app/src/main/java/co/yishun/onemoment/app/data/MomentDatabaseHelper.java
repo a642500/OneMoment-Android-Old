@@ -42,8 +42,12 @@ public class MomentDatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (oldVersion == 1) {
                 Dao<Moment, Integer> dao = getDao(Moment.class);
                 LogUtil.i(TAG, "upgrade database from " + oldVersion + " to " + newVersion);
-                String raw = "ALTER TABLE `" + Contract.Moment.TABLE_NAME + "` ADD COLUMN owner VARCHAR DEFAULT 'LOC' ;";
-                 LogUtil.i(TAG, "affected rows: " + dao.executeRaw(raw));
+                String renameTable = "ALTER TABLE `" + Contract.DATABASE_NAME + "` RENAME TO " + Contract.Moment.TABLE_NAME + " ;";//because I made wrong with naming table with database name.
+                LogUtil.i(TAG, "rename table: " + renameTable);
+                dao.executeRaw(renameTable);
+                String addColumn = "ALTER TABLE " + Contract.Moment.TABLE_NAME + " ADD COLUMN owner VARCHAR DEFAULT 'LOC' ;";
+                LogUtil.i(TAG, "add column: " + addColumn);
+                dao.executeRaw(addColumn);
             }
         } catch (SQLException e) {
             e.printStackTrace();
