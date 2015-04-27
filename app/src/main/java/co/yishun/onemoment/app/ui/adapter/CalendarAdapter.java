@@ -15,9 +15,12 @@ import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.ui.AlbumController;
 import co.yishun.onemoment.app.ui.PlayActivity_;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
@@ -190,10 +193,22 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
         todayOfMonth.set(Calendar.DAY_OF_MONTH, day);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(todayOfMonth.getTime());
         try {
-            List<Moment> result = OpenHelperManager.getHelper(mContext, MomentDatabaseHelper.class).getDao(Moment.class)
-                    .queryBuilder().where()
-                    .eq("time", time).query();
-            if (result.size() > 0) {
+            List<Moment> result = null;
+            Dao<Moment, Integer> dao = OpenHelperManager.getHelper(mContext, MomentDatabaseHelper.class).getDao(Moment.class);
+
+            if (AccountHelper.isLogin(mContext)) {
+                final Where<Moment, Integer> w = dao.queryBuilder().where();
+                result = w.and(
+                        w.eq("time", time),
+                        w.or(
+                                w.eq("owner", AccountHelper.getIdentityInfo(mContext).get_id()),
+                                w.eq("owner", "LOC"))
+                ).query();
+            } else {
+                result = dao.queryBuilder().where()
+                        .eq("time", time).query();
+            }
+            if (result != null && result.size() > 0) {
                 LogUtil.d(TAG, "fill background start,day: " + day + "; moment size: " + result.size());
                 String thumbPath = result.get(0).getThumbPath();
                 LogUtil.i(TAG, "thumb path: " + thumbPath);
