@@ -13,7 +13,11 @@ import android.text.TextUtils;
 import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Contract;
+import co.yishun.onemoment.app.data.Moment;
+import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.result.AccountResult;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
 import java.io.*;
 
@@ -64,6 +68,12 @@ public class AccountHelper {
         return getAccount(context) != null && new File(path).exists();//TODO integrate identity info into account, add update identity when lost
     }
 
+    /**
+     * Cost time, run on background
+     *
+     * @param activity
+     * @param data
+     */
     public static void createAccount(Activity activity, AccountResult.Data data) {
         // Create the account type and default account
         Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
@@ -77,6 +87,7 @@ public class AccountHelper {
                         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                             mAccount = newAccount;
                             saveIdentityInfo(activity, data);
+                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id());
                             setAutoSync(activity, true);
                         } else {
                             LogUtil.e(TAG, "The account exists or some other error occurred.");
@@ -91,9 +102,10 @@ public class AccountHelper {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
+                deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id());
                 setAutoSync(activity, true);
             } else {
-                LogUtil.e(TAG, "Add account occurred, but no old account exists.");
+                LogUtil.e(TAG, "Add account occurred error, but no old account exists.");
             }
         }
     }
@@ -112,10 +124,49 @@ public class AccountHelper {
         }
     }
 
+    private static void deletePrivateMomentExceptWhoseIdEquals(Context context, String userId) {
+        try {
+            Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
+            for (Moment moment : dao.queryBuilder().where().not().eq("owner", "LOC").and().not().eq("owner", userId).query()) {
+                if (dao.delete(moment) == 1) {
+                    new File(moment.getThumbPath()).delete();
+                    new File(moment.getLargeThumbPath()).delete();
+                    LogUtil.i(TAG, "private other user's moment deleted: " + moment);
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.e(TAG, "Exception when delete private moment and thumb after logout");
+            e.printStackTrace();
+        }
+    }
+
+    private static void deleteAllPrivateMoment(Context context) {
+        try {
+            Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
+            for (Moment moment : dao.queryBuilder().where().not().eq("owner", "LOC").query()) {
+                if (dao.delete(moment) == 1) {
+                    new File(moment.getThumbPath()).delete();
+                    new File(moment.getLargeThumbPath()).delete();
+                    LogUtil.i(TAG, "private moment deleted: " + moment);
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.e(TAG, "Exception when delete private moment and thumb after logout");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Cost time, run background
+     *
+     * @param context
+     */
     public static void deleteAccount(Context context) {
         deleteIdentityInfo(context);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         accountManager.removeAccount(getAccount(context), null, null, null);
+
+        deleteAllPrivateMoment(context);
         mAccount = null;
     }
 

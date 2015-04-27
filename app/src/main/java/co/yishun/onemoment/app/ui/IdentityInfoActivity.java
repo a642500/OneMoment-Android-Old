@@ -449,9 +449,13 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             @Override
             public void onPositive(MaterialDialog dialog) {
                 super.onPositive(dialog);
-                AccountHelper.deleteAccount(IdentityInfoActivity.this);
+                deleteAccountBackground();
                 IdentityInfoActivity.this.finish();
             }
         }).show();
+    }
+
+    @Background void deleteAccountBackground() {
+        AccountHelper.deleteAccount(this);
     }
 }
