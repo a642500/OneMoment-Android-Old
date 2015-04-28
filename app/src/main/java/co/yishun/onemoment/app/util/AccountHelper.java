@@ -88,7 +88,7 @@ public class AccountHelper {
                         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                             mAccount = newAccount;
                             saveIdentityInfo(activity, data);
-                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id());
+//                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
                             setAutoSync(activity, true);
                         } else {
                             LogUtil.e(TAG, "The account exists or some other error occurred.");
@@ -103,7 +103,7 @@ public class AccountHelper {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
-                deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id());
+//                deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
                 setAutoSync(activity, true);
             } else {
                 LogUtil.e(TAG, "Add account occurred error, but no old account exists.");
@@ -125,7 +125,8 @@ public class AccountHelper {
         }
     }
 
-    private static void deletePrivateMomentExceptWhoseIdEquals(Context context, String userId) {
+
+    @Deprecated private static void deletePrivateMomentExceptWhoseIdEquals(Context context, String userId) {
         try {
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
             for (Moment moment : dao.queryBuilder().where().not().eq("owner", "LOC").and().not().eq("owner", userId).query()) {
@@ -141,7 +142,7 @@ public class AccountHelper {
         }
     }
 
-    private static void deleteAllPrivateMoment(Context context) {
+    @Deprecated private static void deleteAllPrivateMoment(Context context) {
         try {
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
             for (Moment moment : dao.queryBuilder().where().not().eq("owner", "LOC").query()) {
@@ -157,18 +158,36 @@ public class AccountHelper {
         }
     }
 
+    private final static Object mAccountReadLock = new Object();
+
     /**
      * Cost time, run background
      *
      * @param context
      */
     public static void deleteAccount(Context context) {
-        deleteIdentityInfo(context);
-        AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-        accountManager.removeAccount(getAccount(context), null, null, null);
+        syncAtOnce(context);
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        deleteAllPrivateMoment(context);
-        mAccount = null;
+        synchronized (mAccountReadLock) {
+            Account account = getAccount(context);//disable get
+            mAccount = null;
+
+            //must cancel all sync when delete
+            ContentResolver.removePeriodicSync(account, Contract.AUTHORITY, new Bundle());
+            ContentResolver.cancelSync(account, Contract.AUTHORITY);
+            ContentResolver.setSyncAutomatically(account, Contract.AUTHORITY, false);
+
+            deleteIdentityInfo(context);
+            AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+            accountManager.removeAccount(account, null, null, null);
+
+//            deleteAllPrivateMoment(context); not delete but only read current user's and LOC's
+        }
     }
 
     public static boolean updateAccount(Context context, AccountResult.Data data) {
@@ -178,12 +197,14 @@ public class AccountHelper {
     }
 
     public static Account getAccount(Context context) {
-        if (mAccount == null) {
-            AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-            Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
-            if (accounts.length > 0) mAccount = accounts[0];
+        synchronized (mAccountReadLock) {
+            if (mAccount == null) {
+                AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+                Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
+                if (accounts.length > 0) mAccount = accounts[0];
+            }
+            return mAccount;
         }
-        return mAccount;
     }
 
     private static void loadInfo(Context context) {

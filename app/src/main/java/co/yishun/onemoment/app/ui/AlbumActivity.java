@@ -282,7 +282,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     @AfterViews void setOneMomentCount() {
         try {
-            titleOfCalender.setText(String.valueOf(OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).countOf()));
+            titleOfCalender.setText(String.valueOf(OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).queryBuilder().where().eq("owner", "LOC").and().eq("owner", AccountHelper.getIdentityInfo(this)).countOf()));
         } catch (SQLException e) {
             e.printStackTrace();
         }

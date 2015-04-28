@@ -49,7 +49,9 @@ public class Data implements Serializable, Comparable<Data>, Map.Entry<Integer, 
     }
 
     public String getUserID() {
-        return this.key.substring(0, key.indexOf(Config.URL_HYPHEN));
+        String id = this.key.substring(0, key.indexOf(Config.URL_HYPHEN));
+        LogUtil.v(TAG, "getUserID: " + id);
+        return id;
     }
 
     @Override

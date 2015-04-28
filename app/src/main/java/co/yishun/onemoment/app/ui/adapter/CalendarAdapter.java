@@ -37,7 +37,7 @@ import java.util.List;
  */
 @EBean
 @Deprecated
-public class CalendarAdapter extends BaseAdapter implements AlbumController {
+public class CalendarAdapter extends BaseAdapter implements AlbumController {//TODO delete interface
     public static final int[] WEEK_TITLE_RES = new int[]{
 //                R.string.albumWeekTitleSun,
 //                R.string.albumWeekTitleMon,
@@ -206,7 +206,7 @@ public class CalendarAdapter extends BaseAdapter implements AlbumController {
                 ).query();
             } else {
                 result = dao.queryBuilder().where()
-                        .eq("time", time).query();
+                        .eq("time", time).and().eq("owner", "LOC").query();
             }
             if (result != null && result.size() > 0) {
                 LogUtil.d(TAG, "fill background start,day: " + day + "; moment size: " + result.size());

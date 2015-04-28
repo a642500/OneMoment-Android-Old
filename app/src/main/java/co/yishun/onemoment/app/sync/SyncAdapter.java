@@ -85,6 +85,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override public void onSyncCanceled() {
         //TODO how to handle cancel
+        LogUtil.i(TAG, "onSyncCanceled");
         super.onSyncCanceled();
     }
 
@@ -101,6 +102,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             for (Moment moment : dao) {
                 Integer key = Integer.parseInt(moment.getTime());
                 Data video = videosOnServer.get(key);
+
+                if (Thread.interrupted()) {
+                    LogUtil.e("TAG", "interrupted");
+                    syncDone(false);
+                    return;
+                }
+
                 LogUtil.v(TAG, "sync iter: " + moment.toString());
                 if (video != null) {
                     LogUtil.v(TAG, "on server: " + video.toString());
@@ -121,8 +129,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     videosOnServer.remove(key);
                 } else uploadMoment(moment, null);//server not have today moment, upload
             }
-            for (Data data : videosOnServer.values())
+            for (Data data : videosOnServer.values()) {
+                if (Thread.interrupted()) {
+                    LogUtil.e("TAG", "interrupted");
+                    return;
+                }
                 downloadVideo(data, null);//other unhandled video mean they need download
+            }
             syncDone(true);
         } catch (Exception e) {
             //catch all to avoid crash background
@@ -143,7 +156,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 File syncedFile = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.SYNCED, file);
                 if (file.renameTo(syncedFile)) {
                     moment.setPath(syncedFile.getPath());
-                } else LogUtil.e(TAG, "unable to rename when checkMomentOwnerPrivate");
+                } else
+                    LogUtil.e(TAG, "unable to rename when checkMomentOwnerPrivate, from " + file.getPath() + " to " + syncedFile.getPath());
             }
             //set database owner
             if (moment.isPublic()) {
@@ -169,12 +183,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         isUploadChanged = false;
         isDownloadChanged = false;
 
+        cleanFile();
+    }
+
+    private void cleanFile() {
         try {
             //delete useless video
             File mediaDir = CameraHelper.getOutputMediaDir(getContext());
             for (String s : mediaDir.list((dir, filename) -> filename.startsWith(CameraHelper.Type.RECORDED.getPrefix(getContext())))) {
                 File toDeleted = new File(mediaDir, s);
                 LogUtil.i(TAG, "delete: " + toDeleted);
+                if (Thread.interrupted()) {
+                    LogUtil.e("TAG", "interrupted");
+                    return;
+                }
                 if (toDeleted.exists()) toDeleted.delete();
             }
 
@@ -184,6 +206,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     if (filename.startsWith(CameraHelper.Type.LOCAL.getPrefix(getContext()))) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("path", dir.getPath() + File.pathSeparator + filename);
+                        LogUtil.v(TAG, "query for path: " + map.get("path").toString());
                         return (dao.queryForFieldValues(map).isEmpty());
                     } else return false;
                 } catch (SQLException e) {
@@ -192,6 +215,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 }
             })) {
                 File toDeleted = new File(mediaDir, s);
+                if (Thread.interrupted()) {
+                    LogUtil.e("TAG", "interrupted");
+                    return;
+                }
                 LogUtil.i(TAG, "delete: " + toDeleted);
                 if (toDeleted.exists()) toDeleted.delete();
             }
