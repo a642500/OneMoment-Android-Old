@@ -33,6 +33,7 @@ import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 import com.nispok.snackbar.Snackbar;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
@@ -42,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 @EActivity(R.layout.activity_album)
@@ -190,13 +192,20 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     @Fun
     @Click void replayBtn(View view) {
         try {
-            ArrayList<Moment> momentList = new ArrayList<>(15);
-            momentList.addAll(momentDao.queryBuilder().limit(15).orderBy("timeStamp", true).query());
-            if (momentList.size() >= 2) {
-                MultiPlayActivity_.intent(this).extra("moments", momentList).start();
+            List<Moment> momentList;
+            Where<Moment, Integer> where = momentDao.queryBuilder().orderBy("timeStamp", true).where();
+            if (AccountHelper.isLogin(this)) {
+                momentList = where.eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this)).query();
+            } else {
+                momentList = where.eq("owner", "LOC").query();
+            }
+            if (momentList == null || momentList.isEmpty()) {
+                showNotification(R.string.albumReplayNoMoment);
             } else if (momentList.size() == 1) {
                 PlayActivity_.intent(this).extra("moment", momentList.get(0)).start();
-            } else showNotification(R.string.albumReplayNoMoment);
+            } else {
+                MultiPlayActivity_.intent(this).extra("moments", new ArrayList<>(momentList)).start();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -282,7 +291,14 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     @AfterViews void setOneMomentCount() {
         try {
-            titleOfCalender.setText(String.valueOf(OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class).queryBuilder().where().eq("owner", "LOC").and().eq("owner", AccountHelper.getIdentityInfo(this)).countOf()));
+            Dao<Moment, Integer> dao = OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class);
+            if (AccountHelper.isLogin(this)) {
+                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this)).countOf()));
+            } else {
+                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").countOf()));
+            }
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
