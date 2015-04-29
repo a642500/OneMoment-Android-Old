@@ -137,7 +137,16 @@ public class Moment implements Serializable {
         }
     }
 
+    public void setLargeThumbPath(String largeThumbPath) {
+        this.largeThumbPath = largeThumbPath;
+    }
+
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
     /**
+
      * Create a private moment from {@link Data}
      *
      * @param video

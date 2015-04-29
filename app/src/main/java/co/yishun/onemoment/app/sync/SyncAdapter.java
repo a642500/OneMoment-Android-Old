@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.data.Moment;
@@ -17,6 +18,7 @@ import co.yishun.onemoment.app.net.request.sync.GetVideoList;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.koushikdutta.ion.Ion;
 import com.qiniu.android.storage.UploadManager;
@@ -207,7 +209,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                         Map<String, Object> map = new HashMap<>();
                         map.put("path", dir.getPath() + File.pathSeparator + filename);
                         LogUtil.v(TAG, "query for path: " + map.get("path").toString());
-                        return (dao.queryForFieldValues(map).isEmpty());
+                        return (dao.queryBuilder().where().eq("path", new File(dir, filename).getPath()).countOf() == 0);
                     } else return false;
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -226,6 +228,111 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             LogUtil.e(TAG, "Exception when clean useless video");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * check moment file integrity.
+     */
+    private static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
+        Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
+
+        try {
+            if (!repairVideo(dao, moment, context)) {
+                listener.onMomentDelete(moment);
+                return;
+            }
+            if (!new File(moment.getLargeThumbPath()).exists()) {
+                String laP = CameraHelper.createLargeThumbImage(context, moment.getPath());
+                moment.setPath(laP);
+                LogUtil.e(TAG, "repair moment large thumb");
+                dao.update(moment);
+            }
+            if (!new File(moment.getThumbPath()).exists()) {
+                String p = CameraHelper.createThumbImage(context, moment.getPath());
+                moment.setPath(p);
+                LogUtil.e(TAG, "repair moment thumb");
+                dao.update(moment);
+            }
+            listener.onMomentOk(moment);
+        } catch (IOException e) {
+            e.printStackTrace();
+            dao.delete(moment);
+            LogUtil.e(TAG, "repair moment failed: IOException");
+            listener.onMomentDelete(moment);
+        }
+
+    }
+
+    private static boolean repairVideo(@NonNull Dao<Moment, Integer> dao, @NonNull Moment moment, Context context) throws SQLException {
+        File video = new File(moment.getPath());
+        if (!video.exists()) {
+            if (moment.isPublic()) {
+                CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
+                File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.LOCAL, video);
+                if (type == CameraHelper.Type.SYNCED && mayVideo.exists()) {
+                    //repair public path video is wrong recorded with private path
+                    moment.setPath(mayVideo.getPath());
+                    dao.update(moment);
+                    LogUtil.d(TAG, "repair a moment, which is public but have wrong private path.");
+                    return true;
+                } else {
+                    dao.delete(moment);
+                    LogUtil.e(TAG, "unable repair a moment, which is public but have wrong private path.");
+                    return false;
+                }
+            } else {
+                //moment is private
+                if (AccountHelper.isLogin(context)) {
+                    CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
+                    File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.SYNCED, video);
+                    if (type == CameraHelper.Type.LOCAL && mayVideo.exists()) {
+                        moment.setPath(mayVideo.getPath());
+                        dao.update(moment);
+                        LogUtil.d(TAG, "repair a moment, which is private but have wrong public path.");
+                        return true;
+                    } else {
+                        //if login, try repair by download from server
+                        try {
+                            File downloaded = Ion.with(context).load(Config.getResourceUrl(context) + getQiniuVideoFileName(context, moment)).write(mayVideo).get();
+                            if (downloaded.exists()) {
+                                String pathToThumb = CameraHelper.createThumbImage(context, downloaded.getPath());
+                                String pathToLargeThumb = CameraHelper.createLargeThumbImage(context, downloaded.getPath());
+                                moment.setPath(downloaded.getPath());
+                                moment.setThumbPath(pathToThumb);
+                                moment.setLargeThumbPath(pathToLargeThumb);
+                                dao.update(moment);
+                                return true;
+                            } else throw new Exception("download failed");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            dao.delete(moment);
+                            return false;
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "assert failed! Check bad private moment when not log in, you must avoid read private when not login");
+                    dao.delete(moment);
+                    return false;
+                }
+            }
+        } else return true;
+    }
+
+    public interface OnCheckedListener {
+        /**
+         * Moment is intact to use.
+         */
+        void onMomentOk(Moment moment);
+
+        /**
+         * Moment is not intact. And try to repair it.
+         */
+        void onMomentStartRepairing(Moment moment);
+
+        /**
+         * Moment is unable to be repaired, and has been deleted from database, you should stop use this moment.
+         */
+        void onMomentDelete(Moment moment);
     }
 
     /**
@@ -254,6 +361,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         };
 
         abstract String getAction();
+
     }
 
     /**
@@ -407,7 +515,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private String getQiniuVideoFileName(Moment moment) {
-        String re = AccountHelper.getIdentityInfo(getContext()).get_id() + Config.URL_HYPHEN + moment.getTime() + Config.URL_HYPHEN + moment.getTimeStamp() + Config.VIDEO_FILE_SUFFIX;
+        return getQiniuVideoFileName(getContext(), moment);
+    }
+
+    private static String getQiniuVideoFileName(Context context, Moment moment) {
+        String re = AccountHelper.getIdentityInfo(context).get_id() + Config.URL_HYPHEN + moment.getTime() + Config.URL_HYPHEN + moment.getTimeStamp() + Config.VIDEO_FILE_SUFFIX;
         LogUtil.i(TAG, "qiniu filename: " + re);
         return re;
     }
