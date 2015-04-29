@@ -159,4 +159,6 @@
     <string name="albumSyncAlertOk">同步</string>
     <string name="albumSyncText">正在同步…</string>
     <string name="albumSyncDoneSuccess">同步已完成</string>
+    <string name="playRepairing">视频有点问题，正尝试修复</string>
+    <string name="playRepairingFailed">修复失败，无法播放</string>
 </resources>

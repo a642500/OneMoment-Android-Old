@@ -233,7 +233,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * check moment file integrity.
      */
-    private static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
+    public static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
         Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
 
         try {

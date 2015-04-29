@@ -39,17 +39,27 @@ public class BaseActivity extends ActionBarActivity {
         showNotification(getString(textRes));
     }
 
-    @UiThread
     public void showProgress() {
+        showProgress(R.string.signUpLoading);
+    }
+
+    @UiThread
+    public void showProgress(String text) {
         if (mProgressDialog == null) {
-            mProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(R.string.signUpLoading).build();
+            mProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(text).build();
         }
         mProgressDialog.show();
     }
 
+    public void showProgress(int stringRes) {
+        showProgress(getResources().getString(stringRes));
+    }
+
     @UiThread
     public void hideProgress() {
-        mProgressDialog.hide();
+        if (mProgressDialog != null) {
+            mProgressDialog.hide();
+        }
     }
 
     @Override

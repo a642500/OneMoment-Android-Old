@@ -9,14 +9,19 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.data.Moment;
+import co.yishun.onemoment.app.sync.SyncAdapter;
+import co.yishun.onemoment.app.util.LogUtil;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
+
+import java.sql.SQLException;
 
 /**
  * Created by Carlos on 2015/4/5.
  */
 @EActivity(R.layout.activity_play)
-public class PlayActivity extends ToolbarBaseActivity {
+public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnCheckedListener {
+    private static final String TAG = LogUtil.makeTag(PlayActivity.class);
     @ViewById
     VideoView videoView;
     @ViewById
@@ -34,8 +39,7 @@ public class PlayActivity extends ToolbarBaseActivity {
     @Extra
     Moment moment;
 
-    @AfterViews
-    void initVideo() {
+    @AfterViews void initVideo() {
         ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -48,16 +52,17 @@ public class PlayActivity extends ToolbarBaseActivity {
                 }
             });
         }
+        checkMoment();
+    }
 
-        Picasso.with(this).load("file://" + moment.getLargeThumbPath()).into(thumbImageView);
-        videoView.setVideoPath(moment.getPath());
-        videoView.setOnCompletionListener(mp -> {
-            mp.reset();
-            videoView.setVideoPath(moment.getPath());
-
-            thumbImageView.setVisibility(View.VISIBLE);
-            playBtn.setVisibility(View.VISIBLE);
-        });
+    @Background void checkMoment() {
+        try {
+            SyncAdapter.checkAndSolveBadMoment(moment, this, this);
+        } catch (SQLException e) {
+            this.finish();
+            LogUtil.e(TAG, "SQL exception");
+            e.printStackTrace();
+        }
     }
 
 //    @Click
@@ -66,10 +71,32 @@ public class PlayActivity extends ToolbarBaseActivity {
 //        videoView.start();
 //    }
 
-    @Click
-    void playBtnClicked(View view) {
+    @Click void playBtnClicked(View view) {
         view.setVisibility(View.GONE);
         thumbImageView.setVisibility(View.GONE);
         videoView.start();
     }
+
+    @Override @UiThread public void onMomentOk(Moment moment) {
+        hideProgress();
+        Picasso.with(this).load("file://" + moment.getLargeThumbPath()).into(thumbImageView);
+        videoView.setVideoPath(moment.getPath());
+        videoView.setOnCompletionListener(mp -> {
+            mp.reset();
+            videoView.setVideoPath(moment.getPath());
+            thumbImageView.setVisibility(View.VISIBLE);
+            playBtn.setVisibility(View.VISIBLE);
+        });
+    }
+
+    @Override @UiThread public void onMomentStartRepairing(Moment moment) {
+        showProgress(R.string.playRepairing);
+    }
+
+    @Override @UiThread public void onMomentDelete(Moment moment) {
+        showNotification(R.string.playRepairingFailed);
+        delayFinish();
+    }
+
+    @UiThread(delay = 2000) void delayFinish() { finish(); }
 }

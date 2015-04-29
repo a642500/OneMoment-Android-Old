@@ -193,6 +193,8 @@
     <string name="syncSettingsSyncNowToast">Syncing…</string>
 
     <string name="playTitle">@string/app_name</string>
+    <string name="playRepairing">video is damaged, try repairing</string>
+    <string name="playRepairingFailed">Fail to repairing</string>
     <string name="multiPlayTitle">@string/app_name</string>
 
     <string name="multiPlayShareBtn">Share</string>
