@@ -28,12 +28,14 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 import com.umeng.analytics.MobclickAgent;
 import me.toxz.circularprogressview.library.CircularProgressView;
 import org.androidannotations.annotations.*;
@@ -41,6 +43,7 @@ import org.androidannotations.annotations.*;
 import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -616,8 +619,18 @@ public class RecordingActivity extends Activity {
 
                 //delete other today's moment
                 String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());
-                List<Moment> result = momentDao.queryBuilder().where()
-                        .eq("time", time).query();
+                List<Moment> result;
+                Where<Moment, Integer> w = momentDao.queryBuilder().where();
+                if (AccountHelper.isLogin(this)) {
+                    result = w.and(
+                            w.eq("time", time), w.or(
+                                    w.eq("owner", AccountHelper.getIdentityInfo(this).get_id()),
+                                    w.eq("owner", "LOC"))
+                    ).query();
+                } else {
+                    result = w.eq("time", time).and().eq("owner", "LOC").query();
+                }
+                LogUtil.i(TAG, "delete old today moment: " + Arrays.toString(result.toArray()));
                 momentDao.delete(result);
 
                 Moment moment = new Moment.MomentBuilder()
