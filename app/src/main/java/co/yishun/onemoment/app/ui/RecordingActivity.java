@@ -41,7 +41,6 @@ import me.toxz.circularprogressview.library.CircularProgressView;
 import org.androidannotations.annotations.*;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -641,12 +640,17 @@ public class RecordingActivity extends Activity {
                 if (1 == momentDao.create(moment)) {
                     LogUtil.i(TAG, "new moment: " + moment);
                     momentDao.delete(result);
+                    for (Moment mToDe : result) {
+                        new File(mToDe.getLargeThumbPath()).delete();
+                        new File(mToDe.getThumbPath()).delete();
+                        new File(mToDe.getPath()).delete();
+                    }
                 }
                 // onResult is called before onResume
                 LogUtil.d(TAG, "start album act");
                 moment.unlock();
                 albumBtnClicked(null);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
