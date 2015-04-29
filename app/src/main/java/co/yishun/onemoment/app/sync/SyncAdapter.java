@@ -146,6 +146,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     } else {
                         LogUtil.v(TAG, "same, do nothing");
                         checkMomentOwnerPrivate(moment);
+                        syncUpdate(UpdateType.RECOVER, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
                     }
                     //the video sync ok, remove
                     videosOnServer.remove(key);
@@ -392,6 +393,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         },
         DOWNLOAD {
             @Override String getAction() { return SYNC_BROADCAST_UPDATE_DOWNLOAD; }
+        },
+        RECOVER {
+            @Override String getAction() {
+                return SYNC_BROADCAST_UPDATE_RECOVER;
+            }
         };
 
         abstract String getAction();
@@ -407,6 +413,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String SYNC_BROADCAST_DONE = "co.yishun.onemoment.app.sync.done";
     public static final String SYNC_BROADCAST_UPDATE_UPLOAD = "co.yishun.onemoment.app.sync.update.upload";
     public static final String SYNC_BROADCAST_UPDATE_DOWNLOAD = "co.yishun.onemoment.app.sync.update.download";
+    public static final String SYNC_BROADCAST_UPDATE_RECOVER = "co.yishun.onemoment.app.sync.update.recover";
     public static final String SYNC_BROADCAST_EXTRA_IS_UPLOAD_CHANGED = "is_upload_changed";
     public static final String SYNC_BROADCAST_EXTRA_IS_DOWNLOAD_CHANGED = "is_download_changed";
     public static final String SYNC_BROADCAST_EXTRA_IS_SUCCESS = "is_success";

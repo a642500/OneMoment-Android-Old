@@ -219,6 +219,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         LogUtil.d(TAG, "onResume");
         registerReceiver(mSyncDoneReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_DONE));
         registerReceiver(mDownloadUpdateReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_UPDATE_DOWNLOAD));
+        registerReceiver(mRecoverUpdateReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_UPDATE_RECOVER));
     }
 
     @Override protected void onPause() {
@@ -233,9 +234,20 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             LogUtil.i(TAG, "received download progress update intent");
             if (mController != null && intent.getIntExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_THIS_PROGRESS, 0) == 100) {
                 mController.notifyUpdate();
+                setOneMomentCount();
             }
         }
 
+    };
+
+    BroadcastReceiver mRecoverUpdateReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received recover update intent");
+            if (mController != null) {
+                mController.notifyUpdate();
+                setOneMomentCount();
+            }
+        }
     };
 
     /**
