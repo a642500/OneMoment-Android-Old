@@ -166,13 +166,6 @@ public class AccountHelper {
      * @param context
      */
     public static void deleteAccount(Context context) {
-        syncAtOnce(context);
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         synchronized (mAccountReadLock) {
             Account account = getAccount(context);//disable get
             mAccount = null;

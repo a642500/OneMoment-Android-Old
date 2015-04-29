@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.data.Contract;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.request.sync.Data;
@@ -33,7 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Handle the transfer of data between a server and an
@@ -61,8 +64,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         LogUtil.i(TAG, "onPerformSync, account: " + account.name + ", Bundle: " + extras);
-
         try {
+            if (!AccountHelper.isLogin(getContext())) {
+                LogUtil.i(TAG, "onPerformSync, but account has been logout, stop sync with notify syncDone");
+                ContentResolver.setSyncAutomatically(account, Contract.AUTHORITY, false);
+                return;
+            }
+
             if (!extras.getBoolean(BUNLDE_IGNORE_NETWORK, false) && !connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
                 LogUtil.i(TAG, "cancel sync because network is not wifi");
                 return;
@@ -106,7 +114,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void sync(Map<Integer, Data> videosOnServer) {
         try {
             LogUtil.i(TAG, "video got, start sync");
-            for (Moment moment : dao) {
+            List<Moment> toSyncedMoments = dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(getContext()).get_id()).query();
+
+
+            for (Moment moment : toSyncedMoments) {
                 Integer key = Integer.parseInt(moment.getTime());
                 Data video = videosOnServer.get(key);
 
@@ -123,25 +134,34 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     if (video.getTimeStamp() > moment.getTimeStamp()) {
                         //if server is newer, download and delete older
                         LogUtil.v(TAG, "download: " + video.toString());
-                        downloadVideo(video, moment);
+                        CountDownLatch latch = new CountDownLatch(1);
+                        downloadVideo(video, moment, latch);
+                        latch.await();
                     } else if (video.getTimeStamp() < moment.getTimeStamp()) {
                         //if local is newer, upload and delete older
                         LogUtil.v(TAG, "upload: " + video.toString());
-                        uploadMoment(moment, video);
+                        CountDownLatch latch = new CountDownLatch(1);
+                        uploadMoment(moment, video, latch);
+                        latch.await();
                     } else {
                         LogUtil.v(TAG, "same, do nothing");
                         checkMomentOwnerPrivate(moment);
                     }
                     //the video sync ok, remove
                     videosOnServer.remove(key);
-                } else uploadMoment(moment, null);//server not have today moment, upload
+                } else {
+                    CountDownLatch latch = new CountDownLatch(1);
+                    uploadMoment(moment, null, latch);//server not have today moment, upload
+                    latch.await();
+                }
             }
             for (Data data : videosOnServer.values()) {
                 if (Thread.interrupted()) {
                     LogUtil.e("TAG", "interrupted");
                     return;
                 }
-                downloadVideo(data, null);//other unhandled video mean they need download
+                CountDownLatch latch = new CountDownLatch(1);
+                downloadVideo(data, null, latch);//other unhandled video mean they need download
             }
             syncDone(true);
         } catch (Exception e) {
@@ -403,15 +423,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * @param moment        to upload
      * @param videoToDelete old version on server
      */
-    private void uploadMoment(Moment moment, Data videoToDelete) {
+    private void uploadMoment(@NonNull Moment moment, @Nullable Data videoToDelete, @Nullable CountDownLatch latch) {
         LogUtil.i(TAG, "upload a moment: " + moment.getPath());
         String qiNiuKey = getQiniuVideoFileName(moment);
         syncUpdate(UpdateType.UPLOAD, 0, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
         new GetToken().setFileName(qiNiuKey).with(getContext()).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
-            } else if (result.getCode() != ErrorCode.SUCCESS) LogUtil.e(TAG, "get token failed: " + result.getCode());
-            else
+                if (latch != null) {
+                    latch.countDown();
+                }
+            } else if (result.getCode() != ErrorCode.SUCCESS) {
+                LogUtil.e(TAG, "get token failed: " + result.getCode());
+                syncUpdate(UpdateType.UPLOAD, PROGRESS_ERROR, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                if (latch != null) {
+                    latch.countDown();
+                }
+            } else {
                 getUploadManager().put(moment.getPath(),
                         qiNiuKey,
                         result.getData().getToken(),
@@ -423,11 +451,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                                 checkMomentOwnerPrivate(moment);
                                 isUploadChanged = true;
                                 syncUpdate(UpdateType.UPLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
-                            } else
+                                if (latch != null) {
+                                    latch.countDown();
+                                }
+                            } else {
+                                LogUtil.i(TAG, "a moment upload failed: " + moment.getPath());
                                 syncUpdate(UpdateType.UPLOAD, PROGRESS_ERROR, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                                if (latch != null) {
+                                    latch.countDown();
+                                }
+                            }
                         },
                         new UploadOptions(null, Config.MIME_TYPE, true, null, null)
                 );
+            }
         });
     }
 
@@ -466,7 +503,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * @param aVideoOnServer video to download.
      * @param momentOld      old local moment. It will do nothing if it is null.
      */
-    private void downloadVideo(Data aVideoOnServer, @Nullable Moment momentOld) {
+    private void downloadVideo(Data aVideoOnServer, @Nullable Moment momentOld, @Nullable CountDownLatch latch) {
         LogUtil.i(TAG, "download a video: " + aVideoOnServer.getQiuniuKey());
         File fileSynced = CameraHelper.getOutputMediaFile(getContext(), aVideoOnServer);
 //            OkHttpClient client = new OkHttpClient();
@@ -485,6 +522,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     dao.create(Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb));
 
                     syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                    if (latch != null) {
+                        latch.countDown();
+                    }
                     return;
                 } else fileSynced.delete();
             }
@@ -511,8 +551,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
                 isDownloadChanged = true;
                 syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                if (latch != null) {
+                    latch.countDown();
+                }
             } catch (Exception e1) {
                 syncUpdate(UpdateType.DOWNLOAD, PROGRESS_ERROR, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                if (latch != null) {
+                    latch.countDown();
+                }
                 e1.printStackTrace();
             }
         });
