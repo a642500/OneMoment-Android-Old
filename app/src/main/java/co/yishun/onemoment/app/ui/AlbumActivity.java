@@ -293,10 +293,11 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         try {
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class);
             if (AccountHelper.isLogin(this)) {
-                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this)).countOf()));
+                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this).get_id()).countOf()));
             } else {
                 titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").countOf()));
             }
+            OpenHelperManager.releaseHelper();
 
 
         } catch (SQLException e) {
