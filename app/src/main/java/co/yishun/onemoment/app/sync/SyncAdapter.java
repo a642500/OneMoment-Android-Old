@@ -62,23 +62,28 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         LogUtil.i(TAG, "onPerformSync, account: " + account.name + ", Bundle: " + extras);
 
-        if (!extras.getBoolean(BUNLDE_IGNORE_NETWORK, false) && !connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            LogUtil.i(TAG, "cancel sync because network is not wifi");
-            return;
-        }
-        //see:http://developer.android.com/training/sync-adapters/creating-sync-adapter.html
-
-        new GetVideoList().with(getContext()).setCallback((e, result) -> {
-            if (e != null) {
-                e.printStackTrace();
-                syncDone(false);
-            } else if (result.getCode() == ErrorCode.SUCCESS) {
-                sync(toMap(result.getDatas()));
-            } else {
-                LogUtil.e(TAG, "get video list failed: " + result.getCode());
-                syncDone(false);
+        try {
+            if (!extras.getBoolean(BUNLDE_IGNORE_NETWORK, false) && !connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+                LogUtil.i(TAG, "cancel sync because network is not wifi");
+                return;
             }
-        });
+            //see:http://developer.android.com/training/sync-adapters/creating-sync-adapter.html
+
+            new GetVideoList().with(getContext()).setCallback((e, result) -> {
+                if (e != null) {
+                    e.printStackTrace();
+                    syncDone(false);
+                } else if (result.getCode() == ErrorCode.SUCCESS) {
+                    sync(toMap(result.getDatas()));
+                } else {
+                    LogUtil.e(TAG, "get video list failed: " + result.getCode());
+                    syncDone(false);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, "some uncatched exception in SyncAdapter");
+        }
 
     }
 
