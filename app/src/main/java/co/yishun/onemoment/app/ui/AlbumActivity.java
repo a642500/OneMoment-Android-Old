@@ -195,7 +195,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             List<Moment> momentList;
             Where<Moment, Integer> where = momentDao.queryBuilder().orderBy("timeStamp", true).where();
             if (AccountHelper.isLogin(this)) {
-                momentList = where.eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this)).query();
+                momentList = where.eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this).get_id()).query();
             } else {
                 momentList = where.eq("owner", "LOC").query();
             }
@@ -314,23 +314,30 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             dialog.dismiss();
         }, 150));
         final WeiboHelper helper = new WeiboHelper(this);
-        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(v -> new Handler().postDelayed(() -> helper.login(new WeiboHelper.WeiboLoginListener() {
-            @Override
-            public void onSuccess(Oauth2AccessToken token) {
-                signUpByWeibo(token);
-                dialog.dismiss();
-            }
+        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(
+                v -> new Handler().postDelayed(
+                        () -> {
+                            helper.login(new WeiboHelper.WeiboLoginListener() {
+                                @Override
+                                public void onSuccess(Oauth2AccessToken token) {
+                                    signUpByWeibo(token);
+                                    dialog.dismiss();
+                                }
 
-            @Override
-            public void onFail() {
-                showNotification(R.string.weiboLoginFail);
-            }
+                                @Override
+                                public void onFail() {
+                                    showNotification(R.string.weiboLoginFail);
+                                }
 
-            @Override
-            public void onCancel() {
-                showNotification(R.string.weiboLoginCancel);
-            }
-        }), 150));
+                                @Override
+                                public void onCancel() {
+                                    showNotification(R.string.weiboLoginCancel);
+                                }
+                            });
+                            dialog.dismiss();
+                        }, 150
+                )
+        );
         dialog.show();
         return helper;
     }

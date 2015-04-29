@@ -65,6 +65,7 @@ public class WeiboHelper {
     }
 
     public void login(@NonNull WeiboLoginListener listener) {
+        LogUtil.i(TAG, "start weibo login");
         ssoHandler.authorize(new WeiboAuthListener() {
             @Override
             public void onComplete(Bundle values) {

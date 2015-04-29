@@ -1,6 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -63,8 +65,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    @AfterViews
-    void setSquare() {
+    @AfterViews void setSquare() {
         ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -84,8 +85,8 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         toPlayMoments.addAll(moments);
     }
 
-    @AfterViews
-    void initVideo() {
+    @AfterViews void initVideo() {
+        LogUtil.i(TAG, "moments list, " + Arrays.toString(moments.toArray()));
         toPlayMoments = new ArrayDeque<>(moments.size());
         queueMoments();
         if (BuildConfig.DEBUG && !(moments.size() >= 2))
@@ -94,30 +95,30 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         Picasso.with(this).load("file://" + moments.get(0).getLargeThumbPath()).into(thumbImageView);
         //TODO add cover video
 
-        videoView.setOnCompletionListener(mp -> {
-            mp.reset();
-            Moment moment = toPlayMoments.poll();
-            if (moment != null) {
-                videoView.setVideoPath(moment.getPath());
-                videoView.start();
-            } else {
-                playBtn.setVisibility(View.VISIBLE);
-                thumbImageView.setVisibility(View.VISIBLE);
-                queueMoments();
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override public void onCompletion(MediaPlayer mp) {
+                mp.reset();
+                Moment moment = toPlayMoments.poll();
+                if (moment != null) {
+                    videoView.setVideoPath(moment.getPath());
+                    videoView.start();
+                } else {
+                    playBtn.setVisibility(View.VISIBLE);
+                    thumbImageView.setVisibility(View.VISIBLE);
+                    MultiPlayActivity.this.queueMoments();
+                }
             }
         });
     }
 
-    @Click
-    void playBtnClicked(View view) {
+    @Click void playBtnClicked(View view) {
         videoView.setVideoPath(toPlayMoments.poll().getPath());
         view.setVisibility(View.GONE);
         videoView.start();
         thumbImageView.setVisibility(View.GONE);
     }
 
-    @Click
-    void shareVideoBtnClicked(View view) {
+    @Click void shareVideoBtnClicked(View view) {
         if (!AccountHelper.isLogin(this)) {
             showNotification(R.string.multiPlayShareLoginAlert);
         } else
@@ -126,8 +127,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
 
     long timestamp = 0;
 
-    @Background
-    void prepareShare() {
+    @Background void prepareShare() {
         showProgress();
         int toMergeVideoCount = moments.size() > 10 ? 10 : moments.size();
         File dir = getDir("lone_video", MODE_PRIVATE);
@@ -181,8 +181,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         }
     }
 
-    @Background
-    void upload(String path, String qiNiuKey) {
+    @Background void upload(String path, String qiNiuKey) {
         LogUtil.i(TAG, "upload a long video: " + qiNiuKey + ", path: " + path);
         new GetToken().setFileName(qiNiuKey).with(this).setCallback((e, result) -> {
             if (e != null) {
@@ -216,8 +215,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
     /**
      * delay to wait animation ending.
      */
-    @UiThread(delay = 200)
-    void postStartActivity(Intent intent) {
+    @UiThread(delay = 200) void postStartActivity(Intent intent) {
         startActivity(intent);
     }
 
