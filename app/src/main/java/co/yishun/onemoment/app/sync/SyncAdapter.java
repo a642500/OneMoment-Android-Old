@@ -182,16 +182,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             if (CameraHelper.whatTypeOf(path) == CameraHelper.Type.LOCAL) {
                 File file = new File(path);
                 File syncedFile = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.SYNCED, file);
+                LogUtil.d(TAG, "check private: " + file);
+                LogUtil.d(TAG, "syncedFile: " + syncedFile);
                 if (file.renameTo(syncedFile)) {
                     moment.setPath(syncedFile.getPath());
+                    dao.update(moment);
+                    LogUtil.v(TAG, "update path");
                 } else
                     LogUtil.e(TAG, "unable to rename when checkMomentOwnerPrivate, from " + file.getPath() + " to " + syncedFile.getPath());
             }
             //set database owner
             if (moment.isPublic()) {
                 moment.setOwner(AccountHelper.getIdentityInfo(getContext()).get_id());
+                dao.update(moment);
+                LogUtil.v(TAG, "update owner");
             }
-            dao.update(moment);
             LogUtil.i(TAG, "succeed in setting moment[ " + moment + "] private");
         } catch (Exception e) {
             e.printStackTrace();

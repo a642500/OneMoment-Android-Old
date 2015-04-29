@@ -619,6 +619,7 @@ public class RecordingActivity extends Activity {
 
                 //delete other today's moment
                 String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());
+                Moment.lock(this);
                 List<Moment> result;
                 Where<Moment, Integer> w = momentDao.queryBuilder().where();
                 if (AccountHelper.isLogin(this)) {
@@ -631,16 +632,19 @@ public class RecordingActivity extends Activity {
                     result = w.eq("time", time).and().eq("owner", "LOC").query();
                 }
                 LogUtil.i(TAG, "delete old today moment: " + Arrays.toString(result.toArray()));
-                momentDao.delete(result);
 
                 Moment moment = new Moment.MomentBuilder()
                         .setPath(data.getStringExtra("videoPath"))
                         .setThumbPath(data.getStringExtra("thumbPath"))
                         .setLargeThumbPath(data.getStringExtra("largeThumbPath"))
                         .build();
-                momentDao.create(moment);
+                if (1 == momentDao.create(moment)) {
+                    LogUtil.i(TAG, "new moment: " + moment);
+                    momentDao.delete(result);
+                }
                 // onResult is called before onResume
                 LogUtil.d(TAG, "start album act");
+                moment.unlock();
                 albumBtnClicked(null);
             } catch (SQLException e) {
                 e.printStackTrace();

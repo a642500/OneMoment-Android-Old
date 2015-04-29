@@ -11,8 +11,10 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.sync.SyncAdapter;
+import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
 
@@ -69,8 +71,19 @@ public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnC
     @Background void checkMoment() {
         Moment.lock(this);
         try {
-            List<Moment> moments = dao.queryBuilder().orderBy("time", false).where().eq("time", moment.getTime()).query();
+            LogUtil.i(TAG, "check moment origin: " + moment);
+            Where<Moment, Integer> w = dao.queryBuilder().orderBy("time", true).where();
+            List<Moment> moments;
+            if (AccountHelper.isLogin(this)) {
+                moments = w.and(
+                        w.eq("time", moment.getTime()),
+                        w.eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this).get_id())//null when not login
+                ).query();
+            } else {
+                moments = w.eq("time", moment.getTime()).and().eq("owner", "LOC").query();
+            }
             if (moments.size() > 0) moment = moments.get(0);
+            LogUtil.i(TAG, "check moment after: " + moment);
             SyncAdapter.checkAndSolveBadMoment(moment, this, this);
         } catch (SQLException e) {
             this.finish();
