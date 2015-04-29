@@ -175,6 +175,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * Ensure a moment and it's file is user private. if not, it will be change private.
      */
     private void checkMomentOwnerPrivate(@NonNull Moment moment) {
+        Moment.lock(getContext());
         try {
             //set file name
             String path = moment.getPath();
@@ -194,6 +195,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             LogUtil.i(TAG, "succeed in setting moment[ " + moment + "] private");
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            Moment.unlock();
         }
     }
 
@@ -260,19 +263,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
         Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
-
         try {
-            if (!repairVideo(dao, moment, context)) {
+            if (!repairVideo(dao, moment, context, listener)) {
                 listener.onMomentDelete(moment);
                 return;
             }
             if (!new File(moment.getLargeThumbPath()).exists()) {
+                listener.onMomentStartRepairing(moment);
                 String laP = CameraHelper.createLargeThumbImage(context, moment.getPath());
                 moment.setPath(laP);
                 LogUtil.e(TAG, "repair moment large thumb");
                 dao.update(moment);
             }
             if (!new File(moment.getThumbPath()).exists()) {
+                listener.onMomentStartRepairing(moment);
                 String p = CameraHelper.createThumbImage(context, moment.getPath());
                 moment.setPath(p);
                 LogUtil.e(TAG, "repair moment thumb");
@@ -285,12 +289,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             LogUtil.e(TAG, "repair moment failed: IOException");
             listener.onMomentDelete(moment);
         }
-
     }
 
-    private static boolean repairVideo(@NonNull Dao<Moment, Integer> dao, @NonNull Moment moment, Context context) throws SQLException {
+    private static boolean repairVideo(@NonNull Dao<Moment, Integer> dao, @NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
         File video = new File(moment.getPath());
         if (!video.exists()) {
+            listener.onMomentStartRepairing(moment);
             if (moment.isPublic()) {
                 CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
                 File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.LOCAL, video);
@@ -481,20 +485,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private boolean deleteMoment(@NonNull Moment moment) {
         LogUtil.i(TAG, "delete a moment: " + moment.getPath());
-        File momentFile = moment.getFile();
-        File thumb = new File(moment.getThumbPath());
-        File thumbL = new File(moment.getLargeThumbPath());
+        boolean re = false;
 
-        if (momentFile.exists()) momentFile.delete();
-        if (thumb.exists()) thumb.delete();
-        if (thumbL.exists()) thumbL.delete();
-
+        Moment.lock(getContext());
         try {
-            return dao.delete(moment) == 1;
+            re = dao.delete(moment) == 1;
+            if (re) {
+                File momentFile = moment.getFile();
+                File thumb = new File(moment.getThumbPath());
+                File thumbL = new File(moment.getLargeThumbPath());
+
+                if (momentFile.exists()) momentFile.delete();
+                if (thumb.exists()) thumb.delete();
+                if (thumbL.exists()) thumbL.delete();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            re = false;
+        } finally {
+            Moment.unlock();
         }
+
+
+        return re;
     }
 
     /**
@@ -518,7 +531,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 if (Etag.file(fileSynced).equals(aVideoOnServer.getHash())) {
                     String pathToThumb = CameraHelper.createThumbImage(getContext(), fileSynced.getPath());
                     String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), fileSynced.getPath());
-
+                    //don't need lock
                     dao.create(Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb));
 
                     syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);

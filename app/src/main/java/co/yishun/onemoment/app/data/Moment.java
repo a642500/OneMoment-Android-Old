@@ -11,7 +11,10 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +27,41 @@ import java.util.Date;
 @AdditionalAnnotation.DefaultContentMimeTypeVnd(name = Contract.Moment.MIMETYPE_NAME, type = Contract.Moment.MIMETYPE_TYPE)
 @DatabaseTable(tableName = Contract.Moment.TABLE_NAME)
 public class Moment implements Serializable {
+    private static final String TAG = LogUtil.makeTag(Moment.class);
+    private static FileChannel channel;
+
+    //    public final static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private static FileLock lock;
+
+
+    public static void lock(Context context) {
+        try {
+            if (channel == null) {
+                File f = new File(context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE), "tmp.lock");
+                if (!f.exists()) f.createNewFile();
+                channel = new FileOutputStream(f).getChannel();
+            }
+            if (lock == null) {
+                LogUtil.d(TAG, "lock at thread: " + Thread.currentThread().getId());
+                lock = channel.lock();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unlock() {
+        try {
+            lock.release();
+            lock = null;
+            channel.close();
+            channel = null;
+            LogUtil.d(TAG, "unlock at thread: " + Thread.currentThread().getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @DatabaseField String path;
     @DatabaseField String thumbPath;
     @DatabaseField String largeThumbPath;
@@ -146,7 +184,6 @@ public class Moment implements Serializable {
     }
 
     /**
-
      * Create a private moment from {@link Data}
      *
      * @param video
