@@ -30,18 +30,15 @@ public class LoginActivity extends ToolbarBaseActivity {
     private String mPhoneNum;
     private String mPassword;
 
-    @AfterViews
-    void initPhone() {
+    @AfterViews void initPhone() {
         phoneEditText.setText(phone);
     }
 
-    @AfterTextChange(R.id.phoneEditText)
-    void onPhoneChange(Editable text, TextView phone) {
+    @AfterTextChange(R.id.phoneEditText) void onPhoneChange(Editable text, TextView phone) {
         mPhoneNum = text.toString();
     }
 
-    @AfterTextChange(R.id.passwordEditText)
-    void onPasswordChange(Editable text, TextView phone) {
+    @AfterTextChange(R.id.passwordEditText) void onPasswordChange(Editable text, TextView phone) {
         mPassword = text.toString();
     }
 
@@ -51,14 +48,12 @@ public class LoginActivity extends ToolbarBaseActivity {
         setResult(RESULT_CANCELED);
     }
 
-    @Click
-    void findPasswordBtnClicked(@NonNull View view) {
+    @Click void findPasswordBtnClicked(@NonNull View view) {
         FindPasswordActivity_.intent(this).extra("phone", mPhoneNum).start();
     }
 
     @Click(R.id.loginBtn)
-    @Background
-    void loginBtn(@NonNull View view) {
+    @Background void loginBtn(@NonNull View view) {
         if (checkPhoneNum() && checkPassword()) {
             showProgress();
             new SignIn().setPhone(mPhoneNum).setPassword(mPassword).with(this).setCallback((e, result) -> {
@@ -86,7 +81,7 @@ public class LoginActivity extends ToolbarBaseActivity {
                 hideProgress();
             });
         } else
-            showNotification("Your phone or password is invalid.");
+            showNotification(R.string.loginLoginFailPasswordError);
     }
 
     private boolean checkPhoneNum() {
