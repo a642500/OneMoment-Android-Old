@@ -66,6 +66,7 @@ public class AccountHelper {
 
     public static boolean isLogin(Context context) {
         String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
+        LogUtil.d(TAG, "identity info path: " + path);
         return getAccount(context) != null && new File(path).exists();//TODO integrate identity info into account, add update identity when lost
     }
 
@@ -80,33 +81,40 @@ public class AccountHelper {
         Account newAccount = new Account(data.get_id(), ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
         Account[] oldAccount = accountManager.getAccountsByType(ACCOUNT_TYPE);
-        for (Account account : oldAccount) {
-            LogUtil.v(TAG, "remove old account: " + account);
-            accountManager.removeAccount(account, activity, future -> {
-                try {
-                    if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-                            mAccount = newAccount;
-                            saveIdentityInfo(activity, data);
-//                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
-                            setAutoSync(activity, true);
-                        } else {
-                            LogUtil.e(TAG, "The account exists or some other error occurred.");
-                        }
-                    }
-                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
-                }
-            }, null);
-        }
+
         if (oldAccount.length == 0) {
             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                 mAccount = newAccount;
                 saveIdentityInfo(activity, data);
 //                deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
                 setAutoSync(activity, true);
+                LogUtil.e(TAG, "Add an account.");
             } else {
                 LogUtil.e(TAG, "Add account occurred error, but no old account exists.");
+            }
+        } else {
+            for (Account account : oldAccount) {
+                LogUtil.v(TAG, "remove old account: " + account);
+                accountManager.removeAccount(account, future -> {
+                    try {
+                        if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+                                mAccount = newAccount;
+                                saveIdentityInfo(activity, data);
+//                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
+                                setAutoSync(activity, true);
+                                LogUtil.e(TAG, "Add an account.");
+                            } else {
+                                LogUtil.e(TAG, "The account exists or some other error occurred.");
+                            }
+                        } else {
+                            LogUtil.e(TAG, "remove old account error");
+                        }
+                    } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                        e.printStackTrace();
+                        LogUtil.e(TAG, "remove old account error");
+                    }
+                }, null);
             }
         }
     }
@@ -177,7 +185,7 @@ public class AccountHelper {
 
             deleteIdentityInfo(context);
             AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-            accountManager.removeAccount(account, null, null, null);
+            accountManager.removeAccount(account, null, null);//new implement is not available on old sdk
 
 //            deleteAllPrivateMoment(context); not delete but only read current user's and LOC's
         }
