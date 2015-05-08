@@ -226,6 +226,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         super.onPause();
         unregisterReceiver(mDownloadUpdateReceiver);
         unregisterReceiver(mSyncDoneReceiver);
+        unregisterReceiver(mRecoverUpdateReceiver);
         isManualSync = false;//cancel notify sync done if user leaves.
     }
 
