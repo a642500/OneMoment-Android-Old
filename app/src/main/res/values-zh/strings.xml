@@ -108,7 +108,7 @@
     <string name="signUpVerificationCodeFailedToast">验证码发送失败，请重试</string>
     <string name="signUpVerificationCodeInvalidToast">您输入的验证码错误</string>
     <string name="signUpVerificationCodeSuccessToast">短信已发送，请查收</string>
-    <string name="signUpVerifyFail">验证错误</string>
+    <string name="signUpVerifyFail">验证错误,请检查网络连接</string>
     <string name="signUpVerifySuccess">验证成功</string>
     <string name="syncSettingsTitle">同步</string>
     <string name="videoSaveTitle">@string/app_name</string>

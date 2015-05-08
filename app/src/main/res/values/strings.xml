@@ -139,7 +139,7 @@
     <string name="signUpVerificationCodeFailedToast">Verification code sent failed, please retry</string>
     <string name="signUpLoading">Please waiting…</string>
     <string name="signUpVerifySuccess">Verify Success!</string>
-    <string name="signUpVerifyFail">Verify Failed!</string>
+    <string name="signUpVerifyFail">Verify Failed! Please check your network</string>
     <string name="signUpVerificationRemainTimePrefix">Resend&#160;</string>
     <string name="signUpVerificationRemainTimeSuffix">&#160;seconds later</string>
 
