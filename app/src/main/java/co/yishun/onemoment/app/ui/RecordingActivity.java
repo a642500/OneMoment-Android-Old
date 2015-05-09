@@ -490,6 +490,7 @@ public class RecordingActivity extends Activity {
         prepare();
         if (mStatus == RecordStatus.RECORDER_PREPARED) {
             mStatus = RecordStatus.RECORDER_STARTED;
+            Moment.lock(this);
             mMediaRecorder.start();
         } else {
             releaseMediaRecorder();
@@ -519,7 +520,7 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @UiThread void startConvert() {
+    @UiThread(delay = 1000) void startConvert() {
         //TODO change convert notification method
         mConvertDialog.show();
         mStatus = CONVERTER_STARTED;
@@ -594,6 +595,8 @@ public class RecordingActivity extends Activity {
 
             showNotification(R.string.recordConvertError);
             LogUtil.e(TAG, "Convert Failed: ErrorCode " + exitCode);
+            circularProgressView.resetSmoothly();
+            preview();
             mConvertDialog.dismiss();
         }
     }
@@ -638,7 +641,6 @@ public class RecordingActivity extends Activity {
 
                 //delete other today's moment
                 String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());
-                Moment.lock(this);
                 List<Moment> result;
                 Where<Moment, Integer> w = momentDao.queryBuilder().where();
                 if (AccountHelper.isLogin(this)) {
@@ -668,7 +670,8 @@ public class RecordingActivity extends Activity {
                 }
                 // onResult is called before onResume
                 LogUtil.d(TAG, "start album act");
-                moment.unlock();
+                Moment.unlock();
+                mCurrentVideoPath = null;
                 albumBtnClicked(null);
             } catch (Exception e) {
                 e.printStackTrace();
