@@ -376,6 +376,11 @@ public class RecordingActivity extends Activity {
 
         //prepare recorder
         Camera.Parameters parameters = mCamera.getParameters();
+        /*
+        Huawei Mate 7 return null when call getSupportedVideoSizes(),
+        but return an list contain some not support sizes when getSupportedPreviewSizes().
+        So, we must handle this case specially
+         */
         List<Camera.Size> sizeList = parameters.getSupportedVideoSizes();
         if (sizeList == null) sizeList = parameters.getSupportedPreviewSizes();
         Camera.Size optimalVideoSize = CameraHelper.getOptimalPreviewSize(sizeList, 480, 480);
@@ -407,8 +412,9 @@ public class RecordingActivity extends Activity {
         }
         if (profile == null) throw new IllegalArgumentException("no profile at all!!");
 
-        profile.videoFrameWidth = optimalVideoSize.width;
-        profile.videoFrameHeight = optimalVideoSize.height;
+        // use profile's default width and height, because some laji three-party android system return unsupported size in getSupportedPreviewSizes, like Huawei phone
+//        profile.videoFrameWidth = optimalVideoSize.width;
+//        profile.videoFrameHeight = optimalVideoSize.height;
         profile.videoFrameRate = 30;
         profile.audioCodec = MediaRecorder.AudioEncoder.AAC;
         profile.videoCodec = MediaRecorder.VideoEncoder.H264;
