@@ -66,7 +66,6 @@ public class AccountHelper {
 
     public static boolean isLogin(Context context) {
         String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-        LogUtil.d(TAG, "identity info path: " + path);
         return getAccount(context) != null && new File(path).exists();//TODO integrate identity info into account, add update identity when lost
     }
 
@@ -225,7 +224,7 @@ public class AccountHelper {
 
         try {
             String path = context.getDir(Config.IDENTITY_DIR, Context.MODE_PRIVATE) + "/" + Config.IDENTITY_INFO_FILE_NAME;
-            LogUtil.i(TAG, "identity info path: " + path);
+            LogUtil.i(TAG, "save identity info, path: " + path);
             FileOutputStream fout = new FileOutputStream(path);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(data);
