@@ -75,7 +75,7 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
     /**
      * delay to wait animation ending.
      */
-    @UiThread(delay = 200)
+    @UiThread(delay = 300)
     void postFinish() {
         this.finish();
     }
