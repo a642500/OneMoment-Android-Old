@@ -116,6 +116,8 @@ public class AccountHelper {
                 }, null);
             }
         }
+        setAutoSync(activity, true);
+        setOnlyWifiSyncEnable(activity, true);
     }
 
     public static Account createAccountWithoutEnableAutoSync(Context context, AccountResult.Data data) {
