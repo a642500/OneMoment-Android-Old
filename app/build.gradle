@@ -94,7 +94,7 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.7.3.4'
     compile 'nl.codesoup.cubicbezier:cubicbezier:1.0.0'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
-    compile 'net.orfjackal.retrolambda:retrolambda:2.0.2'
+    compile 'net.orfjackal.retrolambda:retrolambda:1.8.1'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
