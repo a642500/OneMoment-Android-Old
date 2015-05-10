@@ -1,6 +1,6 @@
 package co.yishun.onemoment.app.ui;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import co.yishun.onemoment.app.R;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -13,7 +13,7 @@ import org.androidannotations.annotations.UiThread;
  * Created by Carlos on 2015/4/2.
  */
 @EActivity
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity {
 
     private MaterialDialog mProgressDialog;
 

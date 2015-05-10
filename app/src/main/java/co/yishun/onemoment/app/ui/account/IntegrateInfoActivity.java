@@ -68,7 +68,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @Click void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
-                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick).build();
+                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick,false).build();
         View dialogView = dialog.getCustomView();
         Spinner provinceSpinner = (Spinner) dialogView.findViewById(R.id.provinceSpinner);
         Spinner districtSpinner = (Spinner) dialogView.findViewById(R.id.districtSpinner);

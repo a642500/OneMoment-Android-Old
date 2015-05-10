@@ -2,7 +2,7 @@ package co.yishun.onemoment.app.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -75,7 +75,7 @@ public class RecordingActivity extends Activity {
     /*
     Dialog to display convert progress.
      */
-    private AlertDialog mConvertDialog;
+    private Dialog mConvertDialog;
     private Camera.Size optimalPreviewSize;
 
     @Override

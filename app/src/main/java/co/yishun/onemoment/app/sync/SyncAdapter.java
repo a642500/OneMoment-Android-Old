@@ -113,6 +113,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     private void sync(Map<Integer, Data> videosOnServer) {
         try {
+            LogUtil.v(TAG, "video on server: " + videosOnServer.toString());
             LogUtil.i(TAG, "video got, start sync");
             List<Moment> toSyncedMoments = dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(getContext()).get_id()).query();
 
