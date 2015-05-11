@@ -2,24 +2,25 @@ package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.VideoView;
+import android.widget.*;
 import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.convert.Converter;
 import co.yishun.onemoment.app.data.Moment;
+import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.request.sync.GetToken;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.squareup.picasso.Picasso;
@@ -28,6 +29,7 @@ import org.androidannotations.annotations.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,7 @@ import java.util.Queue;
  * Created by Carlos on 2015/4/5.
  */
 @EActivity(R.layout.activity_multi_play)
-public class MultiPlayActivity extends ToolbarBaseActivity {
+public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlayer.OnPreparedListener {
     private static final String TAG = LogUtil.makeTag(MultiPlayActivity.class);
     @ViewById
     VideoView videoView;
@@ -95,27 +97,68 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
         Picasso.with(this).load("file://" + moments.get(0).getLargeThumbPath()).into(thumbImageView);
         //TODO add cover video
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override public void onCompletion(MediaPlayer mp) {
-                mp.reset();
-                Moment moment = toPlayMoments.poll();
-                if (moment != null) {
-                    videoView.setVideoPath(moment.getPath());
-                    videoView.start();
-                } else {
-                    playBtn.setVisibility(View.VISIBLE);
-                    thumbImageView.setVisibility(View.VISIBLE);
-                    MultiPlayActivity.this.queueMoments();
-                }
+
+        videoView.setOnPreparedListener(this);
+        videoView.setOnCompletionListener(mp -> {
+            mp.reset();
+            Moment moment = toPlayMoments.poll();
+            moment = ensureMomentUpdated(moment);
+            if (moment != null) {
+                videoView.setVideoPath(moment.getPath());
+                videoView.start();
+            } else {
+                Moment.unlock();
+                videoView.setOnPreparedListener(MultiPlayActivity.this);
+                MultiPlayActivity.this.queueMoments();
+                playBtn.setVisibility(View.VISIBLE);
+                thumbImageView.setVisibility(View.VISIBLE);
             }
         });
     }
 
+
     @Click void playBtnClicked(View view) {
-        videoView.setVideoPath(toPlayMoments.poll().getPath());
+        Moment.lock(MultiPlayActivity.this);
+
+        Moment toPlay = toPlayMoments.poll();
+        toPlay = ensureMomentUpdated(toPlay);
+        if (toPlay == null) {
+            this.finish();
+            Toast.makeText(this, "", Toast.LENGTH_LONG).show();
+            return;
+        }
+        videoView.setVideoPath(toPlay.getPath());
         view.setVisibility(View.GONE);
-        videoView.start();
-        thumbImageView.setVisibility(View.GONE);
+    }
+
+    @OrmLiteDao(helper = MomentDatabaseHelper.class)
+    Dao<Moment, Integer> dao;
+
+    /**
+     * To update moment is latest. You should lock Moment before call this method.
+     *
+     * @param moment may be invalid
+     * @return null or valid moment.
+     */
+    private Moment ensureMomentUpdated(Moment moment) {
+        if (moment == null) return null;
+        Where<Moment, Integer> w = dao.queryBuilder().orderBy("time", true).where();
+        List<Moment> momentQueried = null;
+        try {
+            if (AccountHelper.isLogin(this)) {
+                momentQueried = w.and(
+                        w.eq("time", moment.getTime()),
+                        w.eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this).get_id())//null when not login
+                ).query();
+
+            } else {
+                momentQueried = w.eq("time", moment.getTime()).and().eq("owner", "LOC").query();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (momentQueried != null && momentQueried.size() > 0) return momentQueried.get(0);
+        else return null;
     }
 
     @Click void shareVideoBtnClicked(View view) {
@@ -228,5 +271,22 @@ public class MultiPlayActivity extends ToolbarBaseActivity {
     private String getQiniuVideoFileName(int count) {
         timestamp = System.currentTimeMillis();
         return Config.LONG_VIDEO_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + count + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX;
+    }
+
+    @Override public void onPrepared(MediaPlayer mp) {
+        if (Build.VERSION.SDK_INT >= 17) {
+            videoView.setOnInfoListener((mp1, what, extra) -> {
+                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                    thumbImageView.setVisibility(View.GONE);
+                }
+                videoView.setOnInfoListener(null);
+                return true;
+            });
+        } else {
+            thumbImageView.setVisibility(View.GONE);
+        }
+        videoView.start();
+        videoView.setOnPreparedListener(null);
+
     }
 }
