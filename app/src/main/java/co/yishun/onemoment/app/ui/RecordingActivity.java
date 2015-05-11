@@ -98,6 +98,11 @@ public class RecordingActivity extends Activity {
                 params.width = min;
                 recordSurfaceParent.setLayoutParams(params);
                 mPreview.setSurfaceTextureListener(null);
+                mPreview.setOnClickListener(v -> {
+                    if (mStatus.ordinal() >= PREVIEW_PREPARED.ordinal() && mStatus.ordinal() <= RECORDER_PREPARED.ordinal()) {
+                        mCamera.autoFocus(null);
+                    }
+                });
             }
 
             @Override public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) { }
