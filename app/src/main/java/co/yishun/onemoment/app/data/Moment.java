@@ -66,8 +66,6 @@ public class Moment implements Serializable {
     @DatabaseField String thumbPath;
     @DatabaseField String largeThumbPath;
     @DatabaseField(columnName = Contract.Moment._ID, generatedId = true) private int id;
-    //auto set when created
-    @DatabaseField private long timeStamp;
     /**
      * add at database version 2.0
      */
@@ -79,7 +77,6 @@ public class Moment implements Serializable {
 
     private static Moment newInstance() {
         Moment m = new Moment();
-        m.timeStamp = System.currentTimeMillis();
         m.time = new SimpleDateFormat(Config.TIME_FORMAT).format(new Date());
         return m;
     }
@@ -111,7 +108,7 @@ public class Moment implements Serializable {
 
     public File getFile() { return new File(path); }
 
-    public long getTimeStamp() { return timeStamp; }
+    public long getTimeStamp() { return Long.parseLong(path.substring(path.lastIndexOf(Config.URL_HYPHEN) + 1, path.lastIndexOf("."))); }
 
     public String getTime() { return time; }
 
@@ -197,7 +194,6 @@ public class Moment implements Serializable {
         m.path = path;
         m.thumbPath = thumbPath;
         m.largeThumbPath = largeThumbPath;
-        m.timeStamp = video.getTimeStamp();
         m.time = video.getTime();
         m.setOwner(video.getUserID());
         return m;
@@ -217,7 +213,6 @@ public class Moment implements Serializable {
                 "path='" + path + '\'' +
                 ", owner='" + owner + '\'' +
                 ", time='" + time + '\'' +
-                ", timeStamp=" + timeStamp +
                 '}';
     }
 }
