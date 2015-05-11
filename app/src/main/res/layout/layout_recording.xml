@@ -161,9 +161,8 @@
                 android:minHeight="@dimen/fragmentRecordBottomHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:rv_rippleDuration="200"
+                app:rv_rippleDuration="100"
                 app:rv_color="@android:color/black"
-                app:rv_centered="true"
                 >
 
 
@@ -194,38 +193,23 @@
                     android:background="@null"
                     />
 
+            <co.yishun.onemoment.app.ui.view.TintableImageButton
+                    android:id="@+id/albumBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_album"
+                    android:padding="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    app:tintColorStateList="@drawable/bg_normal_color_selector"
+                    app:tintUpdateDelay="1000"
+                    />
+
         </com.andexert.library.RippleView>
-
-        <!--<RelativeLayout-->
-        <!--android:id="@+id/recordBottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="?android:selectableItemBackground"-->
-        <!-->-->
-
-
-        <!--</RelativeLayout>-->
     </LinearLayout>
-
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <co.yishun.onemoment.app.ui.view.TintableImageButton
-                android:id="@+id/albumBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_album"
-                android:padding="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/ripple_only"
-                app:tintColorStateList="@drawable/bg_normal_color_selector"
-                app:tintUpdateDelay="1000"
-                />
-    </RelativeLayout>
 
     <ImageView
             android:id="@+id/welcomeOverlay"

@@ -19,8 +19,6 @@ import android.util.Pair;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
@@ -124,17 +122,18 @@ public class RecordingActivity extends Activity {
 
                                     //disable/hide button
                                     setCameraSwitchEnable(false);
-                                    Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-                                    a.setDuration(300);
-                                    a.setAnimationListener(new Animation.AnimationListener() {
-                                        @Override public void onAnimationStart(Animation animation) {/*do nothing*/}
-
-                                        @Override
-                                        public void onAnimationEnd(Animation animation) { albumBtn.setVisibility(View.INVISIBLE); }
-
-                                        @Override public void onAnimationRepeat(Animation animation) {/*do nothing*/}
-                                    });
-                                    albumBtn.startAnimation(a);
+                                    // cause btn disappear when pressed
+//                                    Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+//                                    a.setDuration(300);
+//                                    a.setAnimationListener(new Animation.AnimationListener() {
+//                                        @Override public void onAnimationStart(Animation animation) {/*do nothing*/}
+//
+//                                        @Override
+//                                        public void onAnimationEnd(Animation animation) { albumBtn.setVisibility(View.INVISIBLE); }
+//
+//                                        @Override public void onAnimationRepeat(Animation animation) {/*do nothing*/}
+//                                    });
+//                                    albumBtn.startAnimation(a);
 
                                     record();
                                     circularProgressView.setDuration(1200);
@@ -170,9 +169,10 @@ public class RecordingActivity extends Activity {
     }
 
     @Fun
-    @Click void albumBtnClicked(View view) {
+    @Click @UiThread(delay = 300) void albumBtnClicked(View view) {
         //TODO
-        new AlbumActivity_.IntentBuilder_(this).start();
+        if (mStatus.ordinal() < RECORDER_STARTED.ordinal() || mStatus.ordinal() >= CONVERTER_ENDED.ordinal())
+            new AlbumActivity_.IntentBuilder_(this).start();
     }
 
     @UiThread void checkFlashLightAvailability() {
@@ -594,7 +594,11 @@ public class RecordingActivity extends Activity {
 
     @UiThread void onConvert(int exitCode, String origin, String converted) {
 //        setCameraSwitchEnable(true);
-        albumBtn.setVisibility(View.VISIBLE);//TODO add animation
+//        albumBtn.setEnabled(true);
+//        Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+//        albumBtn.startAnimation(a);
+//        albumBtn.setVisibility(View.VISIBLE);
+
         if (0 == exitCode) {
             saveData(origin, converted);
         } else {
