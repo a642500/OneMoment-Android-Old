@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,8 +68,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     @ViewById
     FrameLayout viewPagerContainer;
 
-    @Fun
-    @Click void backToToday(View view) {
+    @Fun void backToToday() {
         viewPagerContainer.removeAllViews();
         viewPager = new JazzyViewPager(this);
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
@@ -78,6 +76,10 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         mController = new ViewPagerController(this, viewPager);
         mController.setOnMonthChangeListener(this);
         onMonthChange(Calendar.getInstance());
+    }
+
+    @Click @UiThread(delay = 300) void backToTodayClicked(View view) {
+        backToToday();
     }
 
     @Fun
@@ -109,10 +111,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     JazzyViewPager viewPager;
 
-    SparseArray storedPager = new SparseArray<>();
-
     @AfterViews void initViewPager() {
-        backToToday(null);
+        backToToday();
 //        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
 //        mController = new ViewPagerController(this, viewPager);
 //        viewPager.setPageMargin(30);
