@@ -1,5 +1,7 @@
 package co.yishun.onemoment.app.ui;
 
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -106,7 +108,17 @@ public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnC
 
     @Click void playBtnClicked(View view) {
         view.setVisibility(View.GONE);
-        thumbImageView.setVisibility(View.GONE);
+        if (Build.VERSION.SDK_INT >= 17) {
+            videoView.setOnInfoListener((mp1, what, extra) -> {
+                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                    thumbImageView.setVisibility(View.GONE);
+                }
+                videoView.setOnInfoListener(null);
+                return true;
+            });
+        } else {
+            thumbImageView.setVisibility(View.GONE);
+        }
         videoView.start();
     }
 
