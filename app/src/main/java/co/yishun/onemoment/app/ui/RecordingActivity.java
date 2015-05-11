@@ -350,20 +350,22 @@ public class RecordingActivity extends Activity {
 
         parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
         this.optimalPreviewSize = optimalPreviewSize;
-        mCamera.setParameters(parameters);
-        mCamera.setDisplayOrientation(90);
         try {
-            // Requires API level 11+, For backward compatibility use {@link setPreviewDisplay}
-            // with {@link SurfaceView}
+
+            mCamera.setParameters(parameters);
+            mCamera.setDisplayOrientation(90);
             mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
+            mCamera.startPreview();
+            applyTransform();
+            mStatus = RecordStatus.PREVIEW_PREPARED;
         } catch (IOException e) {
             LogUtil.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
             mStatus = RecordStatus.ERROR_STATUS;
+        } catch (RuntimeException e) {
+            LogUtil.e(TAG, "Camera is being used after Camera.release() was called" + e.getMessage());
+            mStatus = RecordStatus.ERROR_STATUS;
         }
 //        mCamera.setOneShotPreviewCallback((data, camera) -> hideSplash());
-        mCamera.startPreview();
-        applyTransform();
-        mStatus = RecordStatus.PREVIEW_PREPARED;
         delayEnable();
     }
 
