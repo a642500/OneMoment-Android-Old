@@ -161,4 +161,5 @@
     <string name="albumSyncDoneSuccess">同步已完成</string>
     <string name="playRepairing">视频有点问题，正尝试修复</string>
     <string name="playRepairingFailed">修复失败，无法播放</string>
+    <string name="multiPlayError">发生了一些错误，请重试</string>
 </resources>

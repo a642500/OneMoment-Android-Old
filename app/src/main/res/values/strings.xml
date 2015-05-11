@@ -195,8 +195,9 @@
     <string name="playTitle">@string/app_name</string>
     <string name="playRepairing">video is damaged, try repairing</string>
     <string name="playRepairingFailed">Fail to repairing</string>
-    <string name="multiPlayTitle">@string/app_name</string>
 
+    <string name="multiPlayTitle">@string/app_name</string>
+    <string name="multiPlayError">Error occurs, please retry.</string>
     <string name="multiPlayShareBtn">Share</string>
     <string name="multiPlayShareText">One Moment.Every life is a movie, this is my life, how is yours?</string>
     <string name="multiPlayShareLoginAlert">Sorry, you must login first!</string>

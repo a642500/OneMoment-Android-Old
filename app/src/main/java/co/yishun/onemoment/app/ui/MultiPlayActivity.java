@@ -124,7 +124,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         toPlay = ensureMomentUpdated(toPlay);
         if (toPlay == null) {
             this.finish();
-            Toast.makeText(this, "", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.multiPlayShareBtn, Toast.LENGTH_LONG).show();
             return;
         }
         videoView.setVideoPath(toPlay.getPath());
