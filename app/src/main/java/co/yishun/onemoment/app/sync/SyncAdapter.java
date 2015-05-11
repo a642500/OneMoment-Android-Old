@@ -29,10 +29,12 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +106,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         super.onSyncCanceled();
     }
 
+    int databaseNum = 0;
+
     /**
      * compare local video with server's, and determine whether upload or download.
      * <p>
@@ -116,6 +120,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             LogUtil.v(TAG, "video on server: " + videosOnServer.toString());
             LogUtil.i(TAG, "video got, start sync");
             List<Moment> toSyncedMoments = dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(getContext()).get_id()).query();
+
+            LogUtil.d(TAG, "copy " + databaseNum + " to sdcard");
+            File database = new File("/data/data/co.yishun.onemoment.app/databases/OneDataBase.db");
+            File copyed;
+            do {
+                copyed = new File("/sdcard/copyed" + databaseNum + ".db");
+                databaseNum++;
+
+            } while (copyed.exists());
+
+            FileUtils.copyFile(database, copyed);
+
+
+            LogUtil.v(TAG, "queried moments: " + Arrays.toString(toSyncedMoments.toArray()));
 
 
             for (Moment moment : toSyncedMoments) {
@@ -164,6 +182,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 }
                 CountDownLatch latch = new CountDownLatch(1);
                 downloadVideo(data, null, latch);//other unhandled video mean they need download
+                latch.await();
             }
             syncDone(true);
         } catch (Exception e) {
@@ -545,49 +564,65 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     String pathToThumb = CameraHelper.createThumbImage(getContext(), fileSynced.getPath());
                     String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), fileSynced.getPath());
                     //don't need lock
-                    dao.create(Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb));
+                    //if file exist, just register/update private moment at database
+                    if (momentOld == null) {
+                        Moment moment = Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb);
+                        LogUtil.v(TAG, "create a recovered moment: " + moment);
+                        dao.create(moment);
+                        isDownloadChanged = true;
+                    } else {
+                        momentOld.setLargeThumbPath(pathToLargeThumb);
+                        momentOld.setThumbPath(pathToThumb);
+                        LogUtil.v(TAG, "update a recovered moment: " + momentOld);
+                        dao.update(momentOld);
+                        isDownloadChanged = true;
 
+                    }
                     syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
                     if (latch != null) {
                         latch.countDown();
                     }
                     return;
-                } else fileSynced.delete();
+                } else {
+                    fileSynced.delete();
+                }
             }
+
+            //download and register
+            Ion.with(getContext()).load(Config.getResourceUrl(getContext()) + aVideoOnServer.getQiuniuKey())
+                    .write(fileSynced).setCallback((e, result) -> {
+                try {
+                    if (e != null) {
+                        throw e;
+                    }
+                    if (momentOld != null && !deleteMoment(momentOld)) {
+                        LogUtil.e(TAG, "delete old local moment failed: " + momentOld.getPath());
+                    }
+
+                    String pathToThumb = CameraHelper.createThumbImage(getContext(), fileSynced.getPath());
+                    String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), fileSynced.getPath());
+
+                    dao.create(Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb));
+
+                    LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
+                    isDownloadChanged = true;
+                    syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                    if (latch != null) {
+                        latch.countDown();
+                    }
+                } catch (Exception e1) {
+                    syncUpdate(UpdateType.DOWNLOAD, PROGRESS_ERROR, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
+                    if (latch != null) {
+                        latch.countDown();
+                    }
+                    e1.printStackTrace();
+                }
+            });
+
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
 
-        //download and register
-        Ion.with(getContext()).load(Config.getResourceUrl(getContext()) + aVideoOnServer.getQiuniuKey())
-                .write(fileSynced).setCallback((e, result) -> {
-            try {
-                if (e != null) {
-                    throw e;
-                }
-                if (momentOld != null && !deleteMoment(momentOld)) {
-                    LogUtil.e(TAG, "delete old local moment failed: " + momentOld.getPath());
-                }
-
-                String pathToThumb = CameraHelper.createThumbImage(getContext(), fileSynced.getPath());
-                String pathToLargeThumb = CameraHelper.createLargeThumbImage(getContext(), fileSynced.getPath());
-
-                dao.create(Moment.from(aVideoOnServer, fileSynced.getPath(), pathToThumb, pathToLargeThumb));
-
-                LogUtil.i(TAG, "a video download ok: " + aVideoOnServer.getQiuniuKey());
-                isDownloadChanged = true;
-                syncUpdate(UpdateType.DOWNLOAD, 100, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
-                if (latch != null) {
-                    latch.countDown();
-                }
-            } catch (Exception e1) {
-                syncUpdate(UpdateType.DOWNLOAD, PROGRESS_ERROR, PROGRESS_NOT_AVAILABLE, PROGRESS_NOT_AVAILABLE);
-                if (latch != null) {
-                    latch.countDown();
-                }
-                e1.printStackTrace();
-            }
-        });
 
     }
 
