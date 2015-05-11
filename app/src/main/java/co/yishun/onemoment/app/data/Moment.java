@@ -73,6 +73,8 @@ public class Moment implements Serializable {
 
     @DatabaseField private String time;
 
+    @DatabaseField private long timeStamp;
+
     public Moment() { /*keep for ormlite*/ }
 
     private static Moment newInstance() {
@@ -158,6 +160,7 @@ public class Moment implements Serializable {
             m.thumbPath = mThumbPath;
             m.largeThumbPath = mLargeThumbPath;
             m.owner = mOwner;
+            m.timeStamp = m.getTimeStamp();
             return m;
         }
 
@@ -196,6 +199,7 @@ public class Moment implements Serializable {
         m.largeThumbPath = largeThumbPath;
         m.time = video.getTime();
         m.setOwner(video.getUserID());
+        m.timeStamp = m.getTimeStamp();
         return m;
     }
 
