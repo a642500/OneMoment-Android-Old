@@ -87,7 +87,9 @@ public class AccountHelper {
                 saveIdentityInfo(activity, data);
 //                deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
                 setAutoSync(activity, true);
-                LogUtil.e(TAG, "Add an account.");
+                setOnlyWifiSyncEnable(activity, true);
+
+                LogUtil.i(TAG, "Add an account.");
             } else {
                 LogUtil.e(TAG, "Add account occurred error, but no old account exists.");
             }
@@ -96,13 +98,15 @@ public class AccountHelper {
                 LogUtil.v(TAG, "remove old account: " + account);
                 accountManager.removeAccount(account, future -> {
                     try {
-                        if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                        if (future.getResult()) {
                             if (accountManager.addAccountExplicitly(newAccount, null, null)) {
                                 mAccount = newAccount;
                                 saveIdentityInfo(activity, data);
 //                            deletePrivateMomentExceptWhoseIdEquals(activity, data.get_id()); not delete but only read current user's when need
                                 setAutoSync(activity, true);
-                                LogUtil.e(TAG, "Add an account.");
+                                setOnlyWifiSyncEnable(activity, true);
+
+                                LogUtil.i(TAG, "Add an account.");
                             } else {
                                 LogUtil.e(TAG, "The account exists or some other error occurred.");
                             }
@@ -111,13 +115,11 @@ public class AccountHelper {
                         }
                     } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                         e.printStackTrace();
-                        LogUtil.e(TAG, "remove old account error");
+                        LogUtil.e(TAG, "remove old account throw exception");
                     }
                 }, null);
             }
         }
-        setAutoSync(activity, true);
-        setOnlyWifiSyncEnable(activity, true);
     }
 
     public static Account createAccountWithoutEnableAutoSync(Context context, AccountResult.Data data) {
