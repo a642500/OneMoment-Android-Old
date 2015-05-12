@@ -27,11 +27,19 @@ public class LoginActivity extends ToolbarBaseActivity {
     String phone = "";
     @ViewById
     EditText phoneEditText;
+    @ViewById
+    EditText passwordEditText;
     private String mPhoneNum;
     private String mPassword;
 
     @AfterViews void initPhone() {
         phoneEditText.setText(phone);
+    }
+
+    @AfterViews void setFocus() {
+        if (phone != null && phone.trim().length() > 0) {
+            passwordEditText.requestFocus();
+        }
     }
 
     @AfterTextChange(R.id.phoneEditText) void onPhoneChange(Editable text, TextView phone) {
