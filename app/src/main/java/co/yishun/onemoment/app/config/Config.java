@@ -2,7 +2,6 @@ package co.yishun.onemoment.app.config;
 
 import android.content.Context;
 import android.util.Pair;
-import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.net.request.sync.GetDomain;
 
 /**
@@ -10,6 +9,7 @@ import co.yishun.onemoment.app.net.request.sync.GetDomain;
  */
 public class Config {
 
+    public static final String FEEDBACK_MAIL = "onemoment@bingyan.net";
     public static final String MIME_TYPE = "video/mp4";
     public static final String VIDEO_FILE_SUFFIX = ".mp4";
     public static final String THUMB_FILE_SUFFIX = ".png";

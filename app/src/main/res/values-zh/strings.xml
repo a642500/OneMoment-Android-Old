@@ -162,4 +162,8 @@
     <string name="playRepairing">视频有点问题，正尝试修复</string>
     <string name="playRepairingFailed">修复失败，无法播放</string>
     <string name="multiPlayError">发生了一些错误，请重试</string>
+    <string name="action_feedback">反馈</string>
+    <string name="feedbackSubject">一瞬--意见反馈</string>
+    <string name="feedbackContent">请在下方写下您的反馈，我们会尽快查看并可能与您进一步联系：</string>
+    <string name="feedbackFailNotification">您需要安装邮件应用来发送反馈</string>
 </resources>

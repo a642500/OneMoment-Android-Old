@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import co.yishun.onemoment.app.Fun;
 import co.yishun.onemoment.app.R;
+import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
@@ -158,6 +159,18 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
                 break;
             case R.id.action_rate:
                 rate();
+                break;
+            case R.id.action_feedback:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("message/rfc822");
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{Config.FEEDBACK_MAIL});
+                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedbackSubject));
+                i.putExtra(Intent.EXTRA_TEXT, getString(R.string.feedbackContent));
+                try {
+                    startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    showNotification(R.string.feedbackFailNotification);
+                }
                 break;
             case R.id.action_help:
                 GuideActivity_.intent(this).extra("isFromSuggestion", true).start();

@@ -44,6 +44,7 @@
     <string name="action_sync_settings">Sync Settings</string>
     <string name="action_suggest">Suggestion</string>
     <string name="action_rate">Rate it!</string>
+    <string name="action_feedback">Feedback</string>
     <string name="action_help">Help</string>
     <string name="action_about">About</string>
 
@@ -202,4 +203,9 @@
     <string name="multiPlayShareText">One Moment.Every life is a movie, this is my life, how is yours?</string>
     <string name="multiPlayShareLoginAlert">Sorry, you must login first!</string>
     <string name="multiPlayShareFail">Upload video failed, unable to share.</string>
+
+    <string name="feedbackSubject">Feedback: OneMoment</string>
+    <string name="feedbackContent">Please write feedback for us, we will reply soon: </string>
+    <string name="feedbackFailNotification">You need to install an Email app to feedback.</string>
+
 </resources>
