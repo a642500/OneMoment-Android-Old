@@ -121,16 +121,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             LogUtil.i(TAG, "video got, start sync");
             List<Moment> toSyncedMoments = dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(getContext()).get_id()).query();
 
-            LogUtil.d(TAG, "copy " + databaseNum + " to sdcard");
-            File database = new File("/data/data/co.yishun.onemoment.app/databases/OneDataBase.db");
-            File copyed;
-            do {
-                copyed = new File("/sdcard/copyed" + databaseNum + ".db");
-                databaseNum++;
-
-            } while (copyed.exists());
-
-            FileUtils.copyFile(database, copyed);
+//            LogUtil.d(TAG, "copy " + databaseNum + " to sdcard");
+//            File database = new File("/data/data/co.yishun.onemoment.app/databases/OneDataBase.db");
+//            File copyed;
+//            do {
+//                copyed = new File("/sdcard/copyed" + databaseNum + ".db");
+//                databaseNum++;
+//
+//            } while (copyed.exists());
+//
+//            FileUtils.copyFile(database, copyed);
 
 
             LogUtil.v(TAG, "queried moments: " + Arrays.toString(toSyncedMoments.toArray()));
