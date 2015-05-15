@@ -30,7 +30,8 @@
 
     <color name="calenderCellSelectedMaskColor">#80FF853F</color>
     <color name="calenderCellSelectedEmptyMaskColor">@color/colorOrange</color>
-    <color name="calenderCellDefaultMaskColor">#B4343434</color>
+    <color name="calenderCellDefaultDisableMaskColor">#B4343434</color>
+    <color name="calenderCellDefaultEnableMaskColor">#B4212121</color>
 
     <color name="bgColorLoginBtn">@color/colorGreenBlue</color>
     <color name="bgColorLoginToolbar">#253d3d3d</color>

@@ -7,19 +7,19 @@
              android:background="?android:selectableItemBackground"
         >
 
+    <!-- place thumbnail of video-->
     <ImageView
             android:visibility="invisible"
             android:id="@+id/backgroundImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_album"
             />
 
     <ImageView
             android:id="@+id/foregroundImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@color/calenderCellDefaultMaskColor"/>
+            />
 
     <TextView
             android:id="@+id/foregroundTextView"
@@ -28,5 +28,5 @@
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="17sp"
-            android:text="31"/>
+            />
 </FrameLayout>

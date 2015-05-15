@@ -102,6 +102,7 @@ public class CalendarAdapter extends BaseAdapter {
         }
         CellView holder = (CellView) convertView.getTag();
         if (position < WEEK_TITLE_RES.length) {
+            // not use because new implement WEEK_TITLE_RES.length == 0
             holder.view.setEnabled(false);
             holder.view.setVisibility(View.VISIBLE);
             holder.foregroundTextView.setText(WEEK_TITLE_RES[position]);
@@ -118,9 +119,6 @@ public class CalendarAdapter extends BaseAdapter {
 //                holder.recoverViewHeight();
             holder.view.setVisibility(View.VISIBLE);
             holder.view.setEnabled(true);
-            holder.backgroundImageView.setVisibility(View.INVISIBLE);
-            holder.foregroundImageView.setVisibility(View.VISIBLE);
-            holder.foregroundTextView.setVisibility(View.VISIBLE);
             holder.foregroundTextView.setText(String.valueOf(num));
 
             fillBackground(holder, num);
@@ -130,7 +128,6 @@ public class CalendarAdapter extends BaseAdapter {
 
     @Background void fillBackground(CellView holder, int day) {
 //            return;
-        ImageView imageView = holder.backgroundImageView;
         Calendar thisMonth = ((Calendar) (mCalender.clone()));
         thisMonth.set(Calendar.DAY_OF_MONTH, day);
         String time = new SimpleDateFormat(Config.TIME_FORMAT).format(thisMonth.getTime());
@@ -157,15 +154,16 @@ public class CalendarAdapter extends BaseAdapter {
                 LogUtil.i(TAG, "thumb path: " + thumbPath);
                 if (thumbPath == null) CameraHelper.createThumbImage(mContext, result.get(0).getPath());
                 assert thumbPath != null;
-                Picasso.with(mContext).load(new File(thumbPath)).into(imageView);
-                imageView.setVisibility(View.VISIBLE);
-                imageView.setTag(result.get(0));
+                Picasso.with(mContext).load(new File(thumbPath)).into(holder.backgroundImageView);
+                holder.backgroundImageView.setVisibility(View.VISIBLE);
+                holder.backgroundImageView.setTag(result.get(0));
 
                 // set orange if it is today
-                if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR) && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-                        && today.get(Calendar.DAY_OF_MONTH) == day)
-                    holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango);
-                else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
+                if (sameDay(thisMonth, today))
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_orango);
+                else {
+                    holder.foregroundImageView.setVisibility(View.INVISIBLE);
+                }
 
                 holder.view.setOnClickListener(v -> {
                     Moment moment = (Moment) ((CellView) v.getTag()).backgroundImageView.getTag();
@@ -174,17 +172,32 @@ public class CalendarAdapter extends BaseAdapter {
                     }
                 });
             } else {
+                holder.foregroundImageView.setVisibility(View.VISIBLE);
+                holder.backgroundImageView.setVisibility(View.INVISIBLE);
                 // set orange if it is today
-                if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR) && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-                        && today.get(Calendar.DAY_OF_MONTH) == day)
-                    holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango_empty);
-                else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
+                if (sameDay(thisMonth, today))
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_orango_empty);
+                else if (before(thisMonth, today)) {
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_grey_disable);
+                } else {
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_grey);
+                }
             }
 
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean sameDay(Calendar c1, Calendar c2) {
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private boolean before(Calendar c1, Calendar c2) {
+        return c1.get(Calendar.YEAR) < c2.get(Calendar.YEAR)
+                || (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) < c2.get(Calendar.MONTH))
+                || (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c1.get(Calendar.DAY_OF_MONTH) < c2.get(Calendar.DAY_OF_MONTH));
     }
 
     class CellView {
