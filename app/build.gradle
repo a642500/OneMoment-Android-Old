@@ -68,14 +68,9 @@ android {
         marketYingyongbao {}
         innerTest {}
     }
-//    splits {
-//        abi {
-//            enable true
-//            reset()
-//            include 'armeabi-v7a', 'armeabi'
-//            universalApk true
-//        }
-//    }
+    aaptOptions {
+        ignoreAssetsPattern 'x86:fonts:armeabi-v7a-neon'
+    }
 }
 
 apt {
