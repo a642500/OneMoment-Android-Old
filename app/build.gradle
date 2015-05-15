@@ -55,6 +55,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        marketUniversal {}
+        market360 {}
+        marketWandoujia {}
+        marketBaidu {}
+        marketCoolapk {}
+        marketGooglePlay {}
+        marketHuawei {}
+        marketXiaomi {}
+        marketYingyongbao {}
+        innerTest {}
+    }
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'armeabi-v7a', 'armeabi'
+//            universalApk true
+//        }
+//    }
 }
 
 apt {

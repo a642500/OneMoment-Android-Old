@@ -220,10 +220,6 @@
                 android:name="UMENG_APPKEY"
                 android:value="549e2c80fd98c5e4cf000f64"
                 />
-        <meta-data
-                android:name="UMENG_CHANNEL"
-                android:value="QQ Test Group"
-                />
     </application>
 
 </manifest>
