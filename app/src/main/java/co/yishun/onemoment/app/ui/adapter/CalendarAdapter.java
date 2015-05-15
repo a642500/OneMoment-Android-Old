@@ -157,6 +157,7 @@ public class CalendarAdapter extends BaseAdapter {
                 Picasso.with(mContext).load(new File(thumbPath)).into(holder.backgroundImageView);
                 holder.backgroundImageView.setVisibility(View.VISIBLE);
                 holder.backgroundImageView.setTag(result.get(0));
+                holder.foregroundTextView.setTextColor(holder.view.getContext().getResources().getColor(android.R.color.white));
 
                 // set orange if it is today
                 if (sameDay(thisMonth, today))
@@ -175,11 +176,14 @@ public class CalendarAdapter extends BaseAdapter {
                 holder.foregroundImageView.setVisibility(View.VISIBLE);
                 holder.backgroundImageView.setVisibility(View.INVISIBLE);
                 // set orange if it is today
-                if (sameDay(thisMonth, today))
+                if (sameDay(thisMonth, today)) {
+                    holder.foregroundTextView.setTextColor(holder.view.getContext().getResources().getColor(android.R.color.white));
                     holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_orango_empty);
-                else if (before(thisMonth, today)) {
+                } else if (before(thisMonth, today)) {
+                    holder.foregroundTextView.setTextColor(holder.view.getContext().getResources().getColor(android.R.color.white));
                     holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_grey_disable);
                 } else {
+                    holder.foregroundTextView.setTextColor(holder.view.getContext().getResources().getColor(R.color.textColorCalenderNumDark));
                     holder.foregroundImageView.setImageResource(R.drawable.bg_calendar_cell_grey);
                 }
             }

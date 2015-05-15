@@ -27,6 +27,7 @@
     <color name="textColorCalenderTitle">@color/colorGreenBlue</color>
     <color name="textColorCalenderSubtitle">#fff</color>
     <color name="textColorCalenderTileNum">@color/colorGreenBlue</color>
+    <color name="textColorCalenderNumDark">#757575</color>
 
     <color name="calenderCellSelectedMaskColor">#80FF853F</color>
     <color name="calenderCellSelectedEmptyMaskColor">@color/colorOrange</color>
