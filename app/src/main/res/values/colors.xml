@@ -29,7 +29,8 @@
     <color name="textColorCalenderTileNum">@color/colorGreenBlue</color>
 
     <color name="calenderCellSelectedMaskColor">#80FF853F</color>
-    <color name="calenderCellDefaultMaskColor">#80000000</color>
+    <color name="calenderCellSelectedEmptyMaskColor">@color/colorOrange</color>
+    <color name="calenderCellDefaultMaskColor">#B4343434</color>
 
     <color name="bgColorLoginBtn">@color/colorGreenBlue</color>
     <color name="bgColorLoginToolbar">#253d3d3d</color>

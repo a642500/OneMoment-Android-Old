@@ -123,13 +123,6 @@ public class CalendarAdapter extends BaseAdapter {
             holder.foregroundTextView.setVisibility(View.VISIBLE);
             holder.foregroundTextView.setText(String.valueOf(num));
 
-            Calendar today = Calendar.getInstance();
-            if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                    && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-                    && today.get(Calendar.DAY_OF_MONTH) == num)
-                holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango);
-            else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
-
             fillBackground(holder, num);
         }
         return holder.view;
@@ -138,9 +131,9 @@ public class CalendarAdapter extends BaseAdapter {
     @Background void fillBackground(CellView holder, int day) {
 //            return;
         ImageView imageView = holder.backgroundImageView;
-        Calendar todayOfMonth = ((Calendar) (mCalender.clone()));
-        todayOfMonth.set(Calendar.DAY_OF_MONTH, day);
-        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(todayOfMonth.getTime());
+        Calendar thisMonth = ((Calendar) (mCalender.clone()));
+        thisMonth.set(Calendar.DAY_OF_MONTH, day);
+        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(thisMonth.getTime());
         try {
             List<Moment> result = null;
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(mContext, MomentDatabaseHelper.class).getDao(Moment.class);
@@ -157,6 +150,7 @@ public class CalendarAdapter extends BaseAdapter {
                 result = dao.queryBuilder().where()
                         .eq("time", time).and().eq("owner", "LOC").query();
             }
+            Calendar today = Calendar.getInstance();
             if (result != null && result.size() > 0) {
                 LogUtil.d(TAG, "fill background start,day: " + day + "; moment size: " + result.size());
                 String thumbPath = result.get(0).getThumbPath();
@@ -167,13 +161,27 @@ public class CalendarAdapter extends BaseAdapter {
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setTag(result.get(0));
 
+                // set orange if it is today
+                if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR) && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+                        && today.get(Calendar.DAY_OF_MONTH) == day)
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango);
+                else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
+
                 holder.view.setOnClickListener(v -> {
                     Moment moment = (Moment) ((CellView) v.getTag()).backgroundImageView.getTag();
                     if (moment != null) {
                         PlayActivity_.intent(v.getContext()).extra("moment", moment).start();
                     }
                 });
+            } else {
+                // set orange if it is today
+                if (mCalender.get(Calendar.YEAR) == today.get(Calendar.YEAR) && mCalender.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+                        && today.get(Calendar.DAY_OF_MONTH) == day)
+                    holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_orango_empty);
+                else holder.foregroundImageView.setImageResource(R.drawable.bg_calender_cell_grey);
             }
+
+
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
