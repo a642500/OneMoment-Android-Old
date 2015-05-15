@@ -98,7 +98,7 @@
     <string name="setPasswordSignUpSuccess">注册成功！</string>
     <string name="setPasswordTitle">设置密码</string>
     <string name="signUpGetVerificationCode">获取验证码</string>
-    <string name="signUpLoading">请稍后…</string>
+    <string name="signUpLoading">请稍候…</string>
     <string name="signUpLoginEntry">已注册过一瞬？点此登录 ></string>
     <string name="signUpNextBtn">下一步</string>
     <string name="signUpPhone">请输入手机号</string>
