@@ -24,8 +24,7 @@ public class SplashActivity extends BaseActivity {
         startRecording();
     }
 
-    @AfterViews
-    void setResource() {
+    @AfterViews void setResource() {
         boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
         boolean hasHomeKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
 
@@ -42,8 +41,7 @@ public class SplashActivity extends BaseActivity {
         return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, true);
     }
 
-    @UiThread(delay = 1000)
-    void startRecording() {
+    @UiThread(delay = 1600) void startRecording() {
         this.finish();
         if (isFirstLaunch()) GuideActivity_.intent(this).start();
         else RecordingActivity_.intent(this).start();
