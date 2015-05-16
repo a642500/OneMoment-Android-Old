@@ -16,6 +16,8 @@ public class SyncSettingsActivity extends ToolbarBaseActivity {
     Switch syncAutoSwitch;
     @ViewById
     Switch onlyWifiSyncSwitch;
+    @ViewById
+    View onlyWifiSyncItem;
 
     @Click void syncAutoItemClicked(View view) {
         syncAutoSwitch.setChecked(!syncAutoSwitch.isChecked());
@@ -36,6 +38,7 @@ public class SyncSettingsActivity extends ToolbarBaseActivity {
         syncAutoSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             AccountHelper.setAutoSync(this, isChecked);
             onlyWifiSyncSwitch.setEnabled(isChecked);
+            onlyWifiSyncItem.setEnabled(isChecked);
         });
 
         onlyWifiSyncSwitch.setChecked(AccountHelper.isOnlyWifiSyncEnable(this));
