@@ -121,3 +121,10 @@
 -keep class co.yishun.onemoment.app.net.request.sync.** { *; }
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-dontwarn com.sina.weibo.**
+-keep class com.sina.weibo.** { *; }
+-keepnames class com.sina.weibo.** { *; }
+
+-dontwarn umeng.sdk.**
+-keep class umeng.sdk.** { *;}
