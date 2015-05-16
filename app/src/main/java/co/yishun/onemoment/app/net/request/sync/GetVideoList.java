@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.net.request.sync;
 
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.net.request.Request;
+import co.yishun.onemoment.app.net.result.VideoListResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.DecodeUtil;
 import com.google.gson.Gson;
@@ -10,12 +11,11 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Created by Carlos on 2015/4/5.
  */
-public class GetVideoList extends Request<GetVideoList.VideoListResult> {
+public class GetVideoList extends Request<VideoListResult> {
 
     @Override
     protected String getUrl() {
@@ -45,26 +45,5 @@ public class GetVideoList extends Request<GetVideoList.VideoListResult> {
         if (callback == null) {
             throw new IllegalArgumentException("null callback");
         }
-    }
-
-    public static class VideoListResult implements Serializable {
-        private int code;
-        private String msg;
-        private Data[] data;
-
-
-        public int getCode() {
-            return code;
-        }
-
-        public Data[] getDatas() {
-            return data;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-
     }
 }

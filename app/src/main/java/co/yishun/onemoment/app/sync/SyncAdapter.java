@@ -29,7 +29,6 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,17 +47,168 @@ import java.util.concurrent.CountDownLatch;
  */
 @EBean
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
+    public static final String BUNLDE_IGNORE_NETWORK = "boolean_ignore_network";
+    public static final String SYNC_BROADCAST_DONE = "co.yishun.onemoment.app.sync.done";
+    public static final String SYNC_BROADCAST_UPDATE_UPLOAD = "co.yishun.onemoment.app.sync.update.upload";
+    public static final String SYNC_BROADCAST_UPDATE_DOWNLOAD = "co.yishun.onemoment.app.sync.update.download";
+    public static final String SYNC_BROADCAST_UPDATE_RECOVER = "co.yishun.onemoment.app.sync.update.recover";
+    public static final String SYNC_BROADCAST_EXTRA_IS_UPLOAD_CHANGED = "is_upload_changed";
+    public static final String SYNC_BROADCAST_EXTRA_IS_DOWNLOAD_CHANGED = "is_download_changed";
+    public static final String SYNC_BROADCAST_EXTRA_IS_SUCCESS = "is_success";
+    public static final String SYNC_BROADCAST_EXTRA_THIS_PROGRESS = "int_this_progress";
+    public static final String SYNC_BROADCAST_EXTRA_TYPE_PROGRESS = "int_type_progress";
+    public static final String SYNC_BROADCAST_EXTRA_ALL_PROGRESS = "int_all_progress";
+    public static final int PROGRESS_NOT_AVAILABLE = -1;
+    public static final int PROGRESS_ERROR = -2;
     private static final String TAG = LogUtil.makeTag(SyncAdapter.class);
     ContentResolver mContentResolver;
-    public static final String BUNLDE_IGNORE_NETWORK = "boolean_ignore_network";
+    @SystemService
+    ConnectivityManager connectivityManager;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
+    Dao<Moment, Integer> dao;
+    int databaseNum = 0;
+    /**
+     * whether local data update while sync. if true, need to notify some ui update
+     */
+    boolean isUploadChanged = false;
+    boolean isDownloadChanged = false;
+    private UploadManager mUploadManager;
 
     public SyncAdapter(Context context) {
         super(context, true);
         mContentResolver = context.getContentResolver();
     }
 
-    @SystemService
-    ConnectivityManager connectivityManager;
+    /**
+     * check moment file integrity.
+     */
+    public static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
+        Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
+        try {
+            if (!repairVideo(dao, moment, context, listener)) {
+                listener.onMomentDelete(moment);
+                return;
+            }
+            if (!new File(moment.getLargeThumbPath()).exists()) {
+                listener.onMomentStartRepairing(moment);
+                String laP = CameraHelper.createLargeThumbImage(context, moment.getPath());
+                moment.setPath(laP);
+                LogUtil.e(TAG, "repair moment large thumb");
+                dao.update(moment);
+            }
+            if (!new File(moment.getThumbPath()).exists()) {
+                listener.onMomentStartRepairing(moment);
+                String p = CameraHelper.createThumbImage(context, moment.getPath());
+                moment.setPath(p);
+                LogUtil.e(TAG, "repair moment thumb");
+                dao.update(moment);
+            }
+            listener.onMomentOk(moment);
+        } catch (IOException e) {
+            e.printStackTrace();
+            dao.delete(moment);
+            LogUtil.e(TAG, "repair moment failed: IOException");
+            listener.onMomentDelete(moment);
+        }
+    }
+
+    private static boolean repairVideo(@NonNull Dao<Moment, Integer> dao, @NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
+        File video = new File(moment.getPath());
+        if (!video.exists()) {
+            listener.onMomentStartRepairing(moment);
+            if (moment.isPublic()) {
+                CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
+                File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.LOCAL, video);
+                if (type == CameraHelper.Type.SYNCED && mayVideo.exists()) {
+                    //repair public path video is wrong recorded with private path
+                    moment.setPath(mayVideo.getPath());
+                    dao.update(moment);
+                    LogUtil.d(TAG, "repair a moment, which is public but have wrong private path.");
+                    return true;
+                } else {
+                    dao.delete(moment);
+                    LogUtil.e(TAG, "unable repair a moment, which is public but have wrong private path.");
+                    return false;
+                }
+            } else {
+                //moment is private
+                if (AccountHelper.isLogin(context)) {
+                    CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
+                    File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.SYNCED, video);
+                    if (type == CameraHelper.Type.LOCAL && mayVideo.exists()) {
+                        moment.setPath(mayVideo.getPath());
+                        dao.update(moment);
+                        LogUtil.d(TAG, "repair a moment, which is private but have wrong public path.");
+                        return true;
+                    } else {
+                        //if login, try repair by download from server
+                        try {
+                            File downloaded = Ion.with(context).load(Config.getResourceUrl(context) + getQiniuVideoFileName(context, moment)).write(mayVideo).get();
+                            if (downloaded.exists()) {
+                                String pathToThumb = CameraHelper.createThumbImage(context, downloaded.getPath());
+                                String pathToLargeThumb = CameraHelper.createLargeThumbImage(context, downloaded.getPath());
+                                moment.setPath(downloaded.getPath());
+                                moment.setThumbPath(pathToThumb);
+                                moment.setLargeThumbPath(pathToLargeThumb);
+                                dao.update(moment);
+                                return true;
+                            } else throw new Exception("download failed");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            dao.delete(moment);
+                            return false;
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "assert failed! Check bad private moment when not log in, you must avoid read private when not login");
+                    dao.delete(moment);
+                    return false;
+                }
+            }
+        } else return true;
+    }
+
+    private static String getQiniuVideoFileName(Context context, Moment moment) {
+        String re = AccountHelper.getIdentityInfo(context).get_id() + Config.URL_HYPHEN + moment.getTime() + Config.URL_HYPHEN + moment.getTimeStamp() + Config.VIDEO_FILE_SUFFIX;
+        LogUtil.i(TAG, "qiniu filename: " + re);
+        return re;
+    }
+
+    /**
+     * convert array to HashMap
+     * <p>
+     * No generics is from Apache ArrayUtils, and generics version is from <a href="http://stackoverflow.com/questions/6416346/adding-generics-to-arrayutils-tomap">Stack Overflow</a>
+     *
+     * @param array
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <K, V> Map<K, V> toMap(Object[] array) {
+        if (array == null) {
+            return null;
+        }
+
+        final Map<K, V> map = new HashMap<K, V>((int) (array.length * 1.5));
+        for (int i = 0; i < array.length; i++) {
+            Object object = array[i];
+            if (object instanceof Map.Entry) {
+                Map.Entry<K, V> entry = (Map.Entry<K, V>) object;
+                map.put(entry.getKey(), entry.getValue());
+            } else if (object instanceof Object[]) {
+                Object[] entry = (Object[]) object;
+                if (entry.length < 2) {
+                    throw new IllegalArgumentException("Array element " + i
+                            + ", '" + object + "', has a length less than 2");
+                }
+                map.put((K) entry[0], (V) entry[1]);
+            } else {
+                throw new IllegalArgumentException("Array element " + i + ", '"
+                        + object + "', is neither of type Map.Entry nor an Array");
+            }
+        }
+        return map;
+    }
 
     /**
      * To execute sync. When sync end, it will call {@link #syncDone(boolean)} to send broadcast notify sync process ending. And in syncing process, it calls {@link #syncUpdate(UpdateType, int, int, int)} to broadcast progress.
@@ -84,7 +234,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     e.printStackTrace();
                     syncDone(false);
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
-                    sync(toMap(result.getDatas()));
+                    sync(toMap(result.getData()));
                 } else {
                     LogUtil.e(TAG, "get video list failed: " + result.getCode());
                     syncDone(false);
@@ -97,16 +247,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
-    Dao<Moment, Integer> dao;
-
     @Override public void onSyncCanceled() {
         //TODO how to handle cancel
         LogUtil.i(TAG, "onSyncCanceled");
         super.onSyncCanceled();
     }
-
-    int databaseNum = 0;
 
     /**
      * compare local video with server's, and determine whether upload or download.
@@ -285,112 +430,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     /**
-     * check moment file integrity.
-     */
-    public static void checkAndSolveBadMoment(@NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
-        Dao<Moment, Integer> dao = OpenHelperManager.getHelper(context, MomentDatabaseHelper.class).getDao(Moment.class);
-        try {
-            if (!repairVideo(dao, moment, context, listener)) {
-                listener.onMomentDelete(moment);
-                return;
-            }
-            if (!new File(moment.getLargeThumbPath()).exists()) {
-                listener.onMomentStartRepairing(moment);
-                String laP = CameraHelper.createLargeThumbImage(context, moment.getPath());
-                moment.setPath(laP);
-                LogUtil.e(TAG, "repair moment large thumb");
-                dao.update(moment);
-            }
-            if (!new File(moment.getThumbPath()).exists()) {
-                listener.onMomentStartRepairing(moment);
-                String p = CameraHelper.createThumbImage(context, moment.getPath());
-                moment.setPath(p);
-                LogUtil.e(TAG, "repair moment thumb");
-                dao.update(moment);
-            }
-            listener.onMomentOk(moment);
-        } catch (IOException e) {
-            e.printStackTrace();
-            dao.delete(moment);
-            LogUtil.e(TAG, "repair moment failed: IOException");
-            listener.onMomentDelete(moment);
-        }
-    }
-
-    private static boolean repairVideo(@NonNull Dao<Moment, Integer> dao, @NonNull Moment moment, Context context, OnCheckedListener listener) throws SQLException {
-        File video = new File(moment.getPath());
-        if (!video.exists()) {
-            listener.onMomentStartRepairing(moment);
-            if (moment.isPublic()) {
-                CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
-                File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.LOCAL, video);
-                if (type == CameraHelper.Type.SYNCED && mayVideo.exists()) {
-                    //repair public path video is wrong recorded with private path
-                    moment.setPath(mayVideo.getPath());
-                    dao.update(moment);
-                    LogUtil.d(TAG, "repair a moment, which is public but have wrong private path.");
-                    return true;
-                } else {
-                    dao.delete(moment);
-                    LogUtil.e(TAG, "unable repair a moment, which is public but have wrong private path.");
-                    return false;
-                }
-            } else {
-                //moment is private
-                if (AccountHelper.isLogin(context)) {
-                    CameraHelper.Type type = CameraHelper.whatTypeOf(video.getPath());
-                    File mayVideo = CameraHelper.getOutputMediaFile(context, CameraHelper.Type.SYNCED, video);
-                    if (type == CameraHelper.Type.LOCAL && mayVideo.exists()) {
-                        moment.setPath(mayVideo.getPath());
-                        dao.update(moment);
-                        LogUtil.d(TAG, "repair a moment, which is private but have wrong public path.");
-                        return true;
-                    } else {
-                        //if login, try repair by download from server
-                        try {
-                            File downloaded = Ion.with(context).load(Config.getResourceUrl(context) + getQiniuVideoFileName(context, moment)).write(mayVideo).get();
-                            if (downloaded.exists()) {
-                                String pathToThumb = CameraHelper.createThumbImage(context, downloaded.getPath());
-                                String pathToLargeThumb = CameraHelper.createLargeThumbImage(context, downloaded.getPath());
-                                moment.setPath(downloaded.getPath());
-                                moment.setThumbPath(pathToThumb);
-                                moment.setLargeThumbPath(pathToLargeThumb);
-                                dao.update(moment);
-                                return true;
-                            } else throw new Exception("download failed");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            dao.delete(moment);
-                            return false;
-                        }
-                    }
-                } else {
-                    Log.e(TAG, "assert failed! Check bad private moment when not log in, you must avoid read private when not login");
-                    dao.delete(moment);
-                    return false;
-                }
-            }
-        } else return true;
-    }
-
-    public interface OnCheckedListener {
-        /**
-         * Moment is intact to use.
-         */
-        void onMomentOk(Moment moment);
-
-        /**
-         * Moment is not intact. And try to repair it.
-         */
-        void onMomentStartRepairing(Moment moment);
-
-        /**
-         * Moment is unable to be repaired, and has been deleted from database, you should stop use this moment.
-         */
-        void onMomentDelete(Moment moment);
-    }
-
-    /**
      * send broadcast to notify syncing progress update.
      * <p>
      * progress is from 0 to 100.
@@ -406,45 +445,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         LogUtil.i(TAG, "sync update progress, send a broadcast. type: " + type.name() + ", this progress: " + thisProgress + ", type progress: " + thisTypeProgress + ", all progress: " + allProgress);
         getContext().sendBroadcast(intent);
     }
-
-    enum UpdateType {
-        UPLOAD {
-            @Override String getAction() { return SYNC_BROADCAST_UPDATE_UPLOAD; }
-        },
-        DOWNLOAD {
-            @Override String getAction() { return SYNC_BROADCAST_UPDATE_DOWNLOAD; }
-        },
-        RECOVER {
-            @Override String getAction() {
-                return SYNC_BROADCAST_UPDATE_RECOVER;
-            }
-        };
-
-        abstract String getAction();
-
-    }
-
-    /**
-     * whether local data update while sync. if true, need to notify some ui update
-     */
-    boolean isUploadChanged = false;
-    boolean isDownloadChanged = false;
-
-    public static final String SYNC_BROADCAST_DONE = "co.yishun.onemoment.app.sync.done";
-    public static final String SYNC_BROADCAST_UPDATE_UPLOAD = "co.yishun.onemoment.app.sync.update.upload";
-    public static final String SYNC_BROADCAST_UPDATE_DOWNLOAD = "co.yishun.onemoment.app.sync.update.download";
-    public static final String SYNC_BROADCAST_UPDATE_RECOVER = "co.yishun.onemoment.app.sync.update.recover";
-    public static final String SYNC_BROADCAST_EXTRA_IS_UPLOAD_CHANGED = "is_upload_changed";
-    public static final String SYNC_BROADCAST_EXTRA_IS_DOWNLOAD_CHANGED = "is_download_changed";
-    public static final String SYNC_BROADCAST_EXTRA_IS_SUCCESS = "is_success";
-    public static final String SYNC_BROADCAST_EXTRA_THIS_PROGRESS = "int_this_progress";
-    public static final String SYNC_BROADCAST_EXTRA_TYPE_PROGRESS = "int_type_progress";
-    public static final String SYNC_BROADCAST_EXTRA_ALL_PROGRESS = "int_all_progress";
-
-    public static final int PROGRESS_NOT_AVAILABLE = -1;
-    public static final int PROGRESS_ERROR = -2;
-
-    private UploadManager mUploadManager;
 
     private UploadManager getUploadManager() {
         if (mUploadManager == null) {
@@ -630,45 +630,37 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return getQiniuVideoFileName(getContext(), moment);
     }
 
-    private static String getQiniuVideoFileName(Context context, Moment moment) {
-        String re = AccountHelper.getIdentityInfo(context).get_id() + Config.URL_HYPHEN + moment.getTime() + Config.URL_HYPHEN + moment.getTimeStamp() + Config.VIDEO_FILE_SUFFIX;
-        LogUtil.i(TAG, "qiniu filename: " + re);
-        return re;
+    enum UpdateType {
+        UPLOAD {
+            @Override String getAction() { return SYNC_BROADCAST_UPDATE_UPLOAD; }
+        },
+        DOWNLOAD {
+            @Override String getAction() { return SYNC_BROADCAST_UPDATE_DOWNLOAD; }
+        },
+        RECOVER {
+            @Override String getAction() {
+                return SYNC_BROADCAST_UPDATE_RECOVER;
+            }
+        };
+
+        abstract String getAction();
+
     }
 
-    /**
-     * convert array to HashMap
-     * <p>
-     * No generics is from Apache ArrayUtils, and generics version is from <a href="http://stackoverflow.com/questions/6416346/adding-generics-to-arrayutils-tomap">Stack Overflow</a>
-     *
-     * @param array
-     * @param <K>
-     * @param <V>
-     * @return
-     */
-    public static <K, V> Map<K, V> toMap(Object[] array) {
-        if (array == null) {
-            return null;
-        }
+    public interface OnCheckedListener {
+        /**
+         * Moment is intact to use.
+         */
+        void onMomentOk(Moment moment);
 
-        final Map<K, V> map = new HashMap<K, V>((int) (array.length * 1.5));
-        for (int i = 0; i < array.length; i++) {
-            Object object = array[i];
-            if (object instanceof Map.Entry) {
-                Map.Entry<K, V> entry = (Map.Entry<K, V>) object;
-                map.put(entry.getKey(), entry.getValue());
-            } else if (object instanceof Object[]) {
-                Object[] entry = (Object[]) object;
-                if (entry.length < 2) {
-                    throw new IllegalArgumentException("Array element " + i
-                            + ", '" + object + "', has a length less than 2");
-                }
-                map.put((K) entry[0], (V) entry[1]);
-            } else {
-                throw new IllegalArgumentException("Array element " + i + ", '"
-                        + object + "', is neither of type Map.Entry nor an Array");
-            }
-        }
-        return map;
+        /**
+         * Moment is not intact. And try to repair it.
+         */
+        void onMomentStartRepairing(Moment moment);
+
+        /**
+         * Moment is unable to be repaired, and has been deleted from database, you should stop use this moment.
+         */
+        void onMomentDelete(Moment moment);
     }
 }
