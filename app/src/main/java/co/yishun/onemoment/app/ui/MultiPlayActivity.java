@@ -60,6 +60,9 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
     List<Moment> moments;
 
     Queue<Moment> toPlayMoments;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class)
+    Dao<Moment, Integer> dao;
+    long timestamp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,6 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         });
     }
 
-
     @Click void playBtnClicked(View view) {
         Moment.lock(MultiPlayActivity.this);
 
@@ -130,9 +132,6 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         videoView.setVideoPath(toPlay.getPath());
         view.setVisibility(View.GONE);
     }
-
-    @OrmLiteDao(helper = MomentDatabaseHelper.class)
-    Dao<Moment, Integer> dao;
 
     /**
      * To update moment is latest. You should lock Moment before call this method.
@@ -167,8 +166,6 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         } else
             prepareShare();
     }
-
-    long timestamp = 0;
 
     @Background void prepareShare() {
         showProgress();
@@ -269,7 +266,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
 
 
     private String getQiniuVideoFileName(int count) {
-        timestamp = System.currentTimeMillis();
+        timestamp = (System.currentTimeMillis() / 1000);
         return Config.LONG_VIDEO_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + count + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX;
     }
 

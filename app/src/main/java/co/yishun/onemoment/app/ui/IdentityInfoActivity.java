@@ -38,7 +38,11 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     public static final int REQUEST_UPDATE_INFO = 100;
     public static final int REQUEST_IMAGE_SELECT = 101;
     public static final int REQUEST_IMAGE_CROP = 102;
+    public static final int MALE = 0;
+    public static final int FEMALE = 1;
+    public static final int PRIVATE = 2;
     private static final String TAG = LogUtil.makeTag(IdentityInfoActivity.class);
+    private final String[] genders = {"m", "f", "n"};
     @ViewById
     ImageView profileImageView;
     @ViewById
@@ -49,6 +53,13 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
     TextView genderTextView;
     @ViewById
     TextView areaTextView;
+    Uri croppedProfileUri;
+    @StringArrayRes
+    String[] provinces;
+    private int genderSelected = MALE;
+    private String mProvince;
+    private String mDistrict;
+    private String uid = null;
 
     @AfterViews void initViews() {
         AccountResult.Data data = AccountHelper.getIdentityInfo(this);
@@ -58,12 +69,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         setGender(data.getGender());
         setProvinceAndDistrict(data.getArea());
     }
-
-    public static final int MALE = 0;
-    public static final int FEMALE = 1;
-    public static final int PRIVATE = 2;
-    private final String[] genders = {"m", "f", "n"};
-    private int genderSelected = MALE;
 
     private void setGender(int gender) {
         genderSelected = gender;
@@ -95,8 +100,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         Crop.pickImage(this);
     }
 
-    Uri croppedProfileUri;
-
     @OnActivityResult(Crop.REQUEST_PICK)
     @Background void onPictureSelected(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -125,7 +128,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     @Background void uploadProfile(String path) {
         UploadManager uploadManager = new UploadManager();
-        String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + System.currentTimeMillis() + Config.PROFILE_SUFFIX;
+        String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + (System.currentTimeMillis() / 1000) + Config.PROFILE_SUFFIX;
         new GetToken().setFileName(qiNiuKey).with(this).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
@@ -240,11 +243,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         });
     }
 
-    @StringArrayRes
-    String[] provinces;
-    private String mProvince;
-    private String mDistrict;
-
     private void setProvinceAndDistrict(String pro, String dis) {
         mProvince = pro;
         mDistrict = dis;
@@ -263,7 +261,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         mDistrict = provinceAndDistrict.substring(mProvince.length()).trim();
         areaTextView.setText(provinceAndDistrict);
     }
-
 
     @Click void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
@@ -409,7 +406,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
 
     }
 
-
     @Background void unbind() {
         showProgress();
         new UnBind.Weibo().setUid(uid).with(this).setCallback((e, result) -> {
@@ -435,8 +431,6 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         this.uid = uid;
         weiboTextView.setText(uid == null ? R.string.identityInfoWeiboUnbound : R.string.identityInfoWeiboBound);
     }
-
-    private String uid = null;
 
     @Click(R.id.logoutBtn) void logout(View view) {
         new MaterialDialog.Builder(this).theme(Theme.DARK).title(R.string.identityInfoLogout).content(R.string.identityInfoLogoutAlert)

@@ -51,7 +51,16 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     @ViewById
     TextView genderTextView;
+    @StringArrayRes
+    String[] provinces;
+    @ViewById
+    TextView areaTextView;
+    @ViewById
+    ImageView profileImageView;
+    Uri croppedProfileUri;
     private int genderSelected = MALE;
+    private String mProvince;
+    private String mDistrict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +68,9 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         setResult(RESULT_CANCELED);
     }
 
-    @StringArrayRes
-    String[] provinces;
-    private String mProvince;
-    private String mDistrict;
-    @ViewById
-    TextView areaTextView;
-
     @Click void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
-                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick,false).build();
+                .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick, false).build();
         View dialogView = dialog.getCustomView();
         Spinner provinceSpinner = (Spinner) dialogView.findViewById(R.id.provinceSpinner);
         Spinner districtSpinner = (Spinner) dialogView.findViewById(R.id.districtSpinner);
@@ -156,7 +158,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         if (croppedProfileUri != null) {
             String uriString = croppedProfileUri.toString();
             String path = uriString.substring(uriString.indexOf(":") + 1);
-            String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + System.currentTimeMillis() + Config.PROFILE_SUFFIX;
+            String qiNiuKey = Config.PROFILE_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + (System.currentTimeMillis() / 1000) + Config.PROFILE_SUFFIX;
 
             UploadManager uploadManager = new UploadManager();
             new GetToken().setFileName(qiNiuKey).with(this).setCallback((e, result) -> {
@@ -209,14 +211,9 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 
     }
 
-    @ViewById
-    ImageView profileImageView;
-
     @Click void profileImageViewClicked(View view) {
         Crop.pickImage(this);
     }
-
-    Uri croppedProfileUri;
 
     @OnActivityResult(Crop.REQUEST_PICK)
     @Background void onPictureSelected(int resultCode, Intent data) {
