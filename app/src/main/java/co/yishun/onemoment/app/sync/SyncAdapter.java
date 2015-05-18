@@ -33,6 +33,7 @@ import org.androidannotations.annotations.SystemService;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -364,11 +365,66 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 LogUtil.v(TAG, "update owner");
             }
             LogUtil.i(TAG, "succeed in setting moment[ " + moment + "] private");
+
+            boolean isNeedUpdateThumb = false;
+            //check timestamp, because in v1.3.0 I use millisecond instead second
+            if (String.valueOf(moment.getTimeStamp()).length() > 10) {
+                File wrongTimeVideo = new File(moment.getPath());
+                File correctTimeVideo = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.SYNCED, moment.getTimeStamp() / 1000);
+                LogUtil.d(TAG, "check timeStamp, case 0: " + moment.toString());
+                LogUtil.d(TAG, "correct path: " + correctTimeVideo);
+                if (wrongTimeVideo.renameTo(correctTimeVideo)) {
+                    moment.fixTimeStampAndTime();
+                    moment.setPath(correctTimeVideo.getPath());
+                    dao.update(moment);
+                    isNeedUpdateThumb = true;
+                    LogUtil.i(TAG, "correct moment time: " + moment);
+                }
+            }
+            if (!(new SimpleDateFormat(Config.TIME_FORMAT).format(moment.getTimeStamp() * 1000).equals(moment.getTime()))) {
+                File wrongTimeVideo = new File(moment.getPath());
+                File correctTimeVideo = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.SYNCED, moment.getTimeStamp());
+                LogUtil.d(TAG, "check timeStamp, case 1: " + moment.toString());
+                LogUtil.d(TAG, "correct path: " + correctTimeVideo);
+                if (wrongTimeVideo.renameTo(correctTimeVideo)) {
+                    moment.fixTime();
+                    moment.setPath(correctTimeVideo.getPath());
+                    dao.update(moment);
+                    isNeedUpdateThumb = true;
+                    LogUtil.i(TAG, "correct moment time: " + moment);
+                }
+            }
+            if (!getTimeFromPath(moment).equals(moment.getTime())) {
+                File wrongTimeVideo = new File(moment.getPath());
+                File correctTimeVideo = CameraHelper.getOutputMediaFile(getContext(), CameraHelper.Type.SYNCED, moment.getTimeStamp());
+                LogUtil.d(TAG, "check timeStamp, case 2: " + moment.toString());
+                LogUtil.d(TAG, "correct path: " + correctTimeVideo);
+                if (wrongTimeVideo.renameTo(correctTimeVideo)) {
+                    moment.setPath(correctTimeVideo.getPath());
+                    dao.update(moment);
+                    isNeedUpdateThumb = true;
+                    LogUtil.i(TAG, "correct moment time: " + moment);
+                }
+            }
+
+            if (isNeedUpdateThumb) {
+                new File(moment.getThumbPath()).delete();
+                new File(moment.getLargeThumbPath()).delete();
+                moment.setThumbPath(CameraHelper.createThumbImage(getContext(), moment.getPath()));
+                moment.setLargeThumbPath(CameraHelper.createLargeThumbImage(getContext(), moment.getPath()));
+                dao.update(moment);
+                LogUtil.i(TAG, "update thumb");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             Moment.unlock();
         }
+    }
+
+    private String getTimeFromPath(Moment moment) {
+        String key = moment.getPath();
+        return key.substring(key.indexOf(Config.URL_HYPHEN) + 1, key.lastIndexOf(Config.URL_HYPHEN));
     }
 
     /**

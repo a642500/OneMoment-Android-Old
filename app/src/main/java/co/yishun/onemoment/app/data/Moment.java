@@ -32,7 +32,18 @@ public class Moment implements Serializable {
 
     //    public final static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private static FileLock lock;
+    @DatabaseField String path;
+    @DatabaseField String thumbPath;
+    @DatabaseField String largeThumbPath;
+    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true) private int id;
+    /**
+     * add at database version 2.0
+     */
+    @DatabaseField private String owner;
+    @DatabaseField private String time;
+    @DatabaseField private long timeStamp;
 
+    public Moment() { /*keep for ormlite*/ }
 
     public static void lock(Context context) {
         try {
@@ -62,25 +73,42 @@ public class Moment implements Serializable {
         }
     }
 
-    @DatabaseField String path;
-    @DatabaseField String thumbPath;
-    @DatabaseField String largeThumbPath;
-    @DatabaseField(columnName = Contract.Moment._ID, generatedId = true) private int id;
-    /**
-     * add at database version 2.0
-     */
-    @DatabaseField private String owner;
-
-    @DatabaseField private String time;
-
-    @DatabaseField private long timeStamp;
-
-    public Moment() { /*keep for ormlite*/ }
-
     private static Moment newInstance() {
         Moment m = new Moment();
         m.time = new SimpleDateFormat(Config.TIME_FORMAT).format(new Date());
         return m;
+    }
+
+    /**
+     * Create a private moment from {@link Data}
+     *
+     * @param video
+     * @param path
+     * @param thumbPath
+     * @param largeThumbPath
+     * @return
+     */
+    public static Moment from(Data video, String path, String thumbPath, String largeThumbPath) {
+        Moment m = new Moment();
+        m.path = path;
+        m.thumbPath = thumbPath;
+        m.largeThumbPath = largeThumbPath;
+        m.time = video.getTime();
+        m.setOwner(video.getUserID());
+        m.timeStamp = m.getTimeStamp();
+        return m;
+    }
+
+    public static Moment parseOf(Context context, long timeStamp) {
+        return new MomentBuilder()
+                .setPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LOCAL, timeStamp))
+                .setThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.MICRO_THUMB, timeStamp))
+                .setLargeThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LARGE_THUMB, timeStamp))
+                .build();
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
     /**
@@ -94,19 +122,15 @@ public class Moment implements Serializable {
         } else this.owner = owner;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
     public boolean isPublic() {
         return owner.startsWith("LOC");
     }
 
+    public String getPath() { return path; }
+
     public void setPath(String path) {
         this.path = path;
     }
-
-    public String getPath() { return path; }
 
     public File getFile() { return new File(path); }
 
@@ -116,7 +140,44 @@ public class Moment implements Serializable {
 
     public String getThumbPath() { return thumbPath; }
 
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
     public String getLargeThumbPath() { return largeThumbPath; }
+
+    public void setLargeThumbPath(String largeThumbPath) {
+        this.largeThumbPath = largeThumbPath;
+    }
+
+    @Override
+    public String toString() {
+        return "Moment{" +
+                "path='" + path + '\'' +
+                ", owner='" + owner + '\'' +
+                ", time='" + time + '\'' +
+                '}';
+    }
+
+    /**
+     * To fix TimeStamp from millisecond to second
+     *
+     * @return whether timestamp is wrong
+     */
+    public boolean fixTimeStampAndTime() {
+        if (String.valueOf(timeStamp).length() > 10) {
+            timeStamp = timeStamp / 1000;
+            time = new SimpleDateFormat(Config.TIME_FORMAT).format(timeStamp * 1000);
+            return true;
+        } else return false;
+    }
+
+    /**
+     * To fix Time by timeStamp
+     **/
+    public void fixTime() {
+        time = new SimpleDateFormat(Config.TIME_FORMAT).format(timeStamp * 1000);
+    }
 
     public static class MomentBuilder {
         private static final String TAG = LogUtil.makeTag(MomentBuilder.class);
@@ -173,50 +234,5 @@ public class Moment implements Serializable {
                 mOwner = "LOC";
             }
         }
-    }
-
-    public void setLargeThumbPath(String largeThumbPath) {
-        this.largeThumbPath = largeThumbPath;
-    }
-
-    public void setThumbPath(String thumbPath) {
-        this.thumbPath = thumbPath;
-    }
-
-    /**
-     * Create a private moment from {@link Data}
-     *
-     * @param video
-     * @param path
-     * @param thumbPath
-     * @param largeThumbPath
-     * @return
-     */
-    public static Moment from(Data video, String path, String thumbPath, String largeThumbPath) {
-        Moment m = new Moment();
-        m.path = path;
-        m.thumbPath = thumbPath;
-        m.largeThumbPath = largeThumbPath;
-        m.time = video.getTime();
-        m.setOwner(video.getUserID());
-        m.timeStamp = m.getTimeStamp();
-        return m;
-    }
-
-    public static Moment parseOf(Context context, long timeStamp) {
-        return new MomentBuilder()
-                .setPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LOCAL, timeStamp))
-                .setThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.MICRO_THUMB, timeStamp))
-                .setLargeThumbPath(CameraHelper.getOutputMediaPath(context, CameraHelper.Type.LARGE_THUMB, timeStamp))
-                .build();
-    }
-
-    @Override
-    public String toString() {
-        return "Moment{" +
-                "path='" + path + '\'' +
-                ", owner='" + owner + '\'' +
-                ", time='" + time + '\'' +
-                '}';
     }
 }

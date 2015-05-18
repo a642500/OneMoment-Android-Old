@@ -144,76 +144,14 @@ public class CameraHelper {
         return null;
     }
 
-    public enum Type {
-        SYNCED {
-            @Override
-            public String getPrefix(Context context) {
-                return AccountHelper.getIdentityInfo(context).get_id();
-            }
-
-            @Override
-            public String getSuffix() {
-                return Config.VIDEO_FILE_SUFFIX;
-            }
-        },
-        RECORDED {
-            @Override
-            public String getPrefix(Context context) {
-                return "VID";
-            }
-
-            @Override
-            public String getSuffix() {
-                return Config.VIDEO_FILE_SUFFIX;
-            }
-        },
-        LOCAL {
-            @Override
-            public String getPrefix(Context context) {
-                return "LOC";
-            }
-
-            @Override
-            public String getSuffix() {
-                return Config.VIDEO_FILE_SUFFIX;
-            }
-        },
-        LARGE_THUMB {
-            @Override
-            public String getPrefix(Context context) {
-                return "LAT";
-            }
-
-            @Override
-            public String getSuffix() {
-                return Config.THUMB_FILE_SUFFIX;
-            }
-        },
-        MICRO_THUMB {
-            @Override
-            public String getPrefix(Context context) {
-                return "MIT";
-            }
-
-            @Override
-            public String getSuffix() {
-                return Config.THUMB_FILE_SUFFIX;
-            }
-        };
-
-        public abstract String getPrefix(Context context);
-
-        public abstract String getSuffix();
-    }
-
-    public static String getOutputMediaPath(Context context, Type type, @Nullable Long timestamp) {
-        return getOutputMediaFile(context, type, timestamp).getPath();
+    public static String getOutputMediaPath(Context context, Type type, @Nullable Long unixTimestamp) {
+        return getOutputMediaFile(context, type, unixTimestamp).getPath();
     }
 
     public static File getOutputMediaFile(Context context, Type type, @Nullable Long timestamp) {
         File mediaStorageDir = context.getDir(Config.VIDEO_STORE_DIR, Context.MODE_PRIVATE);
         LogUtil.i(TAG, "timestamp: " + timestamp);
-        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : new Date(timestamp));
+        String time = new SimpleDateFormat(Config.TIME_FORMAT).format(timestamp == null ? new Date() : timestamp * 1000);
         LogUtil.i(TAG, "formatted time: " + time);
         return new File(mediaStorageDir.getPath() + File.separator + type.getPrefix(context) + Config.URL_HYPHEN + time + Config.URL_HYPHEN + timestamp + type.getSuffix());
     }
@@ -315,6 +253,68 @@ public class CameraHelper {
         fOut.flush();
         fOut.close();
         return thumbFile.getPath();
+    }
+
+    public enum Type {
+        SYNCED {
+            @Override
+            public String getPrefix(Context context) {
+                return AccountHelper.getIdentityInfo(context).get_id();
+            }
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        RECORDED {
+            @Override
+            public String getPrefix(Context context) {
+                return "VID";
+            }
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        LOCAL {
+            @Override
+            public String getPrefix(Context context) {
+                return "LOC";
+            }
+
+            @Override
+            public String getSuffix() {
+                return Config.VIDEO_FILE_SUFFIX;
+            }
+        },
+        LARGE_THUMB {
+            @Override
+            public String getPrefix(Context context) {
+                return "LAT";
+            }
+
+            @Override
+            public String getSuffix() {
+                return Config.THUMB_FILE_SUFFIX;
+            }
+        },
+        MICRO_THUMB {
+            @Override
+            public String getPrefix(Context context) {
+                return "MIT";
+            }
+
+            @Override
+            public String getSuffix() {
+                return Config.THUMB_FILE_SUFFIX;
+            }
+        };
+
+        public abstract String getPrefix(Context context);
+
+        public abstract String getSuffix();
     }
 
 }
