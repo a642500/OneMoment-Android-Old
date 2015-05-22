@@ -28,7 +28,7 @@ public class Config {
     public static final String PREFERENCE = "preferences";
     public static final String PREFERENCE_IS_FIRST_LAUNCH = "is_first_launch";
 
-    public static final String URL_SHARE_LONG_VIDEO = "http://yishun.co/share_long?account_id=";
+    public static final String URL_SHARE_LONG_VIDEO = "http://yishun.co/share_days?v=";
 
     private final static String URL_MAIN = "http://yishun.co";
     private final static String URL_SIGN_UP_BY_PHONE = "/api/v2/signup";
@@ -49,6 +49,7 @@ public class Config {
 
     private static final Pair<Integer, Integer> mCameraSize = new Pair<>(480, 480);
     private final static String PRIVATE_KEY = "jfio2q3de0ajd0923i9faoik209q0r83u4rjew";
+    private static String mResourceDomain = null;
 
     public static String getUrlDomain() {
         return URL_MAIN + URL_RESOURCE_DOMAIN;
@@ -118,8 +119,6 @@ public class Config {
     public static Pair<Integer, Integer> getDefaultCameraSize() {
         return mCameraSize;
     }
-
-    private static String mResourceDomain = null;
 
     /**
      * <strong>block thread</strong>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -30,17 +31,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by Carlos on 2015/4/5.
  */
 @EActivity(R.layout.activity_multi_play)
-public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlayer.OnPreparedListener {
+public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlayer.OnPreparedListener, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = LogUtil.makeTag(MultiPlayActivity.class);
+    private static final int MAX_CLICK_DURATION = 200;
     @ViewById
     VideoView videoView;
     @ViewById
@@ -48,21 +47,20 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
     @ViewById
     ImageButton playBtn;
 
-    @ViewById
-    FrameLayout recordSurfaceParent;
-
 //    @Extra
 //    String videoPath;
 //    @Extra
 //    String largeThumbPath;
-
+@ViewById
+FrameLayout recordSurfaceParent;
     @Extra
     List<Moment> moments;
-
     Queue<Moment> toPlayMoments;
     @OrmLiteDao(helper = MomentDatabaseHelper.class)
     Dao<Moment, Integer> dao;
     long timestamp = 0;
+    boolean isPause = false;
+    private long startClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,25 +110,45 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
             } else {
                 Moment.unlock();
                 videoView.setOnPreparedListener(MultiPlayActivity.this);
+                videoView.setOnTouchListener(null);
                 MultiPlayActivity.this.queueMoments();
                 playBtn.setVisibility(View.VISIBLE);
                 thumbImageView.setVisibility(View.VISIBLE);
+                isPause = false;
             }
         });
     }
 
     @Click void playBtnClicked(View view) {
-        Moment.lock(MultiPlayActivity.this);
+        if (isPause) {
+            // resume
+            videoView.start();
+            isPause = false;
+            view.setVisibility(View.GONE);
+        } else {
+            // play
+            Moment.lock(MultiPlayActivity.this);
 
-        Moment toPlay = toPlayMoments.poll();
-        toPlay = ensureMomentUpdated(toPlay);
-        if (toPlay == null) {
-            this.finish();
-            Toast.makeText(this, R.string.multiPlayShareBtn, Toast.LENGTH_LONG).show();
-            return;
+            Moment toPlay = toPlayMoments.poll();
+            toPlay = ensureMomentUpdated(toPlay);
+            if (toPlay == null) {
+                this.finish();
+                Toast.makeText(this, R.string.multiPlayShareBtn, Toast.LENGTH_LONG).show();
+                return;
+            }
+            videoView.setVideoPath(toPlay.getPath());
+            view.setVisibility(View.GONE);
         }
-        videoView.setVideoPath(toPlay.getPath());
-        view.setVisibility(View.GONE);
+        videoView.setOnTouchListener(this);
+    }
+
+    public void onClick(View view) {
+        videoView.setOnTouchListener(null);
+        LogUtil.v(TAG, "pause: " + videoView.canPause());
+        Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+        videoView.pause();
+        isPause = true;
+        playBtn.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -235,7 +253,7 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
                             LogUtil.i(TAG, responseInfo.toString());
                             LogUtil.i(TAG, "a moment upload ok: " + path);
                             if (responseInfo.isOK())
-                                share();
+                                share(qiNiuKey);
                             else shareFail();
                         },
                         new UploadOptions(null, Config.MIME_TYPE, true, null, null)
@@ -243,9 +261,9 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         });
     }
 
-    private void share() {
+    private void share(String key) {
         hideProgress();
-        String url = Config.URL_SHARE_LONG_VIDEO + AccountHelper.getIdentityInfo(this).get_id() + "&ts=" + timestamp;
+        String url = Config.URL_SHARE_LONG_VIDEO + key;
         String msg = getString(R.string.multiPlayShareText);
 
         Intent sendIntent = new Intent().setAction(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, msg + url).setType("text/plain");
@@ -263,7 +281,6 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         hideProgress();
         showNotification(R.string.multiPlayShareFail);
     }
-
 
     private String getQiniuVideoFileName(int count) {
         timestamp = (System.currentTimeMillis() / 1000);
@@ -285,5 +302,27 @@ public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlaye
         videoView.start();
         videoView.setOnPreparedListener(null);
 
+    }
+
+    @Override public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startClickTime = Calendar.getInstance().getTimeInMillis();
+                return true;
+            case MotionEvent.ACTION_UP:
+                long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                // if near end, async pause will actually pause video when play end, and will cause resume fail
+                boolean notNearingEnd = (videoView.getDuration() == -1 // only media may have no duration
+                        && videoView.getCurrentPosition() < 800) || (videoView.getCurrentPosition() + 400 < videoView.getDuration());
+                if (clickDuration < MAX_CLICK_DURATION && videoView.isPlaying() && notNearingEnd) {
+                    videoView.setOnTouchListener(null);
+                    videoView.pause();
+                    isPause = true;
+                    playBtn.setVisibility(View.VISIBLE);
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 }

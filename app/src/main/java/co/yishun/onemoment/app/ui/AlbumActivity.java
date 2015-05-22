@@ -63,11 +63,47 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     boolean justPressed = false;
     @ViewById
     TextView titleOfCalender;
-    private AlbumController mController;
-    private WeiboHelper mWeiboHelper = null;
-
     @ViewById
     FrameLayout viewPagerContainer;
+    JazzyViewPager viewPager;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
+    Dao<Moment, Integer> momentDao;
+    @SystemService ConnectivityManager connectivityManager;
+    /**
+     * only after manual sync, it will notify user sync success.
+     */
+    boolean isManualSync = false;
+    BroadcastReceiver mSyncDoneReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received sync done intent");
+            if (isManualSync && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_SUCCESS, false)) {
+                LogUtil.i(TAG, "notify sync done");
+                showNotification(R.string.albumSyncDoneSuccess);
+                isManualSync = false;
+            }
+        }
+    };
+    private AlbumController mController;
+    BroadcastReceiver mDownloadUpdateReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received download progress update intent");
+            if (mController != null && intent.getIntExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_THIS_PROGRESS, 0) == 100) {
+                mController.notifyUpdate();
+                setOneMomentCount();
+            }
+        }
+
+    };
+    BroadcastReceiver mRecoverUpdateReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            LogUtil.i(TAG, "received recover update intent");
+            if (mController != null) {
+                mController.notifyUpdate();
+                setOneMomentCount();
+            }
+        }
+    };
+    private WeiboHelper mWeiboHelper = null;
 
     @Fun void backToToday() {
         viewPagerContainer.removeAllViews();
@@ -78,6 +114,13 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         mController.setOnMonthChangeListener(this);
         onMonthChange(Calendar.getInstance());
     }
+    //    @AfterViews
+//    void initCalenderGrid() {
+//        mAdapter = new CalenderAdapter(this);
+//        calenderGrid.setAdapter(mAdapter);
+//        mAdapter.setOnMonthChangeListener(this);
+//        mAdapter.showTodayMonthCalender();
+//    }
 
     @Click @UiThread(delay = 300) void backToTodayClicked(View view) {
         backToToday();
@@ -110,21 +153,12 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
 
-    JazzyViewPager viewPager;
-
     @AfterViews void initViewPager() {
         backToToday();
 //        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
 //        mController = new ViewPagerController(this, viewPager);
 //        viewPager.setPageMargin(30);
     }
-    //    @AfterViews
-//    void initCalenderGrid() {
-//        mAdapter = new CalenderAdapter(this);
-//        calenderGrid.setAdapter(mAdapter);
-//        mAdapter.setOnMonthChangeListener(this);
-//        mAdapter.showTodayMonthCalender();
-//    }
 
     @Override
     public void onMonthChange(Calendar calendar) {
@@ -199,12 +233,10 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         onBackPressed();
     }
 
-    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
-    Dao<Moment, Integer> momentDao;
-
     @Fun
     @Click void replayBtn(View view) {
         try {
+
             List<Moment> momentList;
             Where<Moment, Integer> where = momentDao.queryBuilder().orderBy("timeStamp", true).where();
             if (AccountHelper.isLogin(this)) {
@@ -215,7 +247,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             if (momentList == null || momentList.isEmpty()) {
                 showNotification(R.string.albumReplayNoMoment);
             } else if (momentList.size() == 1) {
-                PlayActivity_.intent(this).extra("moment", momentList.get(0)).start();
+                PlayActivity_.intent(this).extra("moment", momentList.get(0)).extra("isReplayAll", true).start();
             } else {
                 MultiPlayActivity_.intent(this).extra("moments", new ArrayList<>(momentList)).start();
             }
@@ -223,8 +255,6 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             e.printStackTrace();
         }
     }
-
-    @SystemService ConnectivityManager connectivityManager;
 
     @Override
     protected void onResume() {
@@ -242,42 +272,6 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         unregisterReceiver(mRecoverUpdateReceiver);
         isManualSync = false;//cancel notify sync done if user leaves.
     }
-
-    BroadcastReceiver mDownloadUpdateReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
-            LogUtil.i(TAG, "received download progress update intent");
-            if (mController != null && intent.getIntExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_THIS_PROGRESS, 0) == 100) {
-                mController.notifyUpdate();
-                setOneMomentCount();
-            }
-        }
-
-    };
-
-    BroadcastReceiver mRecoverUpdateReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
-            LogUtil.i(TAG, "received recover update intent");
-            if (mController != null) {
-                mController.notifyUpdate();
-                setOneMomentCount();
-            }
-        }
-    };
-
-    /**
-     * only after manual sync, it will notify user sync success.
-     */
-    boolean isManualSync = false;
-    BroadcastReceiver mSyncDoneReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
-            LogUtil.i(TAG, "received sync done intent");
-            if (isManualSync && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_SUCCESS, false)) {
-                LogUtil.i(TAG, "notify sync done");
-                showNotification(R.string.albumSyncDoneSuccess);
-                isManualSync = false;
-            }
-        }
-    };
 
     @AfterInject void trySync() {
         if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this)) {
