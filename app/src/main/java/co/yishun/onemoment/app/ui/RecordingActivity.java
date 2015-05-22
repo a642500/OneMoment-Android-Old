@@ -356,6 +356,7 @@ public class RecordingActivity extends Activity {
             mCamera.setDisplayOrientation(90);
             mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
             mCamera.startPreview();
+            mCamera.autoFocus(null);
             applyTransform();
             mStatus = RecordStatus.PREVIEW_PREPARED;
         } catch (IOException e) {
