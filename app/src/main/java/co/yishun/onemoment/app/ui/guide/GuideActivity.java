@@ -1,5 +1,6 @@
 package co.yishun.onemoment.app.ui.guide;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -26,8 +27,12 @@ public class GuideActivity extends ToolbarBaseActivity {
     @ViewById
     UnderlinePageIndicator viewpagerIndicator;
 
-    @AfterViews
-    void initViewPager() {
+    @Override public void startActivity(Intent intent) {
+        overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
+        super.startActivity(intent);
+    }
+
+    @AfterViews void initViewPager() {
         toolbar.setVisibility(isFromSuggestion ? View.VISIBLE : View.GONE);
         guideViewPager.setAdapter(
                 new FragmentPagerAdapter(getSupportFragmentManager()) {

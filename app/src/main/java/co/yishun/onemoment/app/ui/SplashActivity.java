@@ -41,8 +41,10 @@ public class SplashActivity extends BaseActivity {
         return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, true);
     }
 
+
     @UiThread(delay = 1600) void startRecording() {
         this.finish();
+        overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
         if (isFirstLaunch()) GuideActivity_.intent(this).start();
         else RecordingActivity_.intent(this).start();
     }
