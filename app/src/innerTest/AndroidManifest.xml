@@ -5,8 +5,17 @@
     <application>
         <meta-data
                 android:name="UMENG_CHANNEL"
-                android:value="QQ Test Group"
-                />
+                android:value="Inner Test"/>
+
+        <activity
+                android:name=".ui.TestActivity"
+                android:label="Test">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
