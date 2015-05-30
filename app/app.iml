@@ -159,5 +159,14 @@
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.0" level="project" />
     <orderEntry type="library" exported="" name="analytics-5.4.2" level="project" />
     <orderEntry type="library" exported="" name="material-dialogs-0.7.3.4" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/open_sdk_r5043_lite.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

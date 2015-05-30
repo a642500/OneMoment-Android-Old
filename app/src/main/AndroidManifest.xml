@@ -216,6 +216,21 @@
                 android:configChanges="orientation|keyboardHidden">
         </activity>
 
+        <!-- for Tencent login auth -->
+        <activity
+                android:name="com.tencent.tauth.AuthActivity"
+                android:noHistory="true"
+                android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="1104574591"/>
+            </intent-filter>
+        </activity>
+
         <meta-data
                 android:name="UMENG_APPKEY"
                 android:value="549e2c80fd98c5e4cf000f64"
