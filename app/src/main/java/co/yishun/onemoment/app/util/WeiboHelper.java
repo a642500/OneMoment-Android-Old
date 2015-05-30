@@ -1,8 +1,6 @@
 package co.yishun.onemoment.app.util;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import com.google.gson.Gson;
@@ -16,6 +14,8 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+
+import static co.yishun.onemoment.app.util.AccessTokenKeeper.KeeperType.Weibo;
 
 /**
  * Created by Carlos on 2015/4/1.
@@ -36,6 +36,12 @@ public class WeiboHelper {
     private final AuthInfo mAuthInfo;
     private final Activity mActivity;
 
+    public WeiboHelper(Activity activity) {
+        mActivity = activity;
+        mAuthInfo = new AuthInfo(mActivity, APP_KEY, AUTH_REDIRECT_URL, SCOPE);
+        ssoHandler = new SsoHandler(mActivity, mAuthInfo);
+    }
+
     public WeiBoInfo getUserInfo(Oauth2AccessToken token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(URL_GET_USER_INFO + token.getUid() + URL_GET_USER_INFO_PART + token.getToken()).get().build();
@@ -48,22 +54,6 @@ public class WeiboHelper {
         return null;
     }
 
-    public class WeiBoInfo {
-        public long id;
-        public String name;
-        public String location;
-        public String description;
-        public String gender;
-        public String avatar_large;
-    }
-
-
-    public WeiboHelper(Activity activity) {
-        mActivity = activity;
-        mAuthInfo = new AuthInfo(mActivity, APP_KEY, AUTH_REDIRECT_URL, SCOPE);
-        ssoHandler = new SsoHandler(mActivity, mAuthInfo);
-    }
-
     public void login(@NonNull WeiboLoginListener listener) {
         LogUtil.i(TAG, "start weibo login");
         ssoHandler.authorize(new WeiboAuthListener() {
@@ -71,8 +61,13 @@ public class WeiboHelper {
             public void onComplete(Bundle values) {
                 Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
                 if (accessToken.isSessionValid()) {
-                    AccessTokenKeeper.writeAccessToken(mActivity.getApplicationContext(), accessToken);
+                    AccessTokenKeeper
+                            .which(Weibo)
+                            .writeAccessToken(
+                                    mActivity.getApplicationContext(), OAuthToken.from(accessToken)
+                            );
                     listener.onSuccess(accessToken);
+                    LogUtil.e(TAG, "weibo auth success");
                 } else {
                     String code = values.getString("code");
                     LogUtil.e(TAG, "weibo auth fail, code:" + code);
@@ -88,12 +83,14 @@ public class WeiboHelper {
 
             @Override
             public void onCancel() {
-                listener.onCancel();
                 LogUtil.e(TAG, "weibo auth cancel");
+                listener.onCancel();
             }
         });
     }
 
+    //TODO replace it with LoginListener
+    @Deprecated
     public interface WeiboLoginListener {
         void onSuccess(Oauth2AccessToken token);
 
@@ -102,47 +99,12 @@ public class WeiboHelper {
         void onCancel();
     }
 
-
-    public static class AccessTokenKeeper {
-        private static final String PREFERENCES_NAME = "com_onemoment_weibo";
-        private static final String KEY_UID = "uid";
-        private static final String KEY_ACCESS_TOKEN = "access_token";
-        private static final String KEY_EXPIRES_IN = "expires_in";
-
-        /**
-         * save Token in SharedPreferences
-         *
-         * @param token Token
-         */
-        public static void writeAccessToken(@NonNull Context context, @NonNull Oauth2AccessToken token) {
-            SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString(KEY_UID, token.getUid());
-            editor.putString(KEY_ACCESS_TOKEN, token.getToken());
-            editor.putLong(KEY_EXPIRES_IN, token.getExpiresTime());
-            editor.apply();
-        }
-
-        /**
-         * read Token from SharedPreferences
-         *
-         * @return saved Token
-         */
-        public static Oauth2AccessToken readAccessToken(@NonNull Context context) {
-            Oauth2AccessToken token = new Oauth2AccessToken();
-            SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
-            token.setUid(pref.getString(KEY_UID, ""));
-            token.setToken(pref.getString(KEY_ACCESS_TOKEN, ""));
-            token.setExpiresTime(pref.getLong(KEY_EXPIRES_IN, 0));
-            return token;
-        }
-
-        /**
-         * clear Token in SharedPreferences
-         */
-        public static void clear(@NonNull Context context) {
-            context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND).edit().clear().apply();
-        }
+    public class WeiBoInfo {
+        public long id;
+        public String name;
+        public String location;
+        public String description;
+        public String gender;
+        public String avatar_large;
     }
-
 }
