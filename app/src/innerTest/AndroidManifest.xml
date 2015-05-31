@@ -8,7 +8,7 @@
                 android:value="Inner Test"/>
 
         <activity
-                android:name=".ui.TestActivity"
+                android:name=".ui.TestActivity_"
                 android:label="Test">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
