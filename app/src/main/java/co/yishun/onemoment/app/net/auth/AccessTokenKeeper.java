@@ -1,10 +1,13 @@
-package co.yishun.onemoment.app.util;
+package co.yishun.onemoment.app.net.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 /**
+ * Util to save Token data. Call {@link #which(KeeperType)} get instance for certain token.
+ * Every time you call {@link #writeAccessToken(Context, OAuthToken)} will override the previous saved data for certain {@link KeeperType} token.
+ * <p>
  * Created by yyz on 5/30/15.
  */
 public class AccessTokenKeeper {
@@ -57,6 +60,9 @@ public class AccessTokenKeeper {
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND).edit().clear().apply();
     }
 
+    /**
+     * Which type token to save. Every type has their own separate stored space.
+     */
     public enum KeeperType {
 
         Weibo {

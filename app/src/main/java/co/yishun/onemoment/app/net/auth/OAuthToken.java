@@ -1,4 +1,4 @@
-package co.yishun.onemoment.app.util;
+package co.yishun.onemoment.app.net.auth;
 
 import android.support.annotation.NonNull;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -24,7 +24,7 @@ public class OAuthToken {
         );
     }
 
-    public Oauth2AccessToken toWeiboToken() {
+    protected Oauth2AccessToken toWeiboToken() {
         Oauth2AccessToken oauth2AccessToken = new Oauth2AccessToken();
         oauth2AccessToken.setUid(id);
         oauth2AccessToken.setToken(token);
@@ -32,7 +32,7 @@ public class OAuthToken {
         return oauth2AccessToken;
     }
 
-    public QQToken toQQToken() {
+    protected QQToken toQQToken() {
         QQToken qqToken = new QQToken(TencentHelper.APP_ID);
         qqToken.setAppId(TencentHelper.APP_ID);
         qqToken.setOpenId(id);

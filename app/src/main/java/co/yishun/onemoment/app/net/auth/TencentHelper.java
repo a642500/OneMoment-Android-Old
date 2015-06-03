@@ -1,9 +1,8 @@
-package co.yishun.onemoment.app.util;
+package co.yishun.onemoment.app.net.auth;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import com.tencent.connect.UserInfo;
+import android.support.annotation.NonNull;
+import co.yishun.onemoment.app.util.LogUtil;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -13,31 +12,37 @@ import org.json.JSONObject;
 import java.util.concurrent.CountDownLatch;
 
 /**
+ * A proxy implement to auth by Tencent open api.
+ * <p>
  * Created by yyz on 5/30/15.
  */
-public class TencentHelper {
-    public static final String APP_ID = "222222";// "1104574591";
-    public static final String SCOPE = "get_user_info";
+public class TencentHelper implements AuthHelper {
+    public static final String APP_ID = "222222";//TODO change from test id to "1104574591"
+    public static final String SCOPE = "get_user_info";//scope we need access
     private static final String TAG = LogUtil.makeTag(WeiboHelper.class);
 
     private final Tencent mTencent;
-    private CountDownLatch mLatch;
-    private QQInfo mInfo = null;
+    private final Activity mActivity;
+    private CountDownLatch mLatch;//to make method synchronous
+    private UserInfo mInfo = null;//user info to return
 
-    public TencentHelper(Context context) {mTencent = Tencent.createInstance(APP_ID, context.getApplicationContext());}
-
-    public void login(Activity activity, LoginListener loginListener) {
-        mTencent.login(activity, SCOPE, createLoginListener(loginListener));
+    public TencentHelper(Activity activity) {
+        mActivity = activity;
+        mTencent = Tencent.createInstance(APP_ID, mActivity.getApplicationContext());
     }
 
-    public void login(Fragment fragment, LoginListener loginListener) {
-        mTencent.login(fragment, SCOPE, createLoginListener(loginListener));
+    @Override
+    public void login(@NonNull LoginListener loginListener) {
+        mTencent.login(mActivity, SCOPE, createLoginListener(loginListener));
     }
 
-    public QQInfo getUserInfo(Context context, OAuthToken token) {
-        UserInfo info = new UserInfo(context, token.toQQToken());
+    @Override
+    public UserInfo getUserInfo(OAuthToken token) {
+        com.tencent.connect.UserInfo info = new com.tencent.connect.UserInfo(mActivity, token.toQQToken());
         mLatch = new CountDownLatch(1);
-        info.getUserInfo(createGetInfoListener());//TODO
+        info.getUserInfo(createGetInfoListener());
+
+        //wait asynchronous handle
         try {
             mLatch.await();
             return mInfo;
@@ -63,7 +68,7 @@ public class TencentHelper {
                     String id = jsonObject.getString("openid");
                     long expiresIn = jsonObject.getLong("expires_in");
 
-                    mInfo = new QQInfo();
+                    mInfo = new UserInfo();
                     mInfo.id = id;
 
                     loginListener.onSuccess(new OAuthToken(id, token, expiresIn));
@@ -149,25 +154,5 @@ public class TencentHelper {
                 mInfo = null;
             }
         };
-    }
-
-    public class QQInfo {
-        public String id;
-        public String name;
-        public String location;
-        public String description;
-        public String gender;
-        public String avatar_large;
-
-        @Override public String toString() {
-            return "QQInfo{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    ", location='" + location + '\'' +
-                    ", description='" + description + '\'' +
-                    ", gender='" + gender + '\'' +
-                    ", avatar_large='" + avatar_large + '\'' +
-                    '}';
-        }
     }
 }

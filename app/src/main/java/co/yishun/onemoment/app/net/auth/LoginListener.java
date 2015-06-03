@@ -1,4 +1,4 @@
-package co.yishun.onemoment.app.util;
+package co.yishun.onemoment.app.net.auth;
 
 /**
  * Created by yyz on 5/30/15.
