@@ -7,9 +7,7 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.util.LoginListener;
 import co.yishun.onemoment.app.util.OAuthToken;
 import co.yishun.onemoment.app.util.TencentHelper;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_test)
 public class TestActivity extends ActionBarActivity {
@@ -19,11 +17,21 @@ public class TestActivity extends ActionBarActivity {
     @ViewById
     TextView qqTestResultTextView;
 
+    @ViewById
+    TextView qqInfoResultTextView;
+
+    private OAuthToken mToken = null;
+
+    private TencentHelper mHelper;
+
+
     @Click void testQQLoginBtnClicked() {
         qqTestResultTextView.setText("Waiting...");
-        new TencentHelper(this).login(this, new LoginListener() {
+        mHelper = new TencentHelper(this);
+        mHelper.login(this, new LoginListener() {
             @Override public void onSuccess(OAuthToken token) {
                 qqTestResultTextView.setText(token.getToken());
+                mToken = token;
             }
 
             @Override public void onFail() {
@@ -34,5 +42,23 @@ public class TestActivity extends ActionBarActivity {
                 qqTestResultTextView.setText("cancel");
             }
         });
+    }
+
+    @Click void testQQInfoBtnClicked() {
+        qqInfoResultTextView.setText("Waiting...");
+        getInfo();
+    }
+
+    @Background void getInfo() {
+        if (mToken == null || mHelper == null) {
+            unableGetInfo();
+        } else {
+            TencentHelper.QQInfo info = mHelper.getUserInfo(this, mToken);
+            System.out.println(info);
+        }
+    }
+
+    @UiThread void unableGetInfo() {
+        qqInfoResultTextView.setText("Please login first");
     }
 }

@@ -2,6 +2,7 @@ package co.yishun.onemoment.app.util;
 
 import android.support.annotation.NonNull;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.tencent.connect.auth.QQToken;
 
 public class OAuthToken {
 
@@ -29,6 +30,15 @@ public class OAuthToken {
         oauth2AccessToken.setToken(token);
         oauth2AccessToken.setExpiresTime(expiresIn);
         return oauth2AccessToken;
+    }
+
+    public QQToken toQQToken() {
+        QQToken qqToken = new QQToken(TencentHelper.APP_ID);
+        qqToken.setAppId(TencentHelper.APP_ID);
+        qqToken.setOpenId(id);
+        qqToken.setAccessToken(token, String.valueOf(expiresIn));
+
+        return qqToken;
     }
 
     public String getId() {

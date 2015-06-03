@@ -24,4 +24,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+    <Button
+            android:id="@+id/testQQInfoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test Get QQ Info"
+            />
+
+    <TextView
+            android:id="@+id/qqInfoResultTextView"
+            android:text="Not available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 </LinearLayout>
