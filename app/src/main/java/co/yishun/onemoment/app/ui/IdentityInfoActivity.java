@@ -11,6 +11,9 @@ import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.Constants;
 import co.yishun.onemoment.app.config.ErrorCode;
+import co.yishun.onemoment.app.net.auth.LoginListener;
+import co.yishun.onemoment.app.net.auth.OAuthToken;
+import co.yishun.onemoment.app.net.auth.WeiboHelper;
 import co.yishun.onemoment.app.net.request.account.Bind;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.request.account.UnBind;
@@ -18,13 +21,11 @@ import co.yishun.onemoment.app.net.request.sync.GetToken;
 import co.yishun.onemoment.app.net.result.AccountResult;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.qiniu.android.storage.UploadManager;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.*;
@@ -368,9 +369,9 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             }).show();
         } else {
             final WeiboHelper helper = new WeiboHelper(this);
-            helper.login(new WeiboHelper.WeiboLoginListener() {
+            helper.login(new LoginListener() {
                 @Override
-                public void onSuccess(Oauth2AccessToken token) {
+                public void onSuccess(OAuthToken token) {
                     bind(token);
                     showNotification(R.string.weiboBindAuthSuccess);
                 }
@@ -388,15 +389,15 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
         }
     }
 
-    @Background void bind(Oauth2AccessToken token) {
+    @Background void bind(OAuthToken token) {
         //weibo user won't run this code, don't need take in account
         showProgress();
-        new Bind.Weibo().setUid(token.getUid()).with(this).setCallback((e, result) -> {
+        new Bind.Weibo().setUid(token.getId()).with(this).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
             } else if (result.getCode() == ErrorCode.SUCCESS) {
                 AccountHelper.updateAccount(this, result.getData());
-                setWeiboUid(token.getUid());
+                setWeiboUid(token.getId());
                 showNotification(R.string.identityInfoWeiboBoundSuccess);
             } else {
                 showNotification(R.string.identityInfoWeiboBoundFail);

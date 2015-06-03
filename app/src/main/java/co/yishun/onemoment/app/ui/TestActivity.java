@@ -4,9 +4,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.Button;
 import android.widget.TextView;
 import co.yishun.onemoment.app.R;
-import co.yishun.onemoment.app.util.LoginListener;
-import co.yishun.onemoment.app.util.OAuthToken;
-import co.yishun.onemoment.app.util.TencentHelper;
+import co.yishun.onemoment.app.net.auth.LoginListener;
+import co.yishun.onemoment.app.net.auth.OAuthToken;
+import co.yishun.onemoment.app.net.auth.TencentHelper;
+import co.yishun.onemoment.app.net.auth.UserInfo;
 import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.activity_test)
@@ -28,7 +29,7 @@ public class TestActivity extends ActionBarActivity {
     @Click void testQQLoginBtnClicked() {
         qqTestResultTextView.setText("Waiting...");
         mHelper = new TencentHelper(this);
-        mHelper.login(this, new LoginListener() {
+        mHelper.login(new LoginListener() {
             @Override public void onSuccess(OAuthToken token) {
                 qqTestResultTextView.setText(token.getToken());
                 mToken = token;
@@ -53,7 +54,7 @@ public class TestActivity extends ActionBarActivity {
         if (mToken == null || mHelper == null) {
             unableGetInfo();
         } else {
-            TencentHelper.QQInfo info = mHelper.getUserInfo(this, mToken);
+            UserInfo info = mHelper.getUserInfo(mToken);
             System.out.println(info);
         }
     }
