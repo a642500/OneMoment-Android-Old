@@ -26,22 +26,18 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.convert.Converter;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
-import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.CameraHelper;
 import co.yishun.onemoment.app.util.LogUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.Where;
 import com.umeng.analytics.MobclickAgent;
 import me.toxz.circularprogressview.library.CircularProgressView;
 import org.androidannotations.annotations.*;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static co.yishun.onemoment.app.ui.RecordingActivity.RecordStatus.*;
@@ -56,7 +52,6 @@ import static co.yishun.onemoment.app.ui.RecordingActivity.RecordStatus.*;
 //@Fullscreen
 @EActivity(R.layout.layout_recording)
 public class RecordingActivity extends Activity {
-    public static final int REQUEST_SAVE = 100;
     private static final String TAG = LogUtil.makeTag(RecordingActivity.class);
     @ViewById(R.id.surfaceView) TextureView mPreview;
     @ViewById ImageSwitcher recordFlashSwitch;
@@ -261,15 +256,10 @@ public class RecordingActivity extends Activity {
             circularProgressView.resetSmoothly();
             setCameraSwitchEnable(true);//was disabled when start record
         }
-        if (mStatus != RecordStatus.CONVERTER_ENDED && mStatus != MOMENT_PREPARED) {
+        if (mStatus != RecordStatus.CONVERTER_ENDED) {
             //just back for result, not preview
             preview();
         }
-        if (mStatus == MOMENT_PREPARED) {
-            mStatus = MOMENT_OK;
-            LogUtil.d(TAG, "resume at: " + MOMENT_PREPARED);
-        }
-
     }
 
     @Override protected void onPause() {
@@ -498,7 +488,6 @@ public class RecordingActivity extends Activity {
         prepare();
         if (mStatus == RecordStatus.RECORDER_PREPARED) {
             mStatus = RecordStatus.RECORDER_STARTED;
-            Moment.lock(this);
             mMediaRecorder.start();
         } else {
             releaseMediaRecorder();
@@ -563,34 +552,6 @@ public class RecordingActivity extends Activity {
                 LogUtil.i(TAG, "finish");
             }
         }).start();
-    }
-
-    private String convertInputStreamToString(InputStream is) throws IOException {
-
-     /*
-         * To convert the InputStream to String we use the
-         * Reader.read(char[] buffer) method. We iterate until the
-         * Reader return -1 which means there's no more data to
-         * read. We use the StringWriter class to produce the string.
-         */
-        if (is != null) {
-            Writer writer = new StringWriter();
-
-            char[] buffer = new char[1024];
-            try {
-                Reader reader = new BufferedReader(
-                        new InputStreamReader(is, "UTF-8"));
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
-            } finally {
-                is.close();
-            }
-            return writer.toString();
-        } else {
-            return "";
-        }
     }
 
     /**
@@ -658,66 +619,10 @@ public class RecordingActivity extends Activity {
                 .extra("videoPath", path)
                 .extra("thumbPath", thumbPath)
                 .extra("largeThumbPath", largeThumbPath)
-                .startForResult(REQUEST_SAVE);
-    }
-
-    @OnActivityResult(REQUEST_SAVE) void onResult(int resultCode, Intent data) {
-        LogUtil.i(TAG, "onResult");
-        mStatus = MOMENT_PREPARED;
-        if (resultCode == RESULT_OK) {
-            //register at database
-            try {
-                //don't delete because it will be used at PlayAct
-//                File useless = new File(data.getStringExtra("largeThumbPath"));
-//                if (useless.exists()) useless.delete();
-
-                //delete other today's moment
-                String time = new SimpleDateFormat(Config.TIME_FORMAT).format(Calendar.getInstance().getTime());
-                List<Moment> result;
-                Where<Moment, Integer> w = momentDao.queryBuilder().where();
-                if (AccountHelper.isLogin(this)) {
-                    result = w.and(
-                            w.eq("time", time), w.or(
-                                    w.eq("owner", AccountHelper.getIdentityInfo(this).get_id()),
-                                    w.eq("owner", "LOC"))
-                    ).query();
-                } else {
-                    result = w.eq("time", time).and().eq("owner", "LOC").query();
-                }
-                LogUtil.i(TAG, "delete old today moment: " + Arrays.toString(result.toArray()));
-
-                Moment moment = new Moment.MomentBuilder()
-                        .setPath(data.getStringExtra("videoPath"))
-                        .setThumbPath(data.getStringExtra("thumbPath"))
-                        .setLargeThumbPath(data.getStringExtra("largeThumbPath"))
-                        .build();
-                if (1 == momentDao.create(moment)) {
-                    LogUtil.i(TAG, "new moment: " + moment);
-                    momentDao.delete(result);
-                    for (Moment mToDe : result) {
-                        new File(mToDe.getLargeThumbPath()).delete();
-                        new File(mToDe.getThumbPath()).delete();
-                        new File(mToDe.getPath()).delete();
-                    }
-                }
-                // onResult is called before onResume
-                LogUtil.d(TAG, "start album act");
-                Moment.unlock();
-                mCurrentVideoPath = null;
-                albumBtnClicked(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            mStatus = MOMENT_OK;
-            File useless = new File(data.getStringExtra("largeThumbPath"));
-            if (useless.exists()) useless.delete();
-            useless = new File(data.getStringExtra("videoPath"));
-            if (useless.exists()) useless.delete();
-            useless = new File(data.getStringExtra("thumbPath"));
-            if (useless.exists()) useless.delete();
-            mCurrentVideoPath = null;
-        }
+                .start();
+        overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
+        mStatus = MOMENT_OK;// SaveVideoAct will handle the remain thing
+        mCurrentVideoPath = null;
     }
 
     /**
@@ -758,7 +663,7 @@ public class RecordingActivity extends Activity {
         RECORDER_ENDED,
         CONVERTER_STARTED,
         CONVERTER_ENDED,//converted, will ask user whether save it
-        MOMENT_PREPARED,//has asked for saving, will jump to album act
+        // delete because it's handled by askSave act        MOMENT_PREPARED,//has asked for saving, will jump to album act
         MOMENT_OK,//has created a new moment or give up the moment,just back to this act to create new
         ERROR_STATUS
     }
