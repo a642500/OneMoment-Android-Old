@@ -3,8 +3,10 @@ package co.yishun.onemoment.app.ui;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.widget.ImageView;
+import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
+import co.yishun.onemoment.app.notification.EveryDayNotification;
 import co.yishun.onemoment.app.ui.guide.GuideActivity_;
 import org.androidannotations.annotations.*;
 
@@ -44,6 +46,7 @@ public class SplashActivity extends BaseActivity {
 
     @UiThread(delay = 1600) void startRecording() {
         this.finish();
+        if (BuildConfig.DEBUG) new EveryDayNotification().onReceive(this, null);
         overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
         if (isFirstLaunch()) GuideActivity_.intent(this).start();
         else RecordingActivity_.intent(this).start();

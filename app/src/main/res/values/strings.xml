@@ -208,4 +208,14 @@
     <string name="feedbackContent">Please write feedback for us, we will reply soon: </string>
     <string name="feedbackFailNotification">You need to install an Email app to feedback.</string>
 
+    <string name="notificationTitle">One Moment</string>
+    <string name="notificationContent0" translatable="false">为了强迫症，可别忘了拍今天的一瞬！</string>
+    <string name="notificationContent1" translatable="false">就现在，让我占有你1.2秒吧(＞﹏＜)</string>
+    <string name="notificationContent2" translatable="false">1.2秒而已，你不点开我跟你急哦！￣へ￣</string>
+    <string name="notificationContent3" translatable="false">据说连续拍摄10000天能召唤神龙，今天别忘了哦&lt;(￣▽￣)&gt;</string>
+    <string name="notificationContent4" translatable="false">告诉你个秘密，用一瞬为女/男神制作长视频的表白成功率为100%！</string>
+    <string name="notificationContent5" translatable="false">你忍心这么无脑的拍掉今天的一瞬么？！╮(╯﹏╰）╭</string>
+    <string name="notificationContent6" translatable="false">今天就没有那么一瞬值得被记录么？</string>
+    <string name="notificationContent7" translatable="false">神说，永远别想重来昨天的一瞬，所以今天也要记录下来哦！</string>
+
 </resources>
