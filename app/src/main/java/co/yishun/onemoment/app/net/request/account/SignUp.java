@@ -286,4 +286,19 @@ public abstract class SignUp {
 
          */
     }
+
+    public static class ByQQ extends Request<AccountResult> {
+
+        @Override protected String getUrl() {
+            return null;
+        }
+
+        @Override public void setCallback(FutureCallback<AccountResult> callback) {
+
+        }
+
+        @Override protected void check(FutureCallback<AccountResult> callback) {
+
+        }
+    }
 }

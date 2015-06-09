@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +19,7 @@ import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
+import co.yishun.onemoment.app.net.auth.*;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
 import co.yishun.onemoment.app.net.request.account.SignUp;
 import co.yishun.onemoment.app.sync.SyncAdapter;
@@ -29,13 +29,11 @@ import co.yishun.onemoment.app.ui.guide.GuideActivity_;
 import co.yishun.onemoment.app.ui.view.viewpager.JazzyViewPager;
 import co.yishun.onemoment.app.util.AccountHelper;
 import co.yishun.onemoment.app.util.LogUtil;
-import co.yishun.onemoment.app.util.WeiboHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.Where;
 import com.nispok.snackbar.Snackbar;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import org.androidannotations.annotations.*;
 
 import java.sql.SQLException;
@@ -47,7 +45,7 @@ import java.util.List;
 
 
 @EActivity(R.layout.activity_album)
-public class AlbumActivity extends BaseActivity implements AlbumController.OnMonthChangeListener {
+public class AlbumActivity extends BaseActivity implements AlbumController.OnMonthChangeListener, View.OnClickListener {
 
     private static final String TAG = LogUtil.makeTag(AlbumActivity.class);
     @ViewById
@@ -103,7 +101,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
             }
         }
     };
-    private WeiboHelper mWeiboHelper = null;
+    private AuthHelper mAuthHelper = null;
 
     @Fun void backToToday() {
         viewPagerContainer.removeAllViews();
@@ -184,12 +182,12 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         switch (item.getItemId()) {
             case R.id.action_identity:
                 if (AccountHelper.isLogin(this)) IdentityInfoActivity_.intent(this).start();
-                else mWeiboHelper = showLoginDialog();
+                else showLoginDialog();
                 break;
             case R.id.action_sync_settings:
                 if (AccountHelper.isLogin(this)) {
                     SyncSettingsActivity_.intent(this).start();
-                } else mWeiboHelper = showLoginDialog();
+                } else showLoginDialog();
                 break;
             case R.id.action_rate:
                 rate();
@@ -223,8 +221,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mWeiboHelper != null) {
-            mWeiboHelper.ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        if (mAuthHelper != null && mAuthHelper instanceof WeiboHelper) {
+            ((WeiboHelper) mAuthHelper).ssoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
 
@@ -285,7 +283,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     @Fun
     @Click void syncBtn(View view) {
         if (!AccountHelper.isLogin(this)) {
-            mWeiboHelper = showLoginDialog();
+            showLoginDialog();
             return;
         }
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
@@ -309,13 +307,22 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         justPressed = false;
     }
 
+    /**
+     * set the moment count display view on the top of the Calendar.
+     */
     @AfterViews void setOneMomentCount() {
         try {
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class);
             if (AccountHelper.isLogin(this)) {
-                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").or().eq("owner", AccountHelper.getIdentityInfo(this).get_id()).countOf()));
+                titleOfCalender.setText(
+                        String.valueOf(dao.queryBuilder().where()
+                                .eq("owner", "LOC").or()
+                                .eq("owner", AccountHelper.getIdentityInfo(this).get_id()).countOf())
+                );
             } else {
-                titleOfCalender.setText(String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").countOf()));
+                titleOfCalender.setText(
+                        String.valueOf(dao.queryBuilder().where().eq("owner", "LOC").countOf())
+                );
             }
             OpenHelperManager.releaseHelper();
 
@@ -325,48 +332,18 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         }
     }
 
-
-    public WeiboHelper showLoginDialog() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).autoDismiss(false).build();
+    private void showLoginDialog() {
+        final MaterialDialog dialog = new MaterialDialog.Builder(this).customView(R.layout.dialog_login, false).backgroundColorRes(R.color.bgLoginDialogColor).build();
         View view = dialog.getCustomView();
-        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(v -> new Handler().postDelayed(() -> {
-            SignUpActivity_.intent(this).start();
-            dialog.dismiss();
-        }, 150));
-        final WeiboHelper helper = new WeiboHelper(this);
-        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(
-                v -> new Handler().postDelayed(
-                        () -> {
-                            helper.login(new WeiboHelper.WeiboLoginListener() {
-                                @Override
-                                public void onSuccess(Oauth2AccessToken token) {
-                                    signUpByWeibo(token);
-                                    dialog.dismiss();
-                                }
-
-                                @Override
-                                public void onFail() {
-                                    showNotification(R.string.weiboLoginFail);
-                                }
-
-                                @Override
-                                public void onCancel() {
-                                    showNotification(R.string.weiboLoginCancel);
-                                }
-                            });
-                            dialog.dismiss();
-                        }, 150
-                )
-        );
+        view.findViewById(R.id.loginByPhoneBtn).setOnClickListener(this);
+        view.findViewById(R.id.loginByWeiboBtn).setOnClickListener(this);
         dialog.show();
-        return helper;
     }
 
-    @Background
-    public void signUpByWeibo(Oauth2AccessToken token) {
+    @Background void signUpByWeibo(OAuthToken token) {
         showNotification(R.string.weiboLoginAuthSuccess);
         showProgress();
-        WeiboHelper.WeiBoInfo info = mWeiboHelper.getUserInfo(token);
+        UserInfo info = mAuthHelper.getUserInfo(token);
         new SignUp.ByWeiBo().setUid(info.id).setGender(info.gender).setLocation(info.location).setNickname(info.name).setIntroduction(info.description).setAvatarUrl(info.avatar_large).with(this).setCallback((e, result) -> {
             if (e != null) {
                 e.printStackTrace();
@@ -378,7 +355,7 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
                 hideProgress();
             } else if (result.getErrorCode() == ErrorCode.WEIBO_UID_EXISTS) {
                 //TODO login success at once, update info if not exist when in identity info act
-                new IdentityInfo.Get().overrideUrlUID(token.getUid()).with(this).setCallback((e1, result1) -> {
+                new IdentityInfo.Get().overrideUrlUID(token.getId()).with(this).setCallback((e1, result1) -> {
                     if (e1 != null) {
                         e1.printStackTrace();
                         showNotification(R.string.weiboLoginFail);
@@ -394,6 +371,41 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         });
     }
 
+    @Background void signUpByQQ(OAuthToken token) {
+        if (true) throw new IllegalStateException("Not implement yet!");//TODO resume
+        showNotification(R.string.weiboLoginAuthSuccess);
+        showProgress();
+        UserInfo info = mAuthHelper.getUserInfo(token);
+        new SignUp.ByQQ().with(this).setCallback((e, result) -> {
+            if (e != null) {
+                e.printStackTrace();
+                showNotification(R.string.weiboLoginFail);
+                hideProgress();
+            } else if (result.getCode() == ErrorCode.SUCCESS) {
+                AccountHelper.createAccount(this, result.getData());
+                showNotification(R.string.weiboLoginSuccess);
+                hideProgress();
+            } else if (result.getErrorCode() == ErrorCode.WEIBO_UID_EXISTS) {
+                //TODO login success at once, update info if not exist when in identity info act
+                new IdentityInfo.Get().overrideUrlUID(token.getId()).with(this).setCallback((e1, result1) -> {
+                    if (e1 != null) {
+                        e1.printStackTrace();
+                        showNotification(R.string.weiboLoginFail);
+                    } else if (result1.getCode() == ErrorCode.SUCCESS) {
+                        AccountHelper.createAccount(this, result1.getData());
+                        showNotification(R.string.weiboLoginSuccess);
+                    } else {
+                        showNotification(R.string.weiboLoginFail);
+                    }
+                    hideProgress();
+                });
+            }
+        });
+    }
+
+    /**
+     * start Market App to rate.
+     */
     private void rate() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -410,6 +422,56 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+    }
+
+    @Override public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.loginByWeiboBtn:
+                requestLoginByWeibo();
+                break;
+            case R.id.loginByPhoneBtn:
+                SignUpActivity_.intent(this).start();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Background(delay = 150) void requestLoginByWeibo() {
+        mAuthHelper = new WeiboHelper(this);
+        mAuthHelper.login(new LoginListener() {
+            @Override
+            public void onSuccess(OAuthToken token) {
+                signUpByWeibo(token);
+            }
+
+            @Override
+            public void onFail() {
+                showNotification(R.string.weiboLoginFail);
+            }
+
+            @Override
+            public void onCancel() {
+                showNotification(R.string.weiboLoginCancel);
+            }
+        });
+    }
+
+    @Background(delay = 150) void requestLoginByQQ() {
+        mAuthHelper = new TencentHelper(this);
+        mAuthHelper.login(new LoginListener() {
+            @Override public void onSuccess(OAuthToken token) {
+
+            }
+
+            @Override public void onFail() {
+
+            }
+
+            @Override public void onCancel() {
+
+            }
+        });
     }
 
     //    @Override
