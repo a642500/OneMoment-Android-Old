@@ -45,6 +45,11 @@ public class Moment implements Serializable {
 
     public Moment() { /*keep for ormlite*/ }
 
+    /**
+     * Lock to sign this process use Moment Database and prevent other process lock.
+     *
+     * @param context
+     */
     public static void lock(Context context) {
         try {
             if (channel == null) {
@@ -61,6 +66,9 @@ public class Moment implements Serializable {
         }
     }
 
+    /**
+     * Unlock to sign this process release Moment Database.
+     */
     public static void unlock() {
         try {
             lock.release();
