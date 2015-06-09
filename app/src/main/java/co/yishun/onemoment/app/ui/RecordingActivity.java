@@ -593,6 +593,13 @@ public class RecordingActivity extends Activity {
         }
     }
 
+    /**
+     * To be called when converting finished.
+     *
+     * @param exitCode  to sign whether the converting is success
+     * @param origin    video's path
+     * @param converted video's path
+     */
     @UiThread void onConvert(int exitCode, String origin, String converted) {
 //        setCameraSwitchEnable(true);
 //        albumBtn.setEnabled(true);
@@ -613,6 +620,12 @@ public class RecordingActivity extends Activity {
         }
     }
 
+    /**
+     * handle the origin video and converted video file, and do next thing
+     *
+     * @param origin    video's path
+     * @param converted video's path
+     */
     @Background void saveData(String origin, String converted) {
         //delete origin file
         File file = new File(origin);
@@ -633,6 +646,13 @@ public class RecordingActivity extends Activity {
         runOnUiThread(mConvertDialog::dismiss);
     }
 
+    /**
+     * ask user whether to save this moment
+     *
+     * @param path           of converted video
+     * @param thumbPath      of thumbnail of video
+     * @param largeThumbPath of large thumbnail of video
+     */
     @UiThread void askSave(String path, String thumbPath, String largeThumbPath) {
         VideoSaveActivity_.intent(this)
                 .extra("videoPath", path)
