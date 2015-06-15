@@ -21,7 +21,7 @@
             android:layout_weight="1"
             />
 
-    <co.yishun.onemoment.app.ui.view.SquareFrameLayout
+    <co.yishun.onemoment.app.ui.view.SquareThumbnailVideoView
             android:id="@+id/recordSurfaceParent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:id="@+id/thumbImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-    </co.yishun.onemoment.app.ui.view.SquareFrameLayout>
+    </co.yishun.onemoment.app.ui.view.SquareThumbnailVideoView>
 
     <!--android:layout_weight="3"-->
     <!--android:id="@+id/recordBottom"-->

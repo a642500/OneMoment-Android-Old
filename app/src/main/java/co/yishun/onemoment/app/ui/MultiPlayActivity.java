@@ -1,14 +1,10 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.Build;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.*;
+import android.widget.ImageView;
 import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
@@ -25,42 +21,27 @@ import com.j256.ormlite.stmt.Where;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.squareup.picasso.Picasso;
+import me.toxz.squarethumbnailvideoview.library.SquareThumbnailVideoView;
+import me.toxz.squarethumbnailvideoview.library.VideoAdapter;
 import org.androidannotations.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Carlos on 2015/4/5.
  */
 @EActivity(R.layout.activity_multi_play)
-public class MultiPlayActivity extends ToolbarBaseActivity implements MediaPlayer.OnPreparedListener, View.OnClickListener, View.OnTouchListener {
+public class MultiPlayActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(MultiPlayActivity.class);
-    private static final int MAX_CLICK_DURATION = 200;
-    @ViewById
-    VideoView videoView;
-    @ViewById
-    ImageView thumbImageView;
-    @ViewById
-    ImageButton playBtn;
-
-//    @Extra
-//    String videoPath;
-//    @Extra
-//    String largeThumbPath;
-@ViewById
-FrameLayout recordSurfaceParent;
-    @Extra
-    List<Moment> moments;
-    Queue<Moment> toPlayMoments;
-    @OrmLiteDao(helper = MomentDatabaseHelper.class)
-    Dao<Moment, Integer> dao;
+    @ViewById SquareThumbnailVideoView squareThumbnailVideoView;
+    @Extra List<Moment> moments;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class) Dao<Moment, Integer> dao;
     long timestamp = 0;
-    boolean isPause = false;
-    private long startClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,87 +49,56 @@ FrameLayout recordSurfaceParent;
         getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    @AfterViews void setSquare() {
-        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
-                    params.height = recordSurfaceParent.getHeight();
-                    params.width = recordSurfaceParent.getWidth();
-                }
-            });
-        }
-    }
-
-    private void queueMoments() {
-        toPlayMoments.clear();
-        toPlayMoments.addAll(moments);
-    }
+//    @AfterViews void setSquare() {
+//        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
+//        if (viewTreeObserver.isAlive()) {
+//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+//                    params.height = recordSurfaceParent.getHeight();
+//                    params.width = recordSurfaceParent.getWidth();
+//                }
+//            });
+//        }
+//    }
 
     @AfterViews void initVideo() {
         LogUtil.i(TAG, "moments list, " + Arrays.toString(moments.toArray()));
-        toPlayMoments = new ArrayDeque<>(moments.size());
-        queueMoments();
+
+        //TODO add cover video
         if (BuildConfig.DEBUG && !(moments.size() >= 2))
             throw new RuntimeException("moment's length is 1 or 0, use PlayActivity");
 
-        Picasso.with(this).load("file://" + moments.get(0).getLargeThumbPath()).into(thumbImageView);
-        //TODO add cover video
+        squareThumbnailVideoView.setVideoAdapter(new VideoAdapter<Moment>() {
+            @Override public int getCount() {
+                return moments.size();
+            }
 
+            @Override public Moment getItem(int i) {
+                // lock when start playing, lock at finish act
+                Moment.lock(MultiPlayActivity.this);
+                return ensureMomentUpdated(moments.get(i));
+            }
 
-        videoView.setOnPreparedListener(this);
-        videoView.setOnCompletionListener(mp -> {
-            mp.reset();
-            Moment moment = toPlayMoments.poll();
-            moment = ensureMomentUpdated(moment);
-            if (moment != null) {
-                videoView.setVideoPath(moment.getPath());
-                videoView.start();
-            } else {
-                Moment.unlock();
-                videoView.setOnPreparedListener(MultiPlayActivity.this);
-                videoView.setOnTouchListener(null);
-                MultiPlayActivity.this.queueMoments();
-                playBtn.setVisibility(View.VISIBLE);
-                thumbImageView.setVisibility(View.VISIBLE);
-                isPause = false;
+            @Override public long getItemId(int i) {
+                return i;
+            }
+
+            @Override public String getVideoPath(int i) {
+                return getItem(i).getPath();
+            }
+
+            @Override public boolean isEmpty() {
+                return moments.isEmpty();
+            }
+
+            @Override public boolean setThumbnailImage(ImageView thumbnailImageView, Bitmap bitmap) {
+                Picasso.with(MultiPlayActivity.this).load("file://" + moments.get(0).getLargeThumbPath()).into(thumbnailImageView);
+                return true;
             }
         });
-    }
-
-    @Click void playBtnClicked(View view) {
-        if (isPause) {
-            // resume
-            videoView.start();
-            isPause = false;
-            view.setVisibility(View.GONE);
-        } else {
-            // play
-            Moment.lock(MultiPlayActivity.this);
-
-            Moment toPlay = toPlayMoments.poll();
-            toPlay = ensureMomentUpdated(toPlay);
-            if (toPlay == null) {
-                this.finish();
-                Toast.makeText(this, R.string.multiPlayShareBtn, Toast.LENGTH_LONG).show();
-                return;
-            }
-            videoView.setVideoPath(toPlay.getPath());
-            view.setVisibility(View.GONE);
-        }
-        videoView.setOnTouchListener(this);
-    }
-
-    public void onClick(View view) {
-        videoView.setOnTouchListener(null);
-        LogUtil.v(TAG, "pause: " + videoView.canPause());
-        Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
-        videoView.pause();
-        isPause = true;
-        playBtn.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -287,42 +237,8 @@ FrameLayout recordSurfaceParent;
         return Config.LONG_VIDEO_PREFIX + AccountHelper.getIdentityInfo(this).get_id() + Config.URL_HYPHEN + count + Config.URL_HYPHEN + timestamp + Config.VIDEO_FILE_SUFFIX;
     }
 
-    @Override public void onPrepared(MediaPlayer mp) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            videoView.setOnInfoListener((mp1, what, extra) -> {
-                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                    thumbImageView.setVisibility(View.GONE);
-                }
-                videoView.setOnInfoListener(null);
-                return true;
-            });
-        } else {
-            thumbImageView.setVisibility(View.GONE);
-        }
-        videoView.start();
-        videoView.setOnPreparedListener(null);
-
-    }
-
-    @Override public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startClickTime = Calendar.getInstance().getTimeInMillis();
-                return true;
-            case MotionEvent.ACTION_UP:
-                long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
-                // if near end, async pause will actually pause video when play end, and will cause resume fail
-                boolean notNearingEnd = (videoView.getDuration() == -1 // only media may have no duration
-                        && videoView.getCurrentPosition() < 800) || (videoView.getCurrentPosition() + 400 < videoView.getDuration());
-                if (clickDuration < MAX_CLICK_DURATION && videoView.isPlaying() && notNearingEnd) {
-                    videoView.setOnTouchListener(null);
-                    videoView.pause();
-                    isPause = true;
-                    playBtn.setVisibility(View.VISIBLE);
-                    return true;
-                }
-                break;
-        }
-        return false;
+    @Override public void finish() {
+        super.finish();
+        Moment.unlock();
     }
 }
