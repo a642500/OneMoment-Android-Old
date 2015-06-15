@@ -21,22 +21,12 @@
             android:layout_weight="1"
             />
 
-    <co.yishun.onemoment.app.ui.view.SquareThumbnailVideoView
-            android:id="@+id/recordSurfaceParent"
+    <me.toxz.squarethumbnailvideoview.library.SquareThumbnailVideoView
+            android:id="@+id/squareThumbnailVideoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-
-        <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        <ImageView
-                android:id="@+id/thumbImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-    </co.yishun.onemoment.app.ui.view.SquareThumbnailVideoView>
+            app:stvv_playButtonImage="@drawable/ic_play"
+            />
 
     <!--android:layout_weight="3"-->
     <!--android:id="@+id/recordBottom"-->

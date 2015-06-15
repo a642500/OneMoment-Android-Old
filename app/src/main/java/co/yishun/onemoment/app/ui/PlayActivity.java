@@ -1,15 +1,10 @@
 package co.yishun.onemoment.app.ui;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.Build;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.VideoView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.config.ErrorCode;
@@ -24,6 +19,8 @@ import com.j256.ormlite.stmt.Where;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.squareup.picasso.Picasso;
+import me.toxz.squarethumbnailvideoview.library.SingleVideoAdapter;
+import me.toxz.squarethumbnailvideoview.library.SquareThumbnailVideoView;
 import org.androidannotations.annotations.*;
 
 import java.sql.SQLException;
@@ -36,19 +33,11 @@ import java.util.List;
 public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnCheckedListener {
     private static final String TAG = LogUtil.makeTag(PlayActivity.class);
     @ViewById
-    VideoView videoView;
-    @ViewById
-    ImageView thumbImageView;
-    @ViewById
-    ImageButton playBtn;
-    @ViewById
     ViewGroup shareVideoBtnParent;
     @ViewById
-    FrameLayout recordSurfaceParent;
-    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
-    Dao<Moment, Integer> dao;
-    @Extra
-    boolean isReplayAll;
+    SquareThumbnailVideoView squareThumbnailVideoView;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class) Dao<Moment, Integer> dao;
+    @Extra boolean isReplayAll;
 //    @Extra
 //    String videoPath;
 //    @Extra
@@ -58,20 +47,20 @@ public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnC
     Moment moment;
     boolean isLock = false;
 
-    @AfterViews void initVideoView() {
-        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
-                    params.height = recordSurfaceParent.getHeight();
-                    params.width = recordSurfaceParent.getWidth();
-                }
-            });
-        }
-    }
+//    @AfterViews void initVideoView() {
+//        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
+//        if (viewTreeObserver.isAlive()) {
+//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+//                    params.height = recordSurfaceParent.getHeight();
+//                    params.width = recordSurfaceParent.getWidth();
+//                }
+//            });
+//        }
+//    }
 
     @Override protected void onResume() {
         super.onResume();
@@ -182,37 +171,22 @@ public class PlayActivity extends ToolbarBaseActivity implements SyncAdapter.OnC
 
     @Override protected void onPause() {
         super.onPause();
-        videoView.stopPlayback();
+//        videoView.stopPlayback();
         Moment.unlock();
-    }
-
-    @Click void playBtnClicked(View view) {
-        view.setVisibility(View.GONE);
-        if (Build.VERSION.SDK_INT >= 17) {
-            videoView.setOnInfoListener((mp1, what, extra) -> {
-                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                    thumbImageView.setVisibility(View.GONE);
-                }
-                videoView.setOnInfoListener(null);
-                return true;
-            });
-        } else {
-            thumbImageView.setVisibility(View.GONE);
-        }
-        videoView.start();
     }
 
     @Override @UiThread public void onMomentOk(Moment moment) {
         hideProgress();
         isLock = true;
+        squareThumbnailVideoView.setVideoAdapter(new SingleVideoAdapter() {
+            @Override public String getVideoPath(int position) {
+                return moment.getPath();
+            }
 
-        Picasso.with(this).load("file://" + moment.getLargeThumbPath()).into(thumbImageView);
-        videoView.setVideoPath(moment.getPath());
-        videoView.setOnCompletionListener(mp -> {
-            mp.reset();
-            videoView.setVideoPath(moment.getPath());
-            thumbImageView.setVisibility(View.VISIBLE);
-            playBtn.setVisibility(View.VISIBLE);
+            @Override public boolean setThumbnailImage(ImageView thumbnailImageView, Bitmap bitmap) {
+                Picasso.with(PlayActivity.this).load("file://" + moment.getLargeThumbPath()).into(thumbnailImageView);
+                return true;
+            }
         });
     }
 

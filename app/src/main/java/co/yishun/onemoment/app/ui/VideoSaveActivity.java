@@ -1,12 +1,9 @@
 package co.yishun.onemoment.app.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.VideoView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
 import co.yishun.onemoment.app.data.Moment;
@@ -16,6 +13,8 @@ import co.yishun.onemoment.app.util.LogUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.Where;
 import com.squareup.picasso.Picasso;
+import me.toxz.squarethumbnailvideoview.library.SingleVideoAdapter;
+import me.toxz.squarethumbnailvideoview.library.SquareThumbnailVideoView;
 import org.androidannotations.annotations.*;
 
 import java.io.File;
@@ -30,9 +29,7 @@ import java.util.List;
 public class VideoSaveActivity extends ToolbarBaseActivity {
     private static final String TAG = LogUtil.makeTag(VideoSaveActivity.class);
 
-    @ViewById VideoView videoView;
-    @ViewById ImageView thumbImageView;
-    @ViewById FrameLayout recordSurfaceParent;
+    @ViewById SquareThumbnailVideoView squareThumbnailVideoView;
 
     @Extra String videoPath;
     @Extra String thumbPath;
@@ -44,31 +41,28 @@ public class VideoSaveActivity extends ToolbarBaseActivity {
     private boolean pendingSave = false;// set false default to delete it if user press back directly.
 
     @AfterViews void initVideo() {
-        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
-                    params.height = recordSurfaceParent.getHeight();
-                    params.width = recordSurfaceParent.getWidth();
-                }
-            });
-        }
+//        ViewTreeObserver viewTreeObserver = recordSurfaceParent.getViewTreeObserver();
+//        if (viewTreeObserver.isAlive()) {
+//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    recordSurfaceParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                    ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
+//                    params.height = recordSurfaceParent.getHeight();
+//                    params.width = recordSurfaceParent.getWidth();
+//                }
+//            });
+//        }
+        squareThumbnailVideoView.setVideoAdapter(new SingleVideoAdapter() {
+            @Override public String getVideoPath(int position) {
+                return videoPath;
+            }
 
-        Picasso.with(this).load("file://" + largeThumbPath).into(thumbImageView);
-        videoView.setVideoPath(videoPath);
-        videoView.setOnCompletionListener(mp -> {
-            mp.reset();
-            videoView.setVideoPath(videoPath);
-            thumbImageView.setVisibility(View.VISIBLE);
+            @Override public boolean setThumbnailImage(ImageView thumbnailImageView, Bitmap bitmap) {
+                Picasso.with(VideoSaveActivity.this).load("file://" + largeThumbPath).into(thumbnailImageView);
+                return false;
+            }
         });
-    }
-
-    @Click void thumbImageViewClicked(View view) {
-        view.setVisibility(View.GONE);
-        videoView.start();
     }
 
     @Override
