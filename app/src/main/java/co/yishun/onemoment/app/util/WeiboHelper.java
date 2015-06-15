@@ -36,32 +36,25 @@ public class WeiboHelper {
     private final AuthInfo mAuthInfo;
     private final Activity mActivity;
 
+    public WeiboHelper(Activity activity) {
+        mActivity = activity;
+        mAuthInfo = new AuthInfo(mActivity, APP_KEY, AUTH_REDIRECT_URL, SCOPE);
+        ssoHandler = new SsoHandler(mActivity, mAuthInfo);
+    }
+
     public WeiBoInfo getUserInfo(Oauth2AccessToken token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(URL_GET_USER_INFO + token.getUid() + URL_GET_USER_INFO_PART + token.getToken()).get().build();
         try {
             Response response = client.newCall(request).execute();
-            return new Gson().fromJson(response.body().string(), WeiBoInfo.class);
+
+            String re = response.body().string();
+            LogUtil.i(TAG, "user info: " + re);
+            return new Gson().fromJson(re, WeiBoInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public class WeiBoInfo {
-        public long id;
-        public String name;
-        public String location;
-        public String description;
-        public String gender;
-        public String avatar_large;
-    }
-
-
-    public WeiboHelper(Activity activity) {
-        mActivity = activity;
-        mAuthInfo = new AuthInfo(mActivity, APP_KEY, AUTH_REDIRECT_URL, SCOPE);
-        ssoHandler = new SsoHandler(mActivity, mAuthInfo);
     }
 
     public void login(@NonNull WeiboLoginListener listener) {
@@ -102,7 +95,6 @@ public class WeiboHelper {
         void onCancel();
     }
 
-
     public static class AccessTokenKeeper {
         private static final String PREFERENCES_NAME = "com_onemoment_weibo";
         private static final String KEY_UID = "uid";
@@ -142,6 +134,26 @@ public class WeiboHelper {
          */
         public static void clear(@NonNull Context context) {
             context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND).edit().clear().apply();
+        }
+    }
+
+    public class WeiBoInfo {
+        public long id;
+        public String name;
+        public String location;
+        public String description;
+        public String gender;
+        public String avatar_large;
+
+        @Override public String toString() {
+            return "WeiBoInfo{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", location='" + location + '\'' +
+                    ", description='" + description + '\'' +
+                    ", gender='" + gender + '\'' +
+                    ", avatar_large='" + avatar_large + '\'' +
+                    '}';
         }
     }
 

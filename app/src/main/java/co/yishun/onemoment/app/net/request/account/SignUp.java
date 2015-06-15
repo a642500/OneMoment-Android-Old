@@ -93,14 +93,14 @@ public abstract class SignUp {
     }
 
     public static class ByWeiBo extends Request<AccountResult> {
-        private long uid;
+        private String uid;
         private String nickname;
         private String introduction;
         private String gender;
         private String avatarUrl;
         private String location;
 
-        public ByWeiBo setUid(long uid) {
+        public ByWeiBo setUid(String uid) {
             this.uid = uid;
             return this;
         }

@@ -167,4 +167,12 @@
     <string name="feedbackContent">请在下方写下您的反馈，我们会尽快查看并可能与您进一步联系：</string>
     <string name="feedbackFailNotification">您需要安装邮件应用来发送反馈</string>
     <string name="notificationTitle">一瞬</string>
+    <string name="integrateInfoGetWeiboInfo">正在读取微博的个人信息</string>
+    <string name="integrateInfoGetWeiboInfoFail">获取微博个人信息失败</string>
+    <string name="integrateInfoGetWeiboInfoSuccess">获取微博个人信息成功</string>
+    <string name="weiboLoginNeedSignUp">请完善您的信息</string>
+    <string name="weiboLoginSignUpFail">注册失败</string>
+    <string name="weiboLoginSignUpSuccess">注册成功</string>
+    <string name="weiboLoginNetworkError">网络错误</string>
+    <string name="integrateInfoNameNotUnique">这个昵称已经被使用了，换一个吧</string>
 </resources>

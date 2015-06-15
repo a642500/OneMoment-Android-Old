@@ -161,6 +161,7 @@
     <string name="integrateInfoGenderHint">Gender</string>
     <string name="integrateInfoFinishBtn">OK</string>
     <string name="integrateInfoNameEmpty">Please set your nickname.</string>
+    <string name="integrateInfoNameNotUnique">This nickname has been used.</string>
     <string name="integrateInfoGenderPrivate">Private</string>
     <string-array name="integrateInfoGenderArray">
         <item>male</item>
@@ -169,11 +170,18 @@
     <string name="integrateInfoChooseBtn">CHOOSE</string>
     <string name="integrateInfoUpdateSuccess">Update Info Success.</string>
     <string name="integrateInfoUpdateFail">Update Info Failed!</string>
+    <string name="integrateInfoGetWeiboInfo">Getting your info on weibo</string>
+    <string name="integrateInfoGetWeiboInfoFail">Get weibo info failed.</string>
+    <string name="integrateInfoGetWeiboInfoSuccess">Get weibo info success.</string>
 
     <string name="weiboLoginAuthSuccess">Auth Success, now login…</string>
+    <string name="weiboLoginNetworkError">Network Error</string>
+    <string name="weiboLoginNeedSignUp">Please integrate your identity information</string>
     <string name="weiboLoginSuccess">Login Success</string>
     <string name="weiboLoginFail">Login Failed</string>
     <string name="weiboLoginCancel">Login Cancel</string>
+    <string name="weiboLoginSignUpSuccess">Sign Up Success</string>
+    <string name="weiboLoginSignUpFail">Sign Up Failed</string>
 
 
     <string name="dayOfWeekSun">Sunday</string>
