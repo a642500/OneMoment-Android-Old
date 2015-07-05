@@ -344,7 +344,9 @@ public class RecordingActivity extends Activity {
 
             mCamera.setParameters(parameters);
             mCamera.setDisplayOrientation(90);
+            LogUtil.i(TAG, "mPreview.getSurfaceTexture() == null :" + String.valueOf(mPreview.getSurfaceTexture() == null));
             mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
+            //TODO bug refer to http://stackoverflow.com/questions/21735456/getsurfacetexture-returning-null
             mCamera.startPreview();
             mCamera.autoFocus(null);
             applyTransform();
