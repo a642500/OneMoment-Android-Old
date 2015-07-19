@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">One Moment</string>
-    <string name="appVersion" translatable="false">1.3.3</string>
+    <string name="appVersion" translatable="false">1.3.4</string>
 
     <string-array name="jazzy_effects" translatable="false">
         <item>Standard</item>
@@ -75,7 +75,8 @@
     <string name="aboutRecommend">Recommend to friends</string>
     <string name="aboutUpdated">Has been updated!</string>
     <string name="aboutChecking">Checking…</string>
-    <string name="aboutRecommendContent">"Hi! I'm use One Moment to record my life, have a try? http://www.yishun.co"</string>
+    <string name="aboutRecommendContent">"Hi! I'm use One Moment to record my life, have a try? http://www.yishun.co"
+    </string>
 
     <string name="findPasswordTitle">Find Password</string>
     <string name="findPasswordPhoneHint">Phone number</string>
@@ -87,11 +88,11 @@
     <string name="resetPasswordPasswordHint">Password</string>
     <string name="resetPasswordPasswordAgainHint">Again</string>
     <string name="resetPasswordOkBtn">OK</string>
-    <string name="resetPasswordPasswordInvalid">Your password is invalid. </string>
-    <string name="resetPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
-    <string name="resetPasswordSaveFail">Save password failed! </string>
+    <string name="resetPasswordPasswordInvalid">Your password is invalid.</string>
+    <string name="resetPasswordPasswordAgainInvalid">The passwords you entered must be the same.</string>
+    <string name="resetPasswordSaveFail">Save password failed!</string>
     <string name="resetPasswordSaveFailFormat">Password Format Invalid!</string>
-    <string name="resetPasswordSaveSuccess">Save password Success. </string>
+    <string name="resetPasswordSaveSuccess">Save password Success.</string>
 
     <string name="identityInfoTitle">Identity Info</string>
     <string name="identityInfoProfile">Profile</string>
@@ -149,11 +150,11 @@
     <string name="setPasswordPasswordHint">Password</string>
     <string name="setPasswordPasswordAgainHint">Again</string>
     <string name="setPasswordNextBtn">Next</string>
-    <string name="setPasswordPasswordInvalid">Your password is invalid. </string>
-    <string name="setPasswordPasswordAgainInvalid">The passwords you entered must be the same. </string>
-    <string name="setPasswordSignUpFail">Register failed! </string>
-    <string name="setPasswordSignUpSuccess">Register Success. </string>
-    <string name="setPasswordSignUpAccountExist">Account already exists! </string>
+    <string name="setPasswordPasswordInvalid">Your password is invalid.</string>
+    <string name="setPasswordPasswordAgainInvalid">The passwords you entered must be the same.</string>
+    <string name="setPasswordSignUpFail">Register failed!</string>
+    <string name="setPasswordSignUpSuccess">Register Success.</string>
+    <string name="setPasswordSignUpAccountExist">Account already exists!</string>
 
     <string name="integrateInfoTitle">Integrate Information</string>
     <string name="integrateInfoNickNameHint">Your Name</string>
@@ -213,7 +214,7 @@
     <string name="multiPlayShareFail">Upload video failed, unable to share.</string>
 
     <string name="feedbackSubject">Feedback: OneMoment</string>
-    <string name="feedbackContent">Please write feedback for us, we will reply soon: </string>
+    <string name="feedbackContent">Please write feedback for us, we will reply soon:</string>
     <string name="feedbackFailNotification">You need to install an Email app to feedback.</string>
 
     <string name="notificationTitle">One Moment</string>
