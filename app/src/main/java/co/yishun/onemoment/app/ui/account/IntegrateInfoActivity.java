@@ -53,19 +53,28 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     public static final int FEMALE = 1;
     public static final int PRIVATE = 2;
     private final String[] genders = {"m", "f", "n"};
-    @ViewById EditText nickNameEditText;
-    @ViewById TextView genderTextView;
-    @StringArrayRes String[] provinces;
-    @ViewById TextView areaTextView;
-    @ViewById ImageView profileImageView;
+    @ViewById
+    EditText nickNameEditText;
+    @ViewById
+    TextView genderTextView;
+    @StringArrayRes
+    String[] provinces;
+    @ViewById
+    TextView areaTextView;
+    @ViewById
+    ImageView profileImageView;
     Uri croppedProfileUri;
     //    @Extra Bundle weiboToken;
-    @Extra String access_token;
-    @Extra String refresh_token;
-    @Extra String expires_in;
+    @Extra
+    String access_token;
+    @Extra
+    String refresh_token;
+    @Extra
+    String expires_in;
 
     //    @Extra Bundle weiboToken;// from weibo login, weibo user need to check identity info
-    @Extra String uid;
+    @Extra
+    String uid;
     private int genderSelected = MALE;
     private String mProvince;
     private String mDistrict;
@@ -87,7 +96,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         setResult(RESULT_CANCELED);
     }
 
-    @Click void areaItemClicked(View view) {
+    @Click
+    void areaItemClicked(View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(this).theme(Theme.DARK).title(getString(R.string.integrateInfoAreaHint))
                 .positiveText(R.string.integrateInfoChooseBtn).customView(R.layout.dialog_area_pick, false).build();
         View dialogView = dialog.getCustomView();
@@ -120,7 +130,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         dialog.show();
     }
 
-    @AfterExtras void initWeiboInfo() {
+    @AfterExtras
+    void initWeiboInfo() {
         if (access_token != null) {
             mWeiboToken = new Oauth2AccessToken();
             mWeiboToken.setExpiresTime(Long.parseLong(expires_in));
@@ -132,19 +143,22 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         }
     }
 
-    @UiThread void showGetInfoDialog() {
+    @UiThread
+    void showGetInfoDialog() {
         mGetInfoProgressDialog = new MaterialDialog.Builder(this).theme(Theme.DARK).progress(true, 0).content(R.string.integrateInfoGetWeiboInfo).build();
         mGetInfoProgressDialog.show();
         mGetInfoProgressDialog.setOnCancelListener(dialog -> this.finish());// finish if press back
     }
 
-    @UiThread void hideGetInfoDialog() {
+    @UiThread
+    void hideGetInfoDialog() {
         if (mGetInfoProgressDialog != null) {
             mGetInfoProgressDialog.dismiss();
         }
     }
 
-    @Background void loadWeiboInfo() {
+    @Background
+    void loadWeiboInfo() {
         WeiboHelper weiboHelper = new WeiboHelper(this);
         LogUtil.i(TAG, mWeiboToken.toString());
 
@@ -165,7 +179,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         hideGetInfoDialog();
     }
 
-    @UiThread void showWeiboInfo(WeiboHelper.WeiBoInfo info) {
+    @UiThread
+    void showWeiboInfo(WeiboHelper.WeiBoInfo info) {
         Picasso.with(this).load(info.avatar_large).into(profileImageView);
         avatarUrl = info.avatar_large;
         nickNameEditText.setText(info.name);
@@ -173,7 +188,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         setProvinceAndDistrict(info.location);
     }
 
-    @Background void signUpByWeibo(@Nullable String profileKey, String nickname, String gender, String location) {
+    @Background
+    void signUpByWeibo(@Nullable String profileKey, String nickname, String gender, String location) {
         SignUp.ByWeiBo bw = new SignUp.ByWeiBo().setUid(mWeiboToken.getUid())
                 .setGender(gender).setLocation(location)
                 .setNickname(nickname);
@@ -188,12 +204,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     AccountHelper.createAccount(this, result.getData());
                     showNotification(R.string.weiboLoginSignUpSuccess);
+                    postfinish();
                     hideProgress();
                 }
             });
     }
 
-    @AfterViews void initAreaTextView() {
+    @AfterViews
+    void initAreaTextView() {
         setProvinceAndDistrict(provinces[0], getResources().getStringArray(Constants.provincesItemsRes[0])[0]);
     }
 
@@ -243,7 +261,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         setGender(genderInt);
     }
 
-    @Click void genderItemClicked(View view) {
+    @Click
+    void genderItemClicked(View view) {
         new MaterialDialog.Builder(this)
                 .theme(Theme.DARK)
                 .title(R.string.integrateInfoGenderHint)
@@ -256,19 +275,24 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 .show();
     }
 
-    @UiThread void shakeNickNameEditText() {
+    @UiThread
+    void shakeNickNameEditText() {
         YoYo.with(Techniques.Shake).duration(getResources().getInteger(R.integer.defaultShakeDuration)).playOn(nickNameEditText);
     }
 
-    @Click @Background void okBtnClicked(View view) {
+    @Click
+    @Background
+    void okBtnClicked(View view) {
         String nickname = String.valueOf(nickNameEditText.getText());
         if (TextUtils.isEmpty(nickname)) {
             shakeNickNameEditText();
             showNotification(R.string.integrateInfoNameEmpty);
             return;
         }
+        showProgress();
         if (!checkNickname(nickname)) {
             showNotification(R.string.integrateInfoNameNotUnique);
+            hideProgress();
             return;
         }
 
@@ -301,6 +325,12 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
             }
             latch.countDown();
         });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            isNickNameOk = false;
+        }
         return isNickNameOk;
     }
 
@@ -348,7 +378,8 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
         return isUploadSuccess ? qiNiuKey : null;
     }
 
-    @Background void updateInfo(@Nullable String qiNiuKey, String nickname, String gender, String location) {
+    @Background
+    void updateInfo(@Nullable String qiNiuKey, String nickname, String gender, String location) {
         showProgress();
         IdentityInfo.Update bu = ((IdentityInfo.Update) (new IdentityInfo.Update().with(this))).setGender(gender);
         if (qiNiuKey != null) bu = bu.setAvatarUrl(Config.getResourceUrl(this) + qiNiuKey);
@@ -369,12 +400,14 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 });
     }
 
-    @Click void profileImageViewClicked(View view) {
+    @Click
+    void profileImageViewClicked(View view) {
         Crop.pickImage(this);
     }
 
     @OnActivityResult(Crop.REQUEST_PICK)
-    @Background void onPictureSelected(int resultCode, Intent data) {
+    @Background
+    void onPictureSelected(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
                 Uri selectedImage = data.getData();
@@ -390,13 +423,15 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     }
 
     @OnActivityResult(Crop.REQUEST_CROP)
-    @Background void onPictureCropped(int resultCode, Intent data) {
+    @Background
+    void onPictureCropped(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             setProfileImage(croppedProfileUri);
         } else croppedProfileUri = null;
     }
 
-    @UiThread void setProfileImage(Uri uri) {
+    @UiThread
+    void setProfileImage(Uri uri) {
 //        if (needInvalidate) {
 //            Picasso.with(this).invalidate(uri);
 //            Picasso.with(this).load(uri).into(profileImageView);
@@ -404,5 +439,10 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
 //            needInvalidate = true;
 //        }
         Picasso.with(this).load(uri).memoryPolicy(MemoryPolicy.NO_STORE).memoryPolicy(MemoryPolicy.NO_CACHE).into(profileImageView);
+    }
+
+    @UiThread(delay = 300)
+    void postfinish() {
+        this.finish();
     }
 }

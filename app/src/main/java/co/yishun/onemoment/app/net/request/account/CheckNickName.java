@@ -30,11 +30,12 @@ public class CheckNickName extends Request<NickNameResult> {
     public void setCallback(FutureCallback<NickNameResult> callback) {
         check(callback);
         try {
+
             builder.load(getUrl())
                     .setBodyParameter("key", key)
-                    .setBodyParameter("nickname", nickname).asString().setCallback((e, result) ->
-                            callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), NickNameResult.class))
-            ).get();
+                    .setBodyParameter("nickname", nickname)
+                    .asString().setCallback((e, result) ->
+                    callback.onCompleted(e, new Gson().fromJson(DecodeUtil.decode(result), NickNameResult.class))).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
