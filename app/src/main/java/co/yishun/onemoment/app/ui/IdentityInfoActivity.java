@@ -106,7 +106,7 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
             try {
                 Uri selectedImage = data.getData();
                 croppedProfileUri = Uri.fromFile(new File(getCacheDir(), "croppedProfile"));
-                new Crop(selectedImage).output(croppedProfileUri).asSquare().start(this);
+                Crop.of(selectedImage, croppedProfileUri).asSquare().start(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 showNotification(R.string.identityInfoSelectProfileFail);
@@ -367,10 +367,12 @@ public class IdentityInfoActivity extends ToolbarBaseActivity {
                 }
             }).show();
         } else {
+            LogUtil.i("IdentityInfo", "bind weibo");
             final WeiboHelper helper = new WeiboHelper(this);
             helper.login(new WeiboHelper.WeiboLoginListener() {
                 @Override
                 public void onSuccess(Oauth2AccessToken token) {
+                    LogUtil.i("IdentityInfo", "get weibo token success");
                     bind(token);
                     showNotification(R.string.weiboBindAuthSuccess);
                 }

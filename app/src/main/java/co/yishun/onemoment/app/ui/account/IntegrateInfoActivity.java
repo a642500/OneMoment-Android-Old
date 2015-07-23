@@ -204,7 +204,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
                 } else if (result.getCode() == ErrorCode.SUCCESS) {
                     AccountHelper.createAccount(this, result.getData());
                     showNotification(R.string.weiboLoginSignUpSuccess);
-                    postfinish();
+                    postFinish();
                     hideProgress();
                 }
             });
@@ -412,7 +412,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
             try {
                 Uri selectedImage = data.getData();
                 croppedProfileUri = Uri.fromFile(new File(getCacheDir(), "croppedProfile"));
-                new Crop(selectedImage).output(croppedProfileUri).asSquare().start(this);
+                Crop.of(selectedImage, croppedProfileUri).asSquare().start(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 showNotification(R.string.identityInfoSelectProfileFail);
@@ -442,7 +442,7 @@ public class IntegrateInfoActivity extends ToolbarBaseActivity {
     }
 
     @UiThread(delay = 300)
-    void postfinish() {
+    void postFinish() {
         this.finish();
     }
 }
