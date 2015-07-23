@@ -53,14 +53,22 @@ import static co.yishun.onemoment.app.ui.RecordingActivity.RecordStatus.*;
 @EActivity(R.layout.layout_recording)
 public class RecordingActivity extends Activity {
     private static final String TAG = LogUtil.makeTag(RecordingActivity.class);
-    @ViewById(R.id.surfaceView) TextureView mPreview;
-    @ViewById ImageSwitcher recordFlashSwitch;
-    @ViewById ImageSwitcher cameraSwitch;
-    @ViewById ImageView welcomeOverlay;
-    @ViewById(R.id.recordVideoBtn) CircularProgressView circularProgressView;
-    @ViewById ImageButton albumBtn;
-    @ViewById FrameLayout recordSurfaceParent;
-    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class) Dao<Moment, Integer> momentDao;
+    @ViewById(R.id.surfaceView)
+    TextureView mPreview;
+    @ViewById
+    ImageSwitcher recordFlashSwitch;
+    @ViewById
+    ImageSwitcher cameraSwitch;
+    @ViewById
+    ImageView welcomeOverlay;
+    @ViewById(R.id.recordVideoBtn)
+    CircularProgressView circularProgressView;
+    @ViewById
+    ImageButton albumBtn;
+    @ViewById
+    FrameLayout recordSurfaceParent;
+    @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
+    Dao<Moment, Integer> momentDao;
     private RecordStatus mStatus = RecordStatus.CAMERA_NOT_PREPARED;
     private Camera mCamera;
     private MediaRecorder mMediaRecorder;
@@ -80,9 +88,11 @@ public class RecordingActivity extends Activity {
     /**
      * set the preview surface to square
      */
-    @AfterViews void setSquare() {
+    @AfterViews
+    void setSquare() {
         mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 LogUtil.i(TAG, "onSurfaceTextureAvailable: " + width + " height: " + height);
                 ViewGroup.LayoutParams params = recordSurfaceParent.getLayoutParams();
                 int min = Math.min(height, width);
@@ -98,15 +108,24 @@ public class RecordingActivity extends Activity {
                 });
             }
 
-            @Override public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) { }
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            }
 
-            @Override public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) { return false; }
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
 
-            @Override public void onSurfaceTextureUpdated(SurfaceTexture surface) { }
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            }
         });
     }
 
-    @Fun @AfterViews void initCircularProgressView() {
+    @Fun
+    @AfterViews
+    void initCircularProgressView() {
         circularProgressView.setOnStateListener(status -> {
                     LogUtil.v(TAG, "onStatus: " + status.name());
                     switch (status) {
@@ -148,29 +167,35 @@ public class RecordingActivity extends Activity {
         );
     }
 
-    @Override public void finish() {
+    @Override
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
-    @Override public void startActivity(Intent intent) {
+    @Override
+    public void startActivity(Intent intent) {
         super.startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
     }
 
     @Fun
-    @Click @UiThread(delay = 300) void albumBtnClicked(View view) {
+    @Click
+    @UiThread(delay = 300)
+    void albumBtnClicked(View view) {
         //TODO
         if (mStatus.ordinal() < RECORDER_STARTED.ordinal() || mStatus.ordinal() >= CONVERTER_ENDED.ordinal())
             new AlbumActivity_.IntentBuilder_(this).start();
     }
 
-    @UiThread void checkFlashLightAvailability() {
+    @UiThread
+    void checkFlashLightAvailability() {
         PackageManager packageManager = getPackageManager();
 
         //TODO flashlight  http://stackoverflow.com/questions/6068803/how-to-turn-on-camera-flash-light-programmatically-in-android
@@ -180,7 +205,8 @@ public class RecordingActivity extends Activity {
         recordFlashSwitch.setDisplayedChild(0);
     }
 
-    @UiThread void checkFrontCameraLightAvailability() {
+    @UiThread
+    void checkFrontCameraLightAvailability() {
         PackageManager packageManager = getPackageManager();
         boolean hasFront = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
         cameraSwitch.setEnabled(hasFront);
@@ -199,14 +225,16 @@ public class RecordingActivity extends Activity {
 
     }
 
-    @Background(delay = 150) void switchCamera() {
+    @Background(delay = 150)
+    void switchCamera() {
         CameraHelper.setFrontCamera(!CameraHelper.isFrontCamera());
 //        recordFlashSwitch.setEnabled(false);
         mCamera.stopPreview();
         releaseCameraAndPreview();
     }
 
-    @AfterViews void initViews() {
+    @AfterViews
+    void initViews() {
         checkFrontCameraLightAvailability();
 
         recordFlashSwitch.getCurrentView().setOnClickListener(v -> {
@@ -237,7 +265,8 @@ public class RecordingActivity extends Activity {
         //checked in onResume    checkFlashLightAvailability();
     }
 
-    @UiThread void setCameraSwitchEnable(boolean enable) {
+    @UiThread
+    void setCameraSwitchEnable(boolean enable) {
         if (cameraSwitch != null) {
             cameraSwitch.setEnabled(enable);
             cameraSwitch.getCurrentView().setEnabled(enable);
@@ -245,7 +274,8 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         ((AudioManager) getSystemService(Context.AUDIO_SERVICE)).setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
@@ -262,7 +292,8 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @Override protected void onPause() {
+    @Override
+    protected void onPause() {
         ((AudioManager) getSystemService(Context.AUDIO_SERVICE)).setStreamMute(AudioManager.STREAM_SYSTEM, false);
         LogUtil.d(TAG, "onPause start: " + System.currentTimeMillis());
         super.onPause();
@@ -276,7 +307,8 @@ public class RecordingActivity extends Activity {
         LogUtil.d(TAG, "onPause end: " + System.currentTimeMillis());
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         LogUtil.d(TAG, "onDestroy");
     }
@@ -294,14 +326,16 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @Background void releaseCameraBackground() {
+    @Background
+    void releaseCameraBackground() {
         if (mCamera != null) {
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
         }
     }
 
-    @SupposeBackground void releaseCameraAndPreview() {
+    @SupposeBackground
+    void releaseCameraAndPreview() {
         if (mCamera != null) {
             CameraHelper.releaseCamera(mCamera);
             mCamera = null;
@@ -311,14 +345,16 @@ public class RecordingActivity extends Activity {
         delayEnable();
     }
 
-    @UiThread void delayEnable() {
+    @UiThread
+    void delayEnable() {
         setCameraSwitchEnable(true);
         circularProgressView.setEnabled(true);
     }
 
     //    @AfterViews
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Background void preview() {
+    @Background
+    void preview() {
         //get camera
         assert mStatus == RecordStatus.CAMERA_NOT_PREPARED || mStatus == RecordStatus.ERROR_STATUS || mStatus == RecordStatus.MOMENT_OK;
         mCamera = CameraHelper.getCameraInstance();
@@ -362,12 +398,14 @@ public class RecordingActivity extends Activity {
         delayEnable();
     }
 
-    @UiThread void applyTransform() {
+    @UiThread
+    void applyTransform() {
         Matrix mat = calculatePreviewMatrix(mPreview, Config.getDefaultCameraSize(), optimalPreviewSize);
         mPreview.setTransform(mat);
     }
 
-    @UiThread void hideSplash() {
+    @UiThread
+    void hideSplash() {
         welcomeOverlay.setVisibility(View.GONE);
     }
 
@@ -408,7 +446,8 @@ public class RecordingActivity extends Activity {
      * <p>
      * This method starts from {@link RecordStatus#RECORDER_NOT_PREPARED} to {@link RecordStatus#RECORDER_PREPARED} or {@link RecordStatus#ERROR_STATUS}.
      */
-    @SupposeBackground void prepare() {
+    @SupposeBackground
+    void prepare() {
         mStatus = RecordStatus.RECORDER_NOT_PREPARED;
 
         //prepare recorder
@@ -429,7 +468,7 @@ public class RecordingActivity extends Activity {
 
         profile.videoFrameWidth = optimalVideoSize.width;
         profile.videoFrameHeight = optimalVideoSize.height;
-        profile.videoFrameRate = 30;
+//        profile.videoFrameRate= 30; use default because some phone not support
         profile.audioCodec = MediaRecorder.AudioEncoder.AAC;
         profile.videoCodec = MediaRecorder.VideoEncoder.H264;
         profile.fileFormat = MediaRecorder.OutputFormat.MPEG_4;
@@ -484,7 +523,8 @@ public class RecordingActivity extends Activity {
      * <p>
      * It asserts that camera was prepared and {@link RecordingActivity#mStatus} is {@link RecordStatus#CAMERA_PREPARED} or {@link RecordStatus#PREVIEW_PREPARED}
      */
-    @Background void record() {
+    @Background
+    void record() {
         LogUtil.v(TAG, "record (background)");
         assert mStatus == CAMERA_PREPARED || mStatus == RecordStatus.PREVIEW_PREPARED;
         prepare();
@@ -519,37 +559,44 @@ public class RecordingActivity extends Activity {
         }
     }
 
-    @UiThread(delay = 1000) void startConvert() {
+    @UiThread(delay = 1000)
+    void startConvert() {
         //TODO change convert notification method
         mConvertDialog.show();
         mStatus = CONVERTER_STARTED;
         convert(mCurrentVideoPath, CameraHelper.getOutputMediaFile(this, CameraHelper.Type.LOCAL, new File(mCurrentVideoPath)).getPath());
     }
 
-    @Background(delay = 300) void convert(String from, String to) {
+    @Background(delay = 300)
+    void convert(String from, String to) {
         Converter.with(this).from(from).cropToStandard().to(to).setHandler(new FFmpegExecuteResponseHandler() {
-            @Override public void onSuccess(String message) {
+            @Override
+            public void onSuccess(String message) {
                 LogUtil.i(TAG, "success: " + message);
                 onConvert(0, from, to);
             }
 
-            @Override public void onProgress(String message) {
+            @Override
+            public void onProgress(String message) {
                 LogUtil.i(TAG, "progress: " + message);
 
             }
 
-            @Override public void onFailure(String message) {
+            @Override
+            public void onFailure(String message) {
                 LogUtil.e(TAG, "fail: " + message);
                 onConvert(1, from, to);
             }
 
-            @Override public void onStart() {
+            @Override
+            public void onStart() {
                 LogUtil.i(TAG, "start");
                 LogUtil.i(TAG, "Converter2 onStart time: " + System.currentTimeMillis());
 
             }
 
-            @Override public void onFinish() {
+            @Override
+            public void onFinish() {
                 LogUtil.i(TAG, "Converter2 onFinish time: " + System.currentTimeMillis());
                 LogUtil.i(TAG, "finish");
             }
@@ -563,7 +610,8 @@ public class RecordingActivity extends Activity {
      * @param origin    video's path
      * @param converted video's path
      */
-    @UiThread void onConvert(int exitCode, String origin, String converted) {
+    @UiThread
+    void onConvert(int exitCode, String origin, String converted) {
 //        setCameraSwitchEnable(true);
 //        albumBtn.setEnabled(true);
 //        Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -589,7 +637,8 @@ public class RecordingActivity extends Activity {
      * @param origin    video's path
      * @param converted video's path
      */
-    @Background void saveData(String origin, String converted) {
+    @Background
+    void saveData(String origin, String converted) {
         //delete origin file
         File file = new File(origin);
         if (file.exists() && new File(converted).exists()) {
@@ -616,7 +665,8 @@ public class RecordingActivity extends Activity {
      * @param thumbPath      of thumbnail of video
      * @param largeThumbPath of large thumbnail of video
      */
-    @UiThread void askSave(String path, String thumbPath, String largeThumbPath) {
+    @UiThread
+    void askSave(String path, String thumbPath, String largeThumbPath) {
         VideoSaveActivity_.intent(this)
                 .extra("videoPath", path)
                 .extra("thumbPath", thumbPath)
