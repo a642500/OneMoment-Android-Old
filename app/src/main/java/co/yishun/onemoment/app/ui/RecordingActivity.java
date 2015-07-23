@@ -380,8 +380,18 @@ public class RecordingActivity extends Activity {
 
             mCamera.setParameters(parameters);
             mCamera.setDisplayOrientation(90);
-            LogUtil.i(TAG, "mPreview.getSurfaceTexture() == null :" + String.valueOf(mPreview.getSurfaceTexture() == null));
-            mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
+            SurfaceTexture texture = null;
+            while (texture == null) {
+                LogUtil.i(TAG, "mPreview.getSurfaceTexture() == null, wait 300ms");
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                texture = mPreview.getSurfaceTexture();
+            }
+
+            mCamera.setPreviewTexture(texture);
             //TODO bug refer to http://stackoverflow.com/questions/21735456/getsurfacetexture-returning-null
             mCamera.startPreview();
             mCamera.autoFocus(null);
