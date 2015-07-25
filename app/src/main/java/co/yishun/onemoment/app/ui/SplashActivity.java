@@ -19,6 +19,8 @@ public class SplashActivity extends BaseActivity {
     @ViewById
     ImageView splashImageView;
 
+    private boolean back = false;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -48,13 +50,20 @@ public class SplashActivity extends BaseActivity {
         return getSharedPreferences(Config.PREFERENCE, MODE_PRIVATE).getBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, true);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        back = true;
+    }
 
     @UiThread(delay = 1600)
     void startRecording() {
         this.finish();
-        overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
-        if (isFirstLaunch()) GuideActivity_.intent(this).start();
-        else RecordingActivity_.intent(this).start();
+        if (!back) {
+            overridePendingTransition(R.anim.act_fade_in, R.anim.act_fade_out);
+            if (isFirstLaunch()) GuideActivity_.intent(this).start();
+            else RecordingActivity_.intent(this).start();
+        }
     }
 
 }
