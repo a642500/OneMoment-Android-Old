@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.config.Config;
-import co.yishun.onemoment.app.notification.EveryDayNotification;
 import co.yishun.onemoment.app.ui.RecordingActivity_;
 import org.androidannotations.annotations.*;
 
@@ -35,7 +34,6 @@ public class GuidePageFragment extends Fragment {
         if (mActivity != null) {
             mActivity.getSharedPreferences(Config.PREFERENCE, Activity.MODE_PRIVATE).edit().putBoolean(Config.PREFERENCE_IS_FIRST_LAUNCH, false).apply();
             mActivity.finish();
-            EveryDayNotification.scheduleNotification(view.getContext());
             RecordingActivity_.intent(this).start();
         }
 

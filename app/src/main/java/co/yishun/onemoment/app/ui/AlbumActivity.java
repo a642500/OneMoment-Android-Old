@@ -22,6 +22,7 @@ import co.yishun.onemoment.app.config.ErrorCode;
 import co.yishun.onemoment.app.data.Moment;
 import co.yishun.onemoment.app.data.MomentDatabaseHelper;
 import co.yishun.onemoment.app.net.request.account.IdentityInfo;
+import co.yishun.onemoment.app.notification.EveryDayNotification;
 import co.yishun.onemoment.app.sync.SyncAdapter;
 import co.yishun.onemoment.app.ui.account.IntegrateInfoActivity_;
 import co.yishun.onemoment.app.ui.account.SignUpActivity_;
@@ -70,13 +71,15 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     JazzyViewPager viewPager;
     @OrmLiteDao(helper = MomentDatabaseHelper.class, model = Moment.class)
     Dao<Moment, Integer> momentDao;
-    @SystemService ConnectivityManager connectivityManager;
+    @SystemService
+    ConnectivityManager connectivityManager;
     /**
      * only after manual sync, it will notify user sync success.
      */
     boolean isManualSync = false;
     BroadcastReceiver mSyncDoneReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             LogUtil.i(TAG, "received sync done intent");
             if (isManualSync && intent.getBooleanExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_IS_SUCCESS, false)) {
                 LogUtil.i(TAG, "notify sync done");
@@ -87,7 +90,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     };
     private AlbumController mController;
     BroadcastReceiver mDownloadUpdateReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             LogUtil.i(TAG, "received download progress update intent");
             if (mController != null && intent.getIntExtra(SyncAdapter.SYNC_BROADCAST_EXTRA_THIS_PROGRESS, 0) == 100) {
                 mController.notifyUpdate();
@@ -97,7 +101,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 
     };
     BroadcastReceiver mRecoverUpdateReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             LogUtil.i(TAG, "received recover update intent");
             if (mController != null) {
                 mController.notifyUpdate();
@@ -118,7 +123,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
 //        mAdapter.showTodayMonthCalender();
 //    }
 
-    @Fun void backToToday() {
+    @Fun
+    void backToToday() {
         viewPagerContainer.removeAllViews();
         viewPager = new JazzyViewPager(this);
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
@@ -128,21 +134,26 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         onMonthChange(Calendar.getInstance());
     }
 
-    @Click @UiThread(delay = 300) void backToTodayClicked(View view) {
+    @Click
+    @UiThread(delay = 300)
+    void backToTodayClicked(View view) {
         backToToday();
     }
 
     @Fun
-    @Click void nextMonthBtn(View view) {
+    @Click
+    void nextMonthBtn(View view) {
         mController.showNextMonthCalendar();
     }
 
     @Fun
-    @Click void previousMonthBtn(View view) {
+    @Click
+    void previousMonthBtn(View view) {
         mController.showPreviousMonthCalendar();
     }
 
-    @AfterViews void initToolbar() {
+    @AfterViews
+    void initToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getString(R.string.albumTitle));
         toolbar.setTitleTextColor(getResources().getColor(R.color.textColorCalenderTitle));
@@ -151,7 +162,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         toolbar.setSubtitleTextColor(getResources().getColor(R.color.textColorCalenderSubtitle));
     }
 
-    @AfterViews void initToday() {
+    @AfterViews
+    void initToday() {
         Calendar today = Calendar.getInstance();
         int day = today.get(Calendar.DAY_OF_MONTH);
         calendarCurrentDay.setText(day > 9 ? String.valueOf(day) : "0" + day);
@@ -159,7 +171,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         calendarDayOfWeek.setText(weeks[today.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY]);
     }
 
-    @AfterViews void initViewPager() {
+    @AfterViews
+    void initViewPager() {
         backToToday();
 //        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
 //        mController = new ViewPagerController(this, viewPager);
@@ -175,6 +188,9 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_album, menu);
+        MenuItem menuNotification = menu.findItem(R.id.action_notification_settings);
+
+        menuNotification.setCheckable(EveryDayNotification.isEnableNotification(this));
         return true;
     }
 
@@ -196,6 +212,11 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
                 if (AccountHelper.isLogin(this)) {
                     SyncSettingsActivity_.intent(this).start();
                 } else mWeiboHelper = showLoginDialog();
+                break;
+            case R.id.action_notification_settings:
+                boolean enable = !item.isChecked();
+                item.setChecked(enable);
+                EveryDayNotification.setEnableNotification(this, enable);
                 break;
             case R.id.action_rate:
                 rate();
@@ -235,12 +256,14 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     }
 
     @Fun
-    @Click void shootingBtn(View view) {
+    @Click
+    void shootingBtn(View view) {
         onBackPressed();
     }
 
     @Fun
-    @Click void replayBtn(View view) {
+    @Click
+    void replayBtn(View view) {
         try {
 
             List<Moment> momentList;
@@ -271,7 +294,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         registerReceiver(mRecoverUpdateReceiver, new IntentFilter(SyncAdapter.SYNC_BROADCAST_UPDATE_RECOVER));
     }
 
-    @Override protected void onPause() {
+    @Override
+    protected void onPause() {
         super.onPause();
         unregisterReceiver(mDownloadUpdateReceiver);
         unregisterReceiver(mSyncDoneReceiver);
@@ -279,7 +303,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         isManualSync = false;//cancel notify sync done if user leaves.
     }
 
-    @AfterInject void trySync() {
+    @AfterInject
+    void trySync() {
         if (AccountHelper.isLogin(this) && AccountHelper.isAutoSync(this)) {
             LogUtil.v(TAG, "try sync, start.");
             if (!AccountHelper.isOnlyWifiSyncEnable(this)) {
@@ -289,7 +314,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
     }
 
     @Fun
-    @Click void syncBtn(View view) {
+    @Click
+    void syncBtn(View view) {
         if (!AccountHelper.isLogin(this)) {
             mWeiboHelper = showLoginDialog();
             return;
@@ -311,11 +337,13 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
         showNotification(R.string.albumSyncText);
     }
 
-    @Background(delay = 10 * 1000) void delayEnableSyncBtn() {
+    @Background(delay = 10 * 1000)
+    void delayEnableSyncBtn() {
         justPressed = false;
     }
 
-    @AfterViews void setOneMomentCount() {
+    @AfterViews
+    void setOneMomentCount() {
         try {
             Dao<Moment, Integer> dao = OpenHelperManager.getHelper(this, MomentDatabaseHelper.class).getDao(Moment.class);
             if (AccountHelper.isLogin(this)) {
@@ -372,7 +400,8 @@ public class AlbumActivity extends BaseActivity implements AlbumController.OnMon
      *
      * @param token to login
      */
-    @Background void tryLoginByWeibo(Oauth2AccessToken token) {
+    @Background
+    void tryLoginByWeibo(Oauth2AccessToken token) {
         showNotification(R.string.weiboLoginAuthSuccess);
         showProgress();
 

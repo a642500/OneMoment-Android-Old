@@ -175,4 +175,5 @@
     <string name="weiboLoginSignUpSuccess">注册成功</string>
     <string name="weiboLoginNetworkError">网络错误</string>
     <string name="integrateInfoNameNotUnique">这个昵称已经被使用了，换一个吧</string>
+    <string name="action_notification_settings">启用通知</string>
 </resources>

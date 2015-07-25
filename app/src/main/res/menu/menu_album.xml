@@ -8,13 +8,20 @@
             android:orderInCategory="0"
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_friends"
-            />
+    />
 
     <item
             android:id="@+id/action_sync_settings"
             android:title="@string/action_sync_settings"
             android:orderInCategory="1"
             app:showAsAction="never"/>
+    <item
+            android:checkable="true"
+            android:checked="true"
+            android:id="@+id/action_notification_settings"
+            android:title="@string/action_notification_settings"
+            app:showAsAction="never"
+            android:orderInCategory="2"/>
     <item
             android:id="@+id/action_rate"
             android:title="@string/action_rate"

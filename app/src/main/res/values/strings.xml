@@ -42,6 +42,7 @@
 
     <string name="action_identity">Identity</string>
     <string name="action_sync_settings">Sync Settings</string>
+    <string name="action_notification_settings">Enable Notification</string>
     <string name="action_suggest">Suggestion</string>
     <string name="action_rate">Rate it!</string>
     <string name="action_feedback">Feedback</string>

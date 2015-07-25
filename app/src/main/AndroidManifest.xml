@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
             android:name=".MyApplication_"
@@ -32,13 +33,13 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:theme="@style/Base.AppTheme.NoActionBar"
-            >
+    >
         <activity
                 android:name=".ui.SplashActivity_"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -56,7 +57,7 @@
                 android:configChanges="orientation|keyboardHidden"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
-                >
+        >
             >
         </activity>
         <!-- <activity -->
@@ -78,7 +79,7 @@
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                />
+        />
 
 
         <activity
@@ -87,7 +88,7 @@
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.AboutActivity_"
@@ -103,7 +104,7 @@
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.ResetPasswordActivity_"
@@ -112,7 +113,7 @@
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.IdentityInfoActivity_"
@@ -120,7 +121,7 @@
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.VideoSaveActivity_"
@@ -136,7 +137,7 @@
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.account.IntegrateInfoActivity_"
@@ -151,7 +152,7 @@
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                />
+        />
         <activity
                 android:name=".ui.SyncSettingsActivity_"
                 android:label="@string/syncSettingsTitle"
@@ -164,14 +165,14 @@
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                />
+        />
         <activity
                 android:name=".ui.MultiPlayActivity_"
                 android:label="@string/multiPlayTitle"
                 android:theme="@style/Base.AppTheme.NoActionBar"
                 android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboardHidden"
-                />
+        />
 
         <service
                 android:name=".sync.AuthenticatorService"
@@ -219,7 +220,17 @@
         <meta-data
                 android:name="UMENG_APPKEY"
                 android:value="549e2c80fd98c5e4cf000f64"
-                />
+        />
+        <receiver android:name=".notification.EveryDayNotification"
+                  android:exported="false"
+        >
+            <intent-filter>
+                <action android:name="co.yishun.onemoment.app.notification"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
