@@ -101,8 +101,8 @@ public class EveryDayNotification extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setLargeIcon(bm).setSmallIcon(R.drawable.notification_small).setContentTitle(context.getString(R.string.notificationTitle)).setContentText(context.getString(CONTENT_RES_IDS[index])).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
 
         Intent resultIntent = new Intent(context, RecordingActivity_.class);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mBuilder.setContentIntent(PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT));
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mBuilder.setContentIntent(PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(ID, mBuilder.build());
     }
