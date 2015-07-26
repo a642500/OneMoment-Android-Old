@@ -98,7 +98,7 @@ public class EveryDayNotification extends BroadcastReceiver {
         int index = new Random().nextInt() % CONTENT_RES_IDS.length;
         index = index >= 0 ? index : index + CONTENT_RES_IDS.length;
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setLargeIcon(bm).setSmallIcon(R.drawable.notification_small).setContentTitle(context.getString(R.string.notificationTitle)).setContentText(context.getString(CONTENT_RES_IDS[index])).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setLargeIcon(bm).setSmallIcon(R.drawable.notification_small).setAutoCancel(true).setContentTitle(context.getString(R.string.notificationTitle)).setContentText(context.getString(CONTENT_RES_IDS[index])).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
 
         Intent resultIntent = new Intent(context, RecordingActivity_.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
