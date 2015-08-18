@@ -13,8 +13,11 @@
         <option name="ASSEMBLE_TASK_NAME" value="assembleMarket360Debug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileMarket360DebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleMarket360DebugAndroidTest" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateMarket360DebugSources" />
-        <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateMarket360DebugAndroidTestSources" />
+        <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileMarket360DebugAndroidTestSources" />
+        <afterSyncTasks>
+          <task>generateMarket360DebugAndroidTestSources</task>
+          <task>generateMarket360DebugSources</task>
+        </afterSyncTasks>
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -23,7 +26,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/market360/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/androidTest/market360/debug" />
     <exclude-output />

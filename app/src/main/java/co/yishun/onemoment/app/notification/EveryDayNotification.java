@@ -11,13 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Calendar;
+import java.util.Random;
+
 import co.yishun.onemoment.app.BuildConfig;
 import co.yishun.onemoment.app.R;
 import co.yishun.onemoment.app.ui.RecordingActivity_;
 import co.yishun.onemoment.app.util.LogUtil;
-
-import java.util.Calendar;
-import java.util.Random;
 
 /**
  * This is to send notification to shot onemoment everyday.
@@ -52,16 +53,14 @@ public class EveryDayNotification extends BroadcastReceiver {
         Intent intent = new Intent(ACTION_ALARM_EVERYDAY);
 
         if (BuildConfig.DEBUG) {
-            long recurring = (5 * 1000);  // in milliseconds
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, 30);
-            am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), recurring, PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             LogUtil.i(TAG, "schedule debug notification.");
         } else {
-            long recurring = (60 * 60 * 24 * 1000);  // in milliseconds
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 16);
-            am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), recurring, PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            calendar.set(Calendar.HOUR_OF_DAY, 14);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             LogUtil.i(TAG, "schedule notification.");
         }
     }
