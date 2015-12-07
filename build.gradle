@@ -19,13 +19,3 @@ allprojects {
         maven { url "http://dl.bintray.com/a642500/maven" }
     }
 }
-
-buildscript {
-//    repositories {
-//        maven { url 'https://raw.github.com/xujiaao/mvn-repository/master/releases' }
-//    }
-//
-//    dependencies {
-//        classpath 'com.github.xujiaao:aarLinkSources:1.0.0'
-//    }
-}
