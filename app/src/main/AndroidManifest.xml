@@ -198,10 +198,10 @@
         </service>
 
         <provider
-                android:name=".data.MomentProvider"
-                android:authorities="co.yishun.onemoment.app"
-                android:exported="false"
-                android:syncable="true"/>
+            android:name=".data.MomentProvider"
+            android:authorities="co.yishun.onemoment.app"
+            android:exported="false"
+            android:syncable="true"/>
 
         <activity
                 android:name="com.soundcloud.android.crop.CropImageActivity"
